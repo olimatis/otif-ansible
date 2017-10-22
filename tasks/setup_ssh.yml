@@ -1,0 +1,81 @@
+---
+## This Ansible Playbook create a user (if not already there), 
+## generate a SSH key localy for this new user and rotate the public key
+## on remote nodes so that this user can use SSH w/o having to provide password.
+
+
+## Author: Martin Brousseau
+## Company: OpenText
+## Version: 1.1
+## Date: 10/23/2017 
+
+## Usage example:
+##   $ ansible-playbook setup_ssh.yml -e "username=otif-admin userpwd=magellan" -k
+##
+## Testing:
+## Once the playbook is completed, become this new user and try ssh to romote host
+## Example:
+##           $ su -otif-admin
+##		...
+##           $ ssh box2
+##              ...
+
+
+- hosts: all
+  gather_facts: False
+  become: true
+  become_user: root
+
+  vars:
+    # Where is ssh config is located at
+    sshd_config: /etc/ssh/sshd_config
+    # The name of ssh daemon
+    sshd: sshd
+
+  tasks:
+
+   - name: 1. Creating user "{{ username }}" with admin access on host and all nodes
+     user: 
+       name: "{{ username }}"
+       password: "{{ userpwd |password_hash('sha512') }}"
+       generate_ssh_key: yes
+       ssh_key_passphrase: ""
+       groups: wheel
+       append: yes
+       state: present
+     register: userkey
+
+#   - debug:
+#       msg: "Public key: {{ userkey.ssh_public_key }}"
+#     when: userkey is defined
+
+   - name: 2. Installing '"{{ username }}"' public key on every node
+     authorized_key:
+       user: "{{ username }}"
+       key: "{{ userkey.ssh_public_key }}"
+     delegate_to: "{{ item }}"
+     with_items: "{{ groups['all'] }}"
+
+
+#   - name: 3. Disabling empty password login
+#     lineinfile: dest={{ sshd_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
+
+#   - name: 4. Disabling remote root login
+#     lineinfile: dest={{ sshd_config }} regexp="^#?PermitRootLogin" line="PermitRootLogin no"
+
+ #  - name: 5. Disabling password login
+ #    lineinfile: dest={{ sshd_config }} regexp="^#?PasswordAuthentication" line="PasswordAuthentication no"
+ #    when: add_identity_key|success and not add_identity_key|skipped
+
+   - name: 6. Enabling PAM
+     lineinfile: dest={{ sshd_config }} regexp="^#?UsePAM" line="UsePAM yes"
+
+   - name: 7. Enabling Pubkey Authentication 
+     lineinfile: dest={{ sshd_config }} regexp="^#?PubkeyAuthentication" line="PubkeyAuthentication yes"
+
+   - name: 8. Restarting sshd
+     service: 
+        name: "{{ sshd }}"
+        state: restarted
+
+
