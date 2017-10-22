@@ -1,9 +1,5 @@
 ---
 
-- hosts: all
-
-  tasks:
-
     - name: Get IP Addresses
       debug: var=ansible_all_ipv4_addresses
     - debug: var=ansible_default_ipv4.address
@@ -13,6 +9,6 @@
 
     - name: Generate /etc/hosts file
       template:
-        src=hosts/hosts.j2
+        src=hosts.j2
         dest=~/hosts-file
     
