@@ -1,5 +1,9 @@
 # otif-ansible
 
+#### This Ansible project is meant to ease InfoFsuion "headless" deployement on CentOS. 
+
+WORKING on it ...
+
 
 #### You can call a specific role from the devops playbook using a command like the following.
 
