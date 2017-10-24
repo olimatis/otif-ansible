@@ -21,19 +21,6 @@
 ##              ...
 
 
-- hosts: all
-  gather_facts: False
-  become: true
-  become_user: root
-
-  vars:
-    # Where is ssh config is located at
-    sshd_config: /etc/ssh/sshd_config
-    # The name of ssh daemon
-    sshd: sshd
-
-  tasks:
-
    - name: 1. Creating user "{{ username }}" with admin access on host and all nodes
      user: 
        name: "{{ username }}"
@@ -72,10 +59,7 @@
 
    - name: 7. Enabling Pubkey Authentication 
      lineinfile: dest={{ sshd_config }} regexp="^#?PubkeyAuthentication" line="PubkeyAuthentication yes"
+     notify: restart-sshd
 
-   - name: 8. Restarting sshd
-     service: 
-        name: "{{ sshd }}"
-        state: restarted
-
+ 
 

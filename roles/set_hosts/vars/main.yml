@@ -1,0 +1,10 @@
+---
+
+# Default domain
+domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
+
+#Default Network Adapter
+adapter: "enp0s3"
+
+
+

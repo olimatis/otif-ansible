@@ -1,0 +1,7 @@
+---
+
+# Where is ssh config is located at
+sshd_config: /etc/ssh/sshd_config
+
+# The name of ssh daemon
+sshd: sshd

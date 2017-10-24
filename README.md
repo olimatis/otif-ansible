@@ -4,8 +4,19 @@
 #### You can call a specific role from the devops playbook using a command like the following.
 
 * This command will generate a hosts file according to the Ansible inventory
+This Ansible role expects that IP addresses have been provided in the Ansible inventory file 
 ```
 $ ansible-playbook devops-tasks.yml -t "set-hosts-file" -k
+```
+
+* To create a hosts file with a custom domain
+```
+$ ansible-playbook devops-tasks.yml -t "set-hosts-file" -e "domain=magellan.net" -k
+```
+
+* To create a host file with a custom domain with provided network adaper
+```
+$ ansible-playbook devops-tasks.yml -t "set-hosts-file" -e "domain=magellan.net adapter=enp0s3" -k
 ```
 
 * This command will create a new user with default password (if not exists already) and will rotate public key on all nodes to provide passwordless ssh
