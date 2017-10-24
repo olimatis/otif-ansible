@@ -1,0 +1,20 @@
+---
+
+#    - name: Get IP Addresses
+#      debug: var=ansible_all_ipv4_addresses
+#    - debug: var=ansible_default_ipv4.address
+#    - debug: var=ansible_default.eth0.address
+#      debug: var=ansible_enp0s3.ipv4.address
+#    - debug: var=ansible_enp0s8.ipv4.address
+#    - debug: var=ansible_virbr0.ipv4.address
+#    - debug: var=inventory_hostname
+#    - debug: var=ansible_domain
+#    - debug: var=ansible_fqdn
+#    - debug: var=group_names
+
+     - name: Generating /etc/hosts file
+       template:
+         src=hosts.j2
+         dest=~/hosts-file
+#      notify: restart-network
+    
