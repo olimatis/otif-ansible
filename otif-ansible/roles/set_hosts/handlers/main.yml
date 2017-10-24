@@ -4,3 +4,4 @@
   service:
     name: "network"
     state: restarted
+    become: true

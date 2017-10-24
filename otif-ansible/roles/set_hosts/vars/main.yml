@@ -6,5 +6,7 @@ domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 #Default Network Adapter
 adapter: "enp0s3"
 
-
+#yes = overwrite exiting /etc/hosts or
+#no = create /etc/ansible-hosts
+overwrite: no
 

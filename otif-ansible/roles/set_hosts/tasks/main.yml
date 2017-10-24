@@ -12,9 +12,17 @@
 #    - debug: var=ansible_fqdn
 #    - debug: var=group_names
 
-     - name: Generating /etc/hosts file
+     - name: Generating /etc/hosts file and restart network.service
+       become: true
        template:
          src=hosts.j2
-         dest=~/hosts-file
-#      notify: restart-network
-    
+         dest=/etc//hosts
+       notify: restart-network
+       when: overwrite == "yes"
+
+     - name: Generating /etc/ansible hosts file if 'overwrite == yes'
+       become: true
+       template:
+         src=hosts.j2
+         dest=/etc/ansible-hosts
+       when: overwrite != "yes"
