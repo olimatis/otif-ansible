@@ -1,4 +1,0 @@
-- hosts: all
-  roles: 
-    - { role: set_hosts, tags: 'set-hosts-file' } 
-    - { role: set_ssh, tags: 'set-ssh-key' }   
