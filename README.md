@@ -35,34 +35,35 @@ $ ansible-playbook devops-tasks.yml -t "set-ssh-key" -e "username=otif-admin pas
 $ ansible-playbook devops-tasks.yml -t "get-host-info" -k
 ```
 
-* Examples using ad-hoc commands ...
-** Free momory on all hosts
+* Examples using ad-hoc commands
+
+ * Free momory on all hosts
 ```
 $  ansible all -m setup -a "filter=ansible_memfree_mb"  -k
 ```
-** Date & Time ...
+ * Date & Time ...
 ```
 $  ansible all -m setup -a "filter=ansible_date_time"  -k
 ```
 
-** Linux distribution ... and processor.
+ * Linux distribution ... and processor.
 ```
 $ otif-ansible]$ ansible all -m setup -a "filter=ansible_distribution"  -k
 $ otif-ansible]$ ansible all -m setup -a "filter=ansible_processor" -k
 ```
 
-** The following command provides all variable that can be read ...
+ * The following command provides all variable that can be read ...
 ```
 $ ansible all -m setup -k
 ```
 
-* The following command shows how you can send a shell command to all hosts
+ * The following command shows how you can send a shell command to all hosts
 ```
 $ ansible all -a "df -h"
 # or this one to extract only info for one specific drive
 $ ansible all -a "df -h" | awk '/SUCCESS/,/centos-root/'
 ```
-* Delete a user and home directorty on all nodes
+ * Delete a user and home directorty on all nodes
 ```
 $ sudo ansible all -a "userdel -r otif-admin" -k
 ```
