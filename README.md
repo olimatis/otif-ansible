@@ -30,7 +30,12 @@ $ ansible-playbook devops-tasks.yml -t "set-hosts-file" -e "domain=magellan.net 
 $ ansible-playbook devops-tasks.yml -t "set-ssh-key" -e "username=otif-admin passwrd=magellan" -k
 ```
 
-* Get facts ...
+* Get information about processor, os and resources on all hosts
+```
+$ ansible-playbook devops-tasks.yml -t "get-host-info" -k
+```
+
+* Examples using ad-hoc commands ...
 ** Free momory on all hosts
 ```
 $  ansible all -m setup -a "filter=ansible_memfree_mb"  -k

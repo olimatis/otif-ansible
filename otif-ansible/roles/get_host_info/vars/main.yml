@@ -1,0 +1,19 @@
+---
+# vars file for get_host_info
+
+
+# Free space on hard disk
+hd_total:  "{% for mount in ansible_mounts %}{% if mount.mount == '/' %}{{ mount.size_total }}{% endif %}{% endfor %}"
+hd_free: "{% for mount in ansible_mounts %}{% if mount.mount == '/' %}{{ mount.size_available }}{% endif %}{% endfor %}"
+hd_total_pretty: "{% for mount in ansible_mounts %}{% if mount.mount == '/' %}{{ (mount.size_total|int/1000000000)|round(1, 'common') }}GB{% endif %}{% endfor %}"
+hd_free_pretty: "{% for mount in ansible_mounts %}{% if mount.mount == '/' %}{{ (mount.size_available|int/1000000000)|round(1, 'common') }}GB{% endif %}{% endfor %}"
+
+mem_total: "{{ ansible_memtotal_mb }}"
+mem_total_pretty: "{{ (ansible_memtotal_mb|int/1000)|round(1,'common') }}GB" 
+mem_free: "{{ ansible_memfree_mb }}"
+mem_free_pretty: "{{ (ansible_memfree_mb|int/1000)|round(1,'common') }}GB"
+host_processor: "{% for processor in ansible_processor %}{{ processor|replace('GenuineIntel', '')|replace('(R) ', ' ')|replace('Core(TM) ','') }}{% endfor %} with {{ ansible_processor_cores }} cores" 
+host_core: "{{ ansible_processor_cores }}"
+
+os_distribution: "{{ ansible_distribution ~ ' ' ~ ansible_distribution_major_version ~ ' / ' ~ ansible_distribution_release ~ ' ' ~ ansible_distribution_version }}"
+ 

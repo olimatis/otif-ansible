@@ -2,3 +2,4 @@
   roles: 
     - { role: set_hosts, tags: 'set-hosts-file' } 
     - { role: set_ssh, tags: 'set-ssh-key' }   
+    - { role: get_host_info, tags: 'get-host-info' }

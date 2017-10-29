@@ -1,0 +1,10 @@
+---
+
+  - name: Get InfoFusion Text Mining
+    get_url:
+      url:  https://knowledge.opentext.com/knowledge/llisapi.dll/Open/68713500
+      dest: ~/
+      force_basic_auth: yes
+    when: inventory_hostname in groups['text-mining']
+    
+

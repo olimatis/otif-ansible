@@ -1,0 +1,14 @@
+---
+# tasks file for get_host_info
+
+  - name: Display host information
+    vars:
+      msg: |
+           {{ansible_hostname}} is running on {{os_distribution}}.
+           {{ansible_hostname}} is running on {{host_processor}}.
+           There is a total of {{ hd_total_pretty }} disk space on {{ansible_hostname}}.
+           There is {{ hd_free_pretty }} of free disk space on {{ansible_hostname}}.
+           There is a total of {{ mem_total_pretty }} of RAM on {{ansible_hostname}}.
+           There is {{ mem_free_pretty }} of free RAM on {{ansible_hostname}}.
+    debug:
+      msg: "{{ msg.split('\n') }}"
