@@ -1,28 +1,47 @@
 # otif-ansible
 
-#### This Ansible project is meant to ease InfoFsuion "headless" deployement on CentOS. 
+#### This Ansible project is meant to ease OpenText InfoFusion "headless" deployement on CentOS. 
 
 * "Auto-pilot" mode
 
+TODO
 
 * Assisted mode
 
-1. Install Oracle Java 8 on nodes where InfoFusion Text Mining will run
+1. Check that all system requirements are met
+* Get information about processor, os and resources on all hosts
+```
+$ ansible-playbook devops-tasks.yml -t "get-host-info" -k
+```
+
+2. Create and 'otif-admin'user on all nodes and enable passwordless ssh for this user
+```
+$ ansible-playbook devops-tasks.yml -t "set-ssh-key" -e "username=otif-admin passwrd=magellan" -k
+```
+
+3. Update the hosts file according to the Ansible invetory (inventory/hosts)
+* To create a host file with a custom domain with provided network adaper. Overwrite /etc/host and $
+* Use '$ ip ad' to know which network adapter is providing access you need. Default is "enp0s3"
+```
+$ ansible-playbook devops-tasks.yml -t "set-hosts-file" -e "domain=magellan.net adapter=enp0s3 over$
+```
+
+4. Install Oracle Java 8 on nodes where InfoFusion Text Mining will run
 ```
 $ ansible-playbook deploy-otif.yml -t "install-java" -k -K
 ```
 
-1. Install InfoFusion Text Mining
+5. Install InfoFusion Text Mining
 ```
 $ TODO
 ```
 
-1. Install InfoFusion Crawler for Web & Social Media (including PostgreSQL)
+6. Install InfoFusion Crawler for Web & Social Media (including PostgreSQL)
 ```
 $ TODO
 ```
 
-1. Install InfoFusion Ingestion Pipeline (including PostgreSQL)
+7. Install InfoFusion Ingestion Pipeline (including PostgreSQL)
 ```
 $ TODO
 ```
