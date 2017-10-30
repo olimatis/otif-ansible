@@ -104,3 +104,11 @@
           oracle_java_task_set_default is defined and
           oracle_java_task_set_default|changed
         )
+
+- name: set JAVA_HOME
+  become: yes
+  lineinfile: dest=/etc/environment state=present regexp='^JAVA_HOME'>
+             line="export JAVA_HOME={{oracle_java_home}}"
+
+- name: Source /etc/environment
+  action: shell source /etc/environment

@@ -27,6 +27,7 @@ $ ansible-playbook devops-tasks.yml -t "set-hosts-file" -e "domain=magellan.net 
 ```
 
 4. Install Oracle Java 8 on nodes where InfoFusion Text Mining will run
+* This Playbook role will also set JAVA_HOME
 ```
 $ ansible-playbook deploy-otif.yml -t "install-java" -k -K
 ```
