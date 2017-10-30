@@ -1,3 +1,4 @@
-- hosts: all
+- hosts: text-mining
   roles: 
-    - { role: deploy_text_mining, tags: 'deploy-text-mining' } 
+     - { role: install_java, tags: 'install-java' }
+     - { role: deploy_text_mining, tags: 'deploy-text-mining' } 

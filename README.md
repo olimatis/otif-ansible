@@ -2,7 +2,31 @@
 
 #### This Ansible project is meant to ease InfoFsuion "headless" deployement on CentOS. 
 
-WORKING on it ...
+* "Auto-pilot" mode
+
+
+* Assisted mode
+
+1. Install Oracle Java 8 on nodes where InfoFusion Text Mining will run
+```
+$ ansible-playbook deploy-otif.yml -t "install-java" -k -K
+```
+
+1. Install InfoFusion Text Mining
+```
+$ TODO
+```
+
+1. Install InfoFusion Crawler for Web & Social Media (including PostgreSQL)
+```
+$ TODO
+```
+
+1. Install InfoFusion Ingestion Pipeline (including PostgreSQL)
+```
+$ TODO
+```
+
 
 
 #### You can call a specific role from the devops playbook using a command like the following.
