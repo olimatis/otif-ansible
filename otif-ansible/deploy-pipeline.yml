@@ -1,0 +1,12 @@
+---
+
+- hosts: pipeline
+
+  tasks:
+
+  - name: Depploy InfoFusion Ingestion Pipeline
+    include_role:
+      name: install_pipeline
+    tags: 'install-pipeline'
+    when: inventory_hostname in groups['_pipeline']
+

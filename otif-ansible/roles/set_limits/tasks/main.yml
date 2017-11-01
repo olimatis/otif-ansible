@@ -1,0 +1,35 @@
+---
+# tasks file for set_limits
+# This role optimize PAM limits in /etc/security/limits.conf for InfoFusion nodes
+
+- name: Add PAM limits "hard nproc 63587"
+  become: true
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nproc
+    value: 63587
+
+- name: Add PAM limits "soft nproc 16384"
+  become: true
+  pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nproc
+    value: 16384
+
+- name: Add PAM limits "hard nofile 65000"
+  become: true
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: 65000
+
+- name: Add PAM limits "soft nofile 4096"
+  become: true
+  pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nofile
+    value: 4096

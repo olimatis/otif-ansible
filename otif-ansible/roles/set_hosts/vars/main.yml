@@ -8,5 +8,5 @@ adapter: "enp0s3"
 
 #yes = overwrite exiting /etc/hosts or
 #no = create /etc/ansible-hosts
-overwrite: no
+overwrite: false
 

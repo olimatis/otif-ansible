@@ -1,6 +1,6 @@
 ---
 # tasks file for install_psql on RedHat/CentOS 7
 
-- include: install_psql.yml
-- include: configure_psql.yml
+- include_tasks: install_psql.yml
+- include_tasks: configure_psql.yml
 

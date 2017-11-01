@@ -9,9 +9,6 @@ box2  ansible_host=192.168.56.102
 [text-mining]
 box3  ansible_host=192.168.56.103
 
-[ecm-crawler]
-box4  ansible_host=192.168.56.104
-
 
 # The following groups defines taget nodes for depedencies
 
@@ -23,11 +20,11 @@ web-crawler
 pipeline
 
 [kafka:children]
+web-crawler
 
 [mongodb:children]
 web-crawler
 
-[search]
 
 
 

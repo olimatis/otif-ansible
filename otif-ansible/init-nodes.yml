@@ -1,0 +1,32 @@
+- hosts: all
+
+  tasks:
+
+  # The follwoing roles set a apply a few settings to the nodes in our cluster
+
+  - name: Set hosts file
+    include_role:
+      name: set_hosts
+    tags: 'set-hosts-file'
+    # when: inventory_hostname in groups['all']
+
+  - name: Modify Linux PAM limits
+    include_role:
+      name: set_limits
+    tags: 'set-limits'
+    # when: inventory_hostname in groups['all']
+
+  - name: Set ssh on each nodes
+    include_role:
+      name: set_ssh
+    tags: 'set-ssh'
+    # when: inventory_hostname in groups['all']
+
+  - name: Display a quick report - get information about each node
+    include_role:
+      name: get_node_info
+    tags: 'get-node-info'
+    # when: inventory_hostname in groups['all']
+
+
+

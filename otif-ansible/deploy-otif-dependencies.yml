@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+
+  tasks:
+  
+  # The follwoing roles manage deployement of dependencies
+
+    - name: Install Oracle java - dependency for InfoFusion Text Mining 
+      include_role:
+        name: install_java
+      tags: [ 'install-java', 'dependencies' ]
+      when: inventory_hostname in groups['text-mining']
+  
+    - name: Install PostgreSQL - dependency for InfoFusion Ingestion Pipeline & InfoFusion Crawler for Web & Social Media
+      include_role:
+        name: install_psql
+      tags: [ 'install-psql', 'dependencies' ]
+      when: inventory_hostname in groups['postgresql']
+
+    - name: Install MongoDB - dependency form InfoFusion Crawler for Web
+      include_role:
+        name: install_mongodb
+      tags: [ 'install-mongodb', 'dependencies' ]
+      when: inventory_hostname in groups[mongodb']
+
+    - name: Install Apache Kafka - dependency for InfoFusion Web Crawler for Web & Social Media
+      include_role:
+        name: install_kafka
+      tags: [ 'install-kafka', 'dependencies' ]
+      when: inventory_hostname in groups['_kafka']
+
+

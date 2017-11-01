@@ -1,6 +1,6 @@
-# The default Ansible inventory to deploy InfoFusion for Web & Social Media on 3 nodes
+# The default Ansible inventory to deploy InfoFusion for ECM Analytics on 3 nodes
 
-[web-crawler]
+[ecm-crawler]
 box1  ansible_host=192.168.56.101 
 
 [pipeline]
@@ -9,25 +9,17 @@ box2  ansible_host=192.168.56.102
 [text-mining]
 box3  ansible_host=192.168.56.103
 
-[ecm-crawler]
-box4  ansible_host=192.168.56.104
 
 
 # The following groups defines taget nodes for depedencies
 
 [postgresql:children]
 pipeline
-web-crawler
+ecm-crawler
 
 [zookeeper:children]
 pipeline
 
-[kafka:children]
-
-[mongodb:children]
-web-crawler
-
-[search]
 
 
 

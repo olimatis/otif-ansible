@@ -1,0 +1,12 @@
+---
+
+- hosts: zookeeper
+
+  tasks:
+
+  - name: Install Zookeeper for InfoFusion - dependency for all InfoFusion services
+    include_role:
+      name: install_zookeeper
+    tags: 'install-zookeeper'
+    when: inventory_hostname in groups['_zookeeper']
+

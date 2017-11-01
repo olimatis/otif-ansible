@@ -5,7 +5,7 @@
 #
 
 - name: check host environment
-  include: check_environment.yml
+  include_tasks: check_environment.yml
 
 - name: check if operating system is suported
   fail:
@@ -96,7 +96,7 @@
   register: oracle_java_task_set_default
 
 - name: in case there were changes, check host environment again
-  include: check_environment.yml
+  include_tasks: check_environment.yml
   when: (
           oracle_java_task_rpm_download is defined and
           not oracle_java_task_rpm_download|skipped

@@ -1,2 +1,5 @@
 ---
 # handlers file for install_mongodb
+
+- name: Restart MongoDB
+  service: name=mongod state=restarted

@@ -1,2 +1,11 @@
 ---
-# tasks file for install_mongodb
+#  install_mongodb & configure_mongod
+
+- include_tasks: install_mongod.yml
+
+
+- include_tasks: configure_mongod.yml
+
+
+
+

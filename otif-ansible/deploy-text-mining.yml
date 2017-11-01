@@ -1,0 +1,13 @@
+---
+
+- hosts: text-mining
+
+  tasks: 
+
+  - name: Deploy InfoFusion Text Mining
+    include_role:
+      name: install_text_mining
+    tags: 'install-text-mining'
+    when: inventory_hostname in groups['_text-mining']    
+
+

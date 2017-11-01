@@ -18,11 +18,11 @@
          src=hosts.j2
          dest=/etc//hosts
        notify: restart-network
-       when: overwrite == "yes"
+       when: overwrite
 
-     - name: Generating /etc/ansible hosts file if 'overwrite == yes'
+     - name: Generating /etc/ansible-hosts file (keep /etc/hosts intact)
        become: true
        template:
          src=hosts.j2
          dest=/etc/ansible-hosts
-       when: overwrite != "yes"
+       when: not overwrite

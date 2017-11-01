@@ -4,4 +4,4 @@
   tasks:
 
      - name: Check Oracle Java variables
-       include: roles/install_java/tasks/check_environment.yml
+       include_tasks: roles/install_java/tasks/check_environment.yml

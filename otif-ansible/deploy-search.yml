@@ -1,0 +1,12 @@
+---
+
+- hosts: search
+
+  tasks:
+
+  - name: Install InfoFusion Search
+    include_role:
+      name: install_search
+    tags: 'install-search'
+    when: iventory_hostname in groups['search']
+

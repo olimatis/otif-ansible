@@ -1,10 +1,10 @@
-# {{ansible_managed}}
+{{ ansible_managed | comment }}
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 {% for host in groups['all'] %}
 
-  {{hostvars[host]['ansible_' + adapter]['ipv4']['address']}}{{'  ' -}}   
+  {{hostvars[host]['ansible_' ~ adapter]['ipv4']['address']}}{{'  ' -}}   
   {{hostvars[host]['ansible_fqdn']}}{{'  ' -}}
   {%- if domain -%}
      {{hostvars[host]['ansible_hostname']}}.{{domain}}{{'  ' -}}

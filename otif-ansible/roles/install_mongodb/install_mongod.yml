@@ -1,0 +1,26 @@
+---
+# tasks file for install_mongodb
+
+
+- name: Install packages dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ mongodb_packages_dependencies | default([]) }}"
+
+- name: Add MongoDB repository
+  yum_repository:
+    name: "mongodb-org-{{ mongodb_version }}"
+    description: 'MongoDB Repository'
+    baseurl: "{{ mongodb_repo_baseurl }}"
+    gpgcheck: "{{ mongodb_repo_gpgcheck }}"
+    gpgkey: "{{ mongodb_repo_gpgkey }}"
+
+- name: Install MongoDB Packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ mongodb_packages }}"
+  notify: Restart MongoDB
+
+
