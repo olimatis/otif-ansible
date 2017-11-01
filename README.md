@@ -4,7 +4,9 @@
 
 * "Auto-pilot" mode
 
-TODO
+```
+$ ansible-playbook deploy-otif.yml -k -K
+```
 
 * Assisted mode
 

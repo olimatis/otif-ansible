@@ -110,5 +110,18 @@
   lineinfile: dest=/etc/environment state=present regexp='^JAVA_HOME'>
              line="export JAVA_HOME={{oracle_java_home}}"
 
+- name: Make sure JAVA_HOME is set
+  shell: echo $JAVA_HOME
+  register: java_home_set
+  
 - name: Source /etc/environment
-  action: shell source /etc/environment
+  shell: source /etc/environment
+  when: java_home_set.stdout == oracle_java_home
+
+- debug:
+    msg: "JAVA_HOME set to {{oracle_java_home}}"
+  when: java_home_set.stdout == oracle_java_home   
+
+- debug:
+    msg: "JAVA_HOME NOT SET to {{oracle_java_home}}"
+  when: java_home_set.stdout != oracle_java_home

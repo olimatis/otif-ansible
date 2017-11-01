@@ -1,0 +1,14 @@
+- hosts: all
+
+  tasks:
+
+  -include_role: 
+     name: install_java
+     tags: install-java
+
+  - include_role:
+      name: deploy_text_mining
+      tags: deploy-text-mining
+    
+ 
+     - { role: install_psql, tags: 'install-psql' } 

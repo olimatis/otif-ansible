@@ -1,4 +1,3 @@
-
 [web-crawler]
 192.168.56.101
 
@@ -10,5 +9,21 @@
 
 [ecm-crawler]
 192.168.56.104
+
+
+[postgresql:children]
+pipeline
+web-crawler
+
+[zookeeper:children]
+pipeline
+
+[kafka:children]
+
+[mongodb:children]
+web-crawler
+
+[search]
+
 
 

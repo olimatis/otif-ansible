@@ -1,0 +1,84 @@
+---
+
+- name: Create InfoFusion database
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: "{{psql_otif_db}}"
+    encoding: UTF-8
+    state: present
+
+- name: Create User
+  become: true
+  become_user: postgres
+  postgresql_user:
+    db: "{{psql_otif_db}}"
+    name: "{{ psql_otif_un }}"
+    password: "{{ psql_otif_pw }}"
+    priv: "{{ psql_otif_priv }}"
+    state: present
+
+- name: Ensure user does not have unnecessary privilege
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: "{{ psql_otif_un }}"
+    role_attr_flags: NOSUPERUSER,NOCREATEDB
+    state: present   
+
+- name: Ensure no other user can access the database
+  become: true
+  become_user: postgres
+  postgresql_privs: 
+    db: "{{ psql_otif_db }}"
+    role: PUBLIC 
+    type: database
+    priv: ALL
+    state: absent
+
+- name: Set password for postgres user
+  become: true
+  become_user: postgres
+  postgresql_user:
+    user: postgres
+    password: "{{ psql_admin_pw }}"
+
+- name: Update PostgreSQL configuration
+  block:
+
+    - name: Copies correct PostgreSQL config file over - This change auteentication type to md5
+      become: true
+      copy:
+        src: pg_hba.conf
+        dest: "/var/lib/pgsql/{{maj_version}}.{{min_version}}/data/pg_hba.conf"
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+
+    - name: Listen from all addresses
+      become: true
+      lineinfile:
+        dest: "{{ psql_config }}"
+        regexp: "^#?listen_addresses"
+        line: "listen_addresses ='*'"
+      notify: Restart PostgreSQL
+  
+  when: update_config
+
+- name: Set port to "{{psql_port}}"
+  become: true
+  lineinfile:
+    dest: "{{ psql_config }}"
+    regexp: "^#?port "
+    line: "port ='{{psql_port}}'"
+  notify: Restart PostgreSQL
+
+- name: Open port "{{psql_port}}"
+  become: true
+  firewalld:
+    zone: public
+    port: "{{psql_port}}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled

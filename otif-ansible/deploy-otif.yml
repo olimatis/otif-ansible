@@ -1,4 +1,76 @@
-- hosts: text-mining
-  roles: 
-     - { role: install_java, tags: 'install-java' }
-     - { role: deploy_text_mining, tags: 'deploy-text-mining' } 
+---
+
+- hosts: all
+
+  tasks:
+  
+  # The follwoing roles manage deployement of dependencies
+
+    - name: Install Oracle java - dependency for InfoFusion Text Mining 
+      include_role:
+        name: install_java
+      tags: 'install-java'
+      when: inventory_hostname in groups['text-mining']
+  
+    - name: Install PostgreSQL - dependency for InfoFusion Ingestion Pipeline & InfoFusion Crawler for Web & Social Media
+      include_role:
+        name: install_psql
+      tags: 'install-psql'
+      when: inventory_hostname in groups['postgresql']
+
+    - name: Install MongoDB - dependency form InfoFusion Crawler for Web
+      include_role:
+        name: install_mongodb
+      tags: 'install-mongodb'
+      when: inventory_hostname in groups['_mogodb']
+
+    - name: Install Apache Kafka - dependency for InfoFusion Web Crawler for Web & Social Media
+      include_role:
+        name: install_kafka
+      tags: 'install-kafka'
+      when: inventory_hostname in groups['_kafka']
+
+    # The following roles manage deployement of InfoFusion services
+
+    - name: Install Zookeeper for InfoFusion - dependency for all InfoFusion services
+      include_role:
+        name: install_zookeeper
+      tags: 'install-zookeeper'
+      when: inventory_hostname in groups['_zookeeper']
+
+    - name: Deploy InfoFusion Text Mining
+      include_role:
+        name: install_text_mining
+      tags: 'install-text-mining'
+      when: inventory_hostname in groups['_text-mining']    
+
+    - name: Depploy InfoFusion Ingestion Pipeline
+      include_role:
+        name: install_pipeline
+      tags: 'install-pipeline'
+      when: inventory_hostname in groups['_pipeline']
+
+    - name: Install InfoFusion Crawler for Web & Social Media
+      include_role:
+        name: install_web_crawler
+      tags: 'install-web-crawler'
+      when: inventory_hostname in groups['_web-crawler']
+
+    - name: Install InfoFusion Crawler for ECM
+      include_role:
+        name: install_ecm_crawler
+      tags: 'install-ecm-crawler'
+      when: inventory_hostname in groups['_ecm-crawler']
+
+    - name: Install InfoFusion Conversion Service
+      include_role:
+        name: install_conversion_service
+      tags: 'install-conversion-service'
+      when: inventory_hostname in groups['_ecm-crawler']
+
+    - name: Install InfoFusion Search
+      include_role:
+        name: install_search
+      tags: 'install-search'
+      when: iventory_hostname in groups['search']
+

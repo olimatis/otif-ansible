@@ -1,0 +1,6 @@
+---
+# handlers file for install_psql
+
+- name: Restart PostgreSQL
+  become: true
+  service: name={{ psql_service_name }} state=restarted

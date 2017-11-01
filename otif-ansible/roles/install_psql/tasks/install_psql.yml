@@ -1,0 +1,56 @@
+---
+
+- name: Remove PostgreSQL if already installed
+  block:
+
+    - name: Uninstall the packages
+      become: true
+      yum:
+        name: "{{item}}"
+        state: absent
+      with_items:
+        - "postgresql{{maj_version}}{{min_version}}-server"
+        - "postgresql{{maj_version}}{{min_version}}-contrib"
+
+    - name: Remove data folder
+      become: true
+      file:
+        state: absent
+        path: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/
+
+  when: remove_psql 
+
+- name: Install prerequisites
+  become: true
+  yum: name={{ item }} state=latest
+  with_items:
+    - python-psycopg2
+
+- name: Install PostgreSQL RPM for Centos7 - flavor pgdg
+  become: true
+  yum:
+    name: "https://download.postgresql.org/pub/repos/yum/{{maj_version}}.{{min_version}}/redhat/rhel-7-x86_64/pgdg-centos{{maj_version}}{{min_version}}-{{maj_version}}.{{min_version}}-{{item}}.noarch.rpm"
+    state: present
+  with_items: [ "{{ psql_rpm_release }}" ]
+
+- name: Install PostgreSQL
+  become: true
+  yum:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - "postgresql{{maj_version}}{{min_version}}-server"
+    - "postgresql{{maj_version}}{{min_version}}-contrib"
+  register: installed_psql
+
+- name: Intialize PostgreSQL DB
+  command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb"
+  become: true
+  when: installed_psql.changed
+
+- name: Enable and Start PostgreSQL
+  become: true
+  service:
+    name: "postgresql-{{maj_version}}.{{min_version}}"
+    state: started
+    enabled: yes
