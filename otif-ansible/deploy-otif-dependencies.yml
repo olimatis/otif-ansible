@@ -22,7 +22,7 @@
       include_role:
         name: install_mongodb
       tags: [ 'install-mongodb', 'dependencies' ]
-      when: inventory_hostname in groups[mongodb']
+      when: inventory_hostname in groups['mongodb']
 
     - name: Install Apache Kafka - dependency for InfoFusion Web Crawler for Web & Social Media
       include_role:

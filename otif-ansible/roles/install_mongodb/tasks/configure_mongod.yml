@@ -1,3 +1,74 @@
 ---
+# Tasks for configuration of MongoDB
+
+- name: Configuration tasks for MongoDB
+  block:
+
+   - include_tasks: restart_mongodb.yml
+ 
+   - name: Set authentication for admin user
+     mongodb_user:
+       database: admin
+       name: "{{ mongodb_user }}"
+       password: "{{ mongodb_pw }}"
+       update_password: on_create
+       roles: root
+       state: present
+
+   - name: Set MongoDB to listen on all interface"
+     become: true
+     lineinfile:
+       dest: "{{ mongodb_config }}"
+       regexp: "^[ ]*bindIp:"
+       line: "#  bindIp: 127.0.0.1 # Ansible commented this line to enable remote conection."
+
+   - name: Set MongoDB to listen on port "{{ mongodb_port }}"
+     become: true
+     lineinfile:
+       dest: "{{ mongodb_config }}"
+       regexp: "^#?[ ]*port:"
+       line: "  port: {{mongodb_port }} # The playbook will make sure this port is opened."
+
+   - name: Open port "{{mongodb_port}}" for MongoDB
+     become: true
+     firewalld:
+       zone: public
+       port: "{{mongodb_port}}/tcp"
+       permanent: true
+       immediate: true
+       state: enabled
+
+   - name: Enable security.authorization for MongoDB
+     become: true
+     lineinfile:
+       dest: "{{ mongodb_config }}"
+       regexp: "^#security:"
+       line: "#security:\nsecurity.authorization: enabled"
+     notify: Restart MongoDB
+
+   - name: Create database for InfoFusion
+     mongodb_user:
+       login_user: "{{ mongodb_user }}"
+       login_password: "{{ mongodb_pw }}"
+       login_database: admin
+       database: "{{ mongodb_database }}"
+       name: "{{ mongodb_user }}"
+       password: "{{ mongodb_pw }}"
+       update_password: on_create
+       roles: dbOwner
+       state: present
+
+
+   - name:
+     vars:
+       msg: |
+            You can now to use the mongo shell with:
+            'mongo infofusion -u otif-admin -p 0t1f-adm1n'
+            Then '> use infofusion'
+     debug:
+       msg: "{{ msg.split('\n') }}"
+
+  when: inventory_hostname in groups['mongodb']
+
 
 

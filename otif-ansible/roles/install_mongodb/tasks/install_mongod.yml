@@ -1,0 +1,63 @@
+---
+# tasks file for install_mongodb
+
+- name: Installation tasks for MongoDB
+  block:
+
+    - name: Make sure MongoDB is not already running
+      become: true
+      service:
+        name: mongod
+        state: stopped
+
+    - name: Uninstall the packages
+      become: true
+      yum:
+        name: "{{item}}"
+        state: absent
+      with_items: "{{ mongodb_packages }}*"
+      when: remove_mongodb
+
+    - name: Remove data & log folders
+      become: true
+      file:
+        state: absent
+        path: "{{ item }}"
+      with_items:
+        - "/var/log/mongodb"
+        - "/var/lib/mongo"
+        - "/etc/mongod.conf"
+      when: remove_mongodb_data 
+
+    - name: Install packages dependencies
+      become: true
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ mongodb_packages_dependencies | default([]) }}"
+
+    - name: Install pymongo dependency
+      become: true
+      easy_install:
+       name: pymongo
+       state: latest
+  
+    - name: Add MongoDB repository
+      become: true
+      yum_repository:
+        name: "mongodb-org-{{ mongodb_version }}"
+        description: 'MongoDB Repository'
+        baseurl: "{{ mongodb_repo_baseurl }}"
+        gpgcheck: "{{ mongodb_repo_gpgcheck }}"
+        gpgkey: "{{ mongodb_repo_gpgkey }}"
+
+    - name: Install MongoDB Packages
+      become: true
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ mongodb_packages }}"
+  
+  when: inventory_hostname in groups['mongodb']
+ 
+
