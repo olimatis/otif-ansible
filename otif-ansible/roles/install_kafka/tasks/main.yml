@@ -1,2 +1,9 @@
 ---
 # tasks file for install_kafka
+
+- name: Install Apache Kafka
+  include_tasks: install_kafka.yml
+
+- name: Configure Apache Kafka
+  include_tasks: configure_kafka.yml
+

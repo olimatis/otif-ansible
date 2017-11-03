@@ -1,2 +1,5 @@
 ---
 # vars file for install_kafka
+
+
+kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz"

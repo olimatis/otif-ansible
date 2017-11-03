@@ -1,0 +1,5 @@
+# Global variables
+
+playbook_user: "{{ lookup('env','USER') }}" 
+download_folder: "{{ lookup('env','HOME') }}/otif-packages"
+

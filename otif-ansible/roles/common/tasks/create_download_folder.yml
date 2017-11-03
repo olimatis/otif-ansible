@@ -1,0 +1,11 @@
+---
+# tasks file for common
+# All variables refered here should be globally defined
+# under the inventory host_vars or group_vars folders
+
+- name: Make sure download folder exists
+  file:
+    path: "{{ download_folder }}"
+    state: directory
+    owner: "{{ playbook_user }}"
+    group: "{{ playbook_user }}"

@@ -10,7 +10,7 @@
       include_role:
         name: install_java
       tags: [ 'install-java', 'dependencies' ]
-      when: inventory_hostname in groups['text-mining']
+      when: inventory_hostname in groups['java']
   
     - name: Install PostgreSQL - dependency for InfoFusion Ingestion Pipeline & InfoFusion Crawler for Web & Social Media
       include_role:
@@ -28,6 +28,6 @@
       include_role:
         name: install_kafka
       tags: [ 'install-kafka', 'dependencies' ]
-      when: inventory_hostname in groups['_kafka']
+      when: inventory_hostname in groups['kafka']
 
 

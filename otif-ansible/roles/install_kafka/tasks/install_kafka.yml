@@ -1,0 +1,65 @@
+---
+
+- name: Make sure download folder exists
+  include_role: 
+    name: common
+    tasks_from: create_download_folder.yml
+
+- name: Delete existing download 
+  file:
+    path: "{{ download_folder }}/{{ kafka_package_url | basename}}"
+    state: absent
+ 
+- name: Download Kafka package
+  get_url:
+    url: "{{ kafka_package_url }}"
+    dest: "{{ download_folder }}"
+    owner: "{{ playbook_user }}"
+    group: "{{ playbook_user }}"
+  register: kafka_package
+
+- name: Create a group for Kafka user
+  group:
+    name: kafka
+    state: present
+
+- name: Create user that will run Kafka deamon
+  user:
+    name: kafka
+    group: kafka
+    comment: "This user manages Kafka deamon"    
+
+- name: Extract Kafka from the package
+  unarchive:
+    src: "{{ kafka_package.dest }}"
+    dest: "/opt"
+    owner: kafka
+    group: kafka
+    
+
+- name: Create a link for the Kafka install folder
+  file:
+    src: "/opt/{{ kafka_package.dest | basename | regex_replace('\\.[^.]+$') }}"
+    dest: "/opt/kafka"
+    state: link
+    owner: kafka
+    group: kafka
+
+- name: Create working folder for Kafka & embedded Zookeeper
+  file:
+    path: "{{ item }}"
+    owner: kafka
+    group: kafka
+    state: directory
+  with_items:
+    - "/var/lib/zookeeper"
+    - "/var/lib/kafka"  
+    
+
+
+
+
+
+
+
+

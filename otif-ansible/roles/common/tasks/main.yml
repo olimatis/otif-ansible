@@ -1,0 +1,5 @@
+---
+# tasks file for common
+# All variables refered here should be globally defined
+# under the inventory host_vars or group_vars folders
+
