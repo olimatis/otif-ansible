@@ -55,11 +55,60 @@
     - "/var/lib/zookeeper"
     - "/var/lib/kafka"  
     
+- name: Set Zookeeper working dir
+  become: true
+  lineinfile:
+    dest: /opt/kafka/config/zookeeper.properties
+    regexp: "^#?dataDir="
+    line: "dataDir=/var/lib/zookeeper"
 
+- name: Create service for Zookeeper
+  copy:
+    src: zookeeper.service
+    dest: /etc/systemd/system/zookeeper.service
+    backup: yes
 
+- name: start Zookeeper service
+  systemd:
+   state: started
+   daemon_reload: yes
+   enabled: yes
+   name: zookeeper
 
+- name: Wait Zookeeper port 2181 is listening
+  wait_for:
+    host: "127.0.0.1"
+    port: "2181"
+    delay: 5
+    state: started
 
+- name: Configure kafka
+  become: true
+  lineinfile:
+    dest: /opt/kafka/config/server.properties
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#?listeners=", line: "listeners=PLAINTEXT://0.0.0.0:9092" }
+    - { regexp: "^#?log.dirs=", line: "log.dirs=/var/lib/kafka/kafka-logs" }
 
+- name: Create service for Kafka
+  copy:
+    src: kafka.service
+    dest: /etc/systemd/system/kafka.service
+    backup: yes
 
+- name: start Kafka service
+  systemd:
+   state: started
+   daemon_reload: yes
+   enabled: yes
+   name: kafka
 
+- name: Wait Kafka port 9092 is listening
+  wait_for:
+    host: "127.0.0.1"
+    port: "9092"
+    delay: 5
+    state: started
 

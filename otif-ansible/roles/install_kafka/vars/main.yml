@@ -1,5 +1,12 @@
 ---
 # vars file for install_kafka
 
+# Note: this vars is part of role 'install_kafka'
+#        
 
 kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz"
+
+# Both Kafka are setup to run on their default ports. Role would need to be changed
+# to used the commented variable below if custom ports are needed.
+#kafka_port: 9092
+#zookeeper_port: 2181
