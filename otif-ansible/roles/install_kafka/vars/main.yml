@@ -10,3 +10,7 @@ kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10
 # to used the commented variable below if custom ports are needed.
 #kafka_port: 9092
 #zookeeper_port: 2181
+
+
+# Remove existing Kafka
+remove_kafka: true

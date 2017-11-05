@@ -13,8 +13,10 @@ psql_rpm_release: 3
 
 # Remove existing PostgreSQL 
 remove_psql: true
+
 # Change PostgreSQL config to allow remote connections and enable authentication using md5
 update_config: yes
+
 #Path for psql config file
 psql_config: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/postgresql.conf
 

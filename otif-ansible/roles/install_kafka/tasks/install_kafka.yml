@@ -5,11 +5,32 @@
     name: common
     tasks_from: create_download_folder.yml
 
-- name: Delete existing download 
-  file:
-    path: "{{ download_folder }}/{{ kafka_package_url | basename}}"
-    state: absent
- 
+- name: Make sure Kafka and Zookeeper are not already running
+  systemd:
+    state: stopped
+    name: "{{ item.name }}"
+  with_items:
+    - { name: zookeeper }
+    - { name: kafka }
+
+- name: delete existing instalation
+  block:
+
+    - name: Delete existing download 
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ download_folder }}/{{ kafka_package_url | basename}}"
+        - "/opt/kafka"
+        - "/opt/{{  kafka_package_url | basename | regex_replace('\\.[^.]+$') }}"
+        - "/var/lib/zookeeper"
+        - "/var/lib/kafka"
+        - "/etc/systemd/system/zookeeper.service"        
+        - "/etc/systemd/system/kafka.service"
+
+  when: remove_kafka
+
 - name: Download Kafka package
   get_url:
     url: "{{ kafka_package_url }}"
