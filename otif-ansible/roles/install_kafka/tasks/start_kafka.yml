@@ -1,0 +1,24 @@
+---
+
+- name: start Kafka and Zookeeper services
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: zookeeper }
+    - { name: kafka }
+
+- name: Wait Zookeeper port 2181 and Kafka on port 9092 is listening
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item.port }}"
+    delay: 5
+    state: started
+  with_items:
+    - { port: 2181 }
+    - { port: 9092 }
+
+
+
