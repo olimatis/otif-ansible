@@ -4,7 +4,7 @@
 
 {% for host in groups['all'] %}
 
-  {{hostvars[host]['ansible_' ~ adapter]['ipv4']['address']}}{{'  ' -}}   
+  {{hostvars[host]['ansible_' ~ network_interface]['ipv4']['address']}}{{'  ' -}}   
   {{hostvars[host]['ansible_fqdn']}}{{'  ' -}}
   {%- if domain -%}
      {{hostvars[host]['ansible_hostname']}}.{{domain}}{{'  ' -}}

@@ -1,1 +1,49 @@
 ---
+
+- name: Create working folder for Kafka & embedded Zookeeper
+  file:
+    path: "{{ item }}"
+    owner: kafka
+    group: kafka
+    state: directory
+  with_items:
+    - "/var/lib/zookeeper"
+    - "/var/lib/kafka"
+
+- name: Set Zookeeper working dir
+  become: true
+  lineinfile:
+    dest: /opt/kafka/config/zookeeper.properties
+    regexp: "^#?dataDir="
+    line: "dataDir=/var/lib/zookeeper"
+
+- name: Configure Kafka
+  become: true
+  lineinfile:
+    dest: /opt/kafka/config/server.properties
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#?listeners=", line: "listeners=PLAINTEXT://0.0.0.0:9092" }
+    - { regexp: "^#?log.dirs=", line: "log.dirs=/var/lib/kafka/kafka-logs" }
+
+- name: Create services for Kafka and Zookeeper
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    backup: yes
+  with_items:
+    - { src: zookeeper.service, dest: /etc/systemd/system/zookeeper.service }
+    - { src: kafka.service, dest: /etc/systemd/system/kafka.service }
+
+- name: Open port 2181 and 9092
+  become: true
+  firewalld:
+    zone: public
+    port: "{{item}}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - 2181
+    - 9092

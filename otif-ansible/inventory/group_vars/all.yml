@@ -1,5 +1,14 @@
 # Global variables
 
-playbook_user: "{{ lookup('env','USER') }}" 
+# Default domain
+domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
+
+#Default Network Adapter
+network_interface: "enp0s3"
+
+# User running the playbooks
+playbook_user: "{{ lookup('env','USER') }}"
+
+# Location where to download/find the packages (wget) 
 download_folder: "{{ lookup('env','HOME') }}/otif-packages"
 

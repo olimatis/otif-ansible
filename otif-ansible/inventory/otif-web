@@ -12,6 +12,10 @@ box3  ansible_host=192.168.56.103
 
 # The following groups defines taget nodes for depedencies
 
+[java:children]
+text-mining
+kafka
+
 [postgresql:children]
 pipeline
 web-crawler
