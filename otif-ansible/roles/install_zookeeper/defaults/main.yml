@@ -1,2 +1,5 @@
 ---
 # defaults file for install_zookeeper
+
+
+USER_INSTALL_DIR: /opt/infofusion-16.2/zookeeper

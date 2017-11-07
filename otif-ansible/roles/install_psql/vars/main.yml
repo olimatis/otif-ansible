@@ -1,35 +1,9 @@
 ---
 # vars file for install_psql
 
-# Install PostgreSQL 9.6 by default
-maj_version: 9
-min_version: 6
-
 psql_service_name: postgresql-{{maj_version}}.{{min_version}}
-
-
-# use RPM release 3 (9.6-3)
-psql_rpm_release: 3
-
-# Remove existing PostgreSQL 
-remove_psql: true
-
-# Change PostgreSQL config to allow remote connections and enable authentication using md5
-update_config: yes
 
 #Path for psql config file
 psql_config: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/postgresql.conf
 
 
-# Pawword for postrges user
-psql_admin_pw: psql-admin
-
-# Default DB, user and pw
-psql_otif_db: infofusion
-psql_otif_un: otif-admin
-psql_otif_pw: 1nf0fus10n
-# Set default privileges for the otif admin user
-psql_otif_priv: ALL
-
-# Default port to use
-psql_port: 5432

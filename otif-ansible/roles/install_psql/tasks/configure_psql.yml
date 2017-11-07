@@ -46,7 +46,7 @@
 - name: Update PostgreSQL configuration
   block:
 
-    - name: Copies correct PostgreSQL config file over - This change auteentication type to md5
+    - name: Copies correct PostgreSQL config file over - This change autentication type to md5
       become: true
       copy:
         src: pg_hba.conf
@@ -82,3 +82,19 @@
     permanent: true
     immediate: true
     state: enabled
+
+- name: Create .pgpass file
+  template:
+    src: pgpass.j2
+    dest: "{{ playbook_user_home }}/.pgpass"
+  when: create_pgpass
+
+- name: Set permission of .pgpass
+  file:
+    path: "{{ playbook_user_home }}/.pgpass"
+    state: touch
+    mode: 0600
+    owner: "{{ playbook_user }}"
+    group: "{{ playbook_user }}"
+
+

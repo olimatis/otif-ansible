@@ -1,2 +1,15 @@
 ---
 # defaults file for install_pipeline
+
+
+USER_INSTALL_DIR: /opt/infofusion-16.2/pipeline
+REGISTRY_ZK_URL=otif-pipeline.opentext.net:2181
+DB_HOST=otif-pipeline.opentext.net:5432
+DB_NAME: {{ psql_otif_db }}
+DB_USER: {{ psql_otif_un }}
+
+KAFKA_URL=otif-crawler.opentext.net:9092
+MONGO_URL=otif-crawler.opentext.net:27017
+MONGO_DB_NAME=magellan_tracker
+MONGO_USER=tracker
+
