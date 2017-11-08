@@ -14,9 +14,9 @@ psql_rpm_release: 3
 psql_admin_pw: psql-admin
 
 # Default DB, user and pw
-psql_otif_db: infofusion
-psql_otif_un: otif-admin
-psql_otif_pw: 0t1f-adm1n
+psql_otif_db: "{{ master_dbname }}"
+psql_otif_un: "{{ master_username }}"
+psql_otif_pw: "{{ master_password }}"
 # Set default privileges for the otif admin user
 psql_otif_priv: ALL
 

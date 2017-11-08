@@ -8,5 +8,5 @@
     include_role:
       name: install_zookeeper
     tags: 'install-zookeeper'
-    when: inventory_hostname in groups['_zookeeper']
+    when: inventory_hostname in groups['zookeeper']
 

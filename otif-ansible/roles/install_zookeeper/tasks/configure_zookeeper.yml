@@ -1,0 +1,13 @@
+---
+# tasks file for install_zookeeper
+
+- name: Openport 2181 used by Zookeeper service
+  become: true
+  firewalld:
+    zone: public
+    port: "{{ item}}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - "2181" 

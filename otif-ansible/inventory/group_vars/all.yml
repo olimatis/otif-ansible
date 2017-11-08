@@ -15,3 +15,9 @@ playbook_user_home: "{{ lookup('env','HOME') }}"
 # Location where to download/find the packages (wget) 
 download_folder: "{{ lookup('env','HOME') }}/otif-packages"
 
+# Master db name, username and password
+# Use these as global defults for db names, username and password.
+master_dbname: infofusion
+master_username: otif-admin
+master_password: 0t1f-adm1n
+

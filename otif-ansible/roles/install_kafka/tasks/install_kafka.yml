@@ -13,7 +13,7 @@
     - { name: zookeeper }
     - { name: kafka }
 
-- name: delete existing instalation
+- name: Remove existing instalation
   block:
 
     - name: Delete existing download 
