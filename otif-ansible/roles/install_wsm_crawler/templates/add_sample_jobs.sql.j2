@@ -1,0 +1,9 @@
+
+INSERT INTO public.job_group(job_group_name) VALUES ('TestGroup');
+INSERT INTO public.job(job_id, crawl_job_name, description, crawler_subtype,status,search_text, job_group_name) VALUES (1, 'Sample Twitter Crawling Job', 'This is a sample Twitter crawling job.', 'Twitter Search', 'Unscheduled, '{"criteria":{"type":"twitter_search","words":{"include_all_these":["opentext"],"include_any_of_these":[],"not_include_these":[],"include_these_hashtags":[],"exact_phrase":null},"dates":null,"language":null,"surrounding_to":null,"people":null,"others":{"positive":false,"negative":false,"question":false,"include_retweets":false,"result_type":"mixed"}}}', 'TestGroup');
+INSERT INTO public.job(job_id, crawl_job_name, description, crawler_subtype,status,search_text, job_group_name) VALUES (2, 'Sample Web Crawling Job', 'This is a sample Web crawling job.', 'Nutch', 'Unscheduled', '{"numberOfCycles":2,"batchSize":5,"configuration":{},"urls":["https://www.opentext.com/who-we-are/press-releases"],"url_filters":[{"expression":"https://www.opentext.com/who-we-are/press-releases*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}]}', 'TestGroup');
+
+
+
+
+

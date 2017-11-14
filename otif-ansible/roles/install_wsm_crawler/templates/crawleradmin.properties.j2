@@ -1,0 +1,76 @@
+#-----------------------------------------------------------------------------
+# The properties related to persistence layer.
+#-----------------------------------------------------------------------------
+crawleradmin.db.provider=postgresql
+crawleradmin.db.host={{ wsm_crawler_fqdn }}
+crawleradmin.db.port=5432
+crawleradmin.db.database={{ master_dbname }}
+crawleradmin.db.schema=public
+crawleradmin.db.user={{ master_username }}
+crawleradmin.db.password={{ master_password }}
+
+crawler.db.max.active.connections=10
+crawler.db.max.idle.connections=5
+crawler.db.max.wait.time.millisecs=10000
+crawler.db.validation.query=SELECT 1
+
+#----------------------------------------------------------------------
+#			Job Execution Log Info
+#----------------------------------------------------------------------
+#This property is used to specify the type of status persisted to job_execution_info table
+#job execution log level can be set to 3 LEVELS. LEVEL1, LEVEL2 & LEVEL3.
+# LEVEL3 will log statuses: RUNNING, ABORTED, FAILED & COMPLETED
+# LEVEL2 will log statuses: ABORTED, FAILED & COMPLETED
+# LEVEL1 will log statuses: FAILED & COMPLETED
+#default level is LEVEL2. Please adjust as per choice.
+crawler.db.execution.log.info.level=LEVEL2
+
+
+#-----------------------------------------------------------------------------
+# The properties related to Quartz Scheduler
+#-----------------------------------------------------------------------------
+org.quartz.scheduler.instanceName = CrawlerScheduler
+org.quartz.scheduler.instanceId = AUTO
+org.quartz.scheduler.skipUpdateCheck = true
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 100
+org.quartz.threadPool.threadPriority = 5
+org.quartz.jobStore.useProperties=false
+org.quartz.jobStore.tablePrefix=QRTZ_
+org.quartz.jobStore.isClustered=false
+org.quartz.jobStore.misfireThreshold = 60000
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.dataSource.ds.maxConnections = 10
+
+#-----------------------------------------------------------------------------------
+#Service discovery library related properties
+#-----------------------------------------------------------------------------------
+crawleradmin.servicediscovery.zookeeper.ensembleurl={{ zookeeper_fqdn }}:2181
+crawleradmin.servicediscovery.instance.downpolicy.timeout=600000
+crawleradmin.servicediscovery.instance.downpolicy.threshold=1
+crawleradmin.servicediscovery.instance.slow.timeout=600000
+crawleradmin.servicediscovery.instance.slow.errorthreshold=1
+crawleradmin.servicediscovery.instance.slow.successthreshold=2
+
+#-----------------------------------------------------------------------------------
+# Configuration for crawler & email
+#-----------------------------------------------------------------------------------
+job.status.heartbeat.time=15000
+com.opentext.crawler.authenticator=com.opentext.infofusion.crawlers.admin.authenticators.SQLAuthenticator
+com.opentext.crawler.authentication.cookie.age=360000
+com.opentext.crawlers.authentication.token.secret=S3cr3tUn1d3ntif1@ble
+com.opentext.crawlers.authentication.token.issuer=OTIFCrawlerAdmin
+com.opentext.encryption.scheme=SHA-512
+com.opentext.encryption.salt=MAGELLA-OT
+com.opentext.crawlers.secret.key=OpenText123$
+com.opentext.crawler.admin.email=mbrousse@opentext.com
+#com.opentext.crawler.sender.email=crawlertest123@gmail.com
+#com.opentext.crawler.sender.email.password=crawlertest123$
+#com.opentext.crawler.sender.email=
+#com.opentext.crawler.sender.email.password=
+com.opentext.smtp.host=smtp-na.opentext.com
+com.opentext.smtp.port=25
+com.opentext.admin.crawler.connection.attempts=3
+com.opentext.admin.crawler.connection.attempt.msecs=30000
+com.opentext.admin.sdl.retryonslow.count=10
+

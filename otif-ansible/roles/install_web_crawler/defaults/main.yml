@@ -1,4 +1,0 @@
----
-# defaults file for install_web_crawler
-
-USER_INSTALL_DIR: /opt/infofusion-16.2/web-crawler

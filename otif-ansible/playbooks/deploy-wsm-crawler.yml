@@ -1,0 +1,13 @@
+---
+
+- hosts: wsm-crawler
+
+  tasks:
+
+  - name: Install InfoFusion Crawler for Web & Social Media
+    include_role:
+      name: install_wsm_crawler
+    tags: 'install-wsm-crawler'
+    when: inventory_hostname in groups['wsm-crawler']
+
+

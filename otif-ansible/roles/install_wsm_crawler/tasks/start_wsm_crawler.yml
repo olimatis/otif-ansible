@@ -1,0 +1,32 @@
+---
+# tasks file for start_web_crawler
+
+#- name: Start Crawler for Web & Social Media service
+#  command: "{{ USER_INSTALL_DIR }}/bin/otif.sh start"  
+#  register: start_wsm_crawler
+
+#- debug:
+#    msg: "{{ start_wsm_crawler.stdout_lines }}"
+
+- name: Enable service for Web & Social Media service
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-wsm-crawler-1 }
+
+
+- name: Wait Crawler for Web & Social Media to be listening on port 10010
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item }}"
+    delay: 5
+    state: started
+  with_items:
+    - "10010"
+
+- debug:
+    msg: "Test by accessing http:\\{{wsm_crawler_fqdn}}:10010. You should get the loggin screen."
+

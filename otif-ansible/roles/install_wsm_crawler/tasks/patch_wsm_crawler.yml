@@ -1,0 +1,89 @@
+---
+
+#- name: Stop Crawler for Web & Social Media service
+#  command: "{{ USER_INSTALL_DIR }}/bin/otif.sh stop"
+
+- name: Patch appenv.sh to set DAEMON_USER
+  template:
+    src: appenv.sh.j2
+    dest: "{{ USER_INSTALL_DIR }}/crawler-web/bin/appenv.sh"
+
+- name: Patch gora.properties to set MongoDB connectivity
+  template:
+    src: gora.properties.j2
+    dest: "{{ USER_INSTALL_DIR }}/crawler-web/conf/gora.properties"
+
+- name: Patch nuch-site.xml to set Kafka producer settings
+  template:
+    src: nutch-site.xml.j2
+    dest: "{{ USER_INSTALL_DIR }}/crawler-web/conf/nutch-site.xml"
+
+- name: Patch wrapper.conf to set missing port for Nutch service
+  template:
+    src: wrapper.conf.j2
+    dest: "{{ USER_INSTALL_DIR }}/crawler-web/conf/wrapper.conf"
+
+- name: Patch crawler-registration.xml for missing settings
+  template:
+    src: crawler-registration.xml.j2
+    dest: "{{ USER_INSTALL_DIR }}/etc/crawler-registration.xml"
+
+- name: Patch otif-system.properties to set missing crawler.daemon.user
+  template:
+    src: otif-system.properties.j2
+    dest: "{{ USER_INSTALL_DIR }}/etc/otif-system.properties"
+
+- name: Patch StartCrawler.html for missing Tomcat port
+  template:
+    src: StartCrawler.html.j2
+    dest: "{{ USER_INSTALL_DIR }}/rc/StartCrawler.html"
+
+- name: Patch crawleradmin.properties for missing db and zk settings
+  template: 
+    src: crawleradmin.properties.j2
+    dest: "{{ USER_INSTALL_DIR }}/etc/crawleradmin.properties"
+
+- name: Patch otif-crawler.properties for missing SDL properties
+  template:
+    src: otif-crawler.properties.j2
+    dest: "{{ USER_INSTALL_DIR }}/etc/otif-crawler.properties"
+
+- name: Patch server.xml for missing Tomcat ports
+  template:
+    src: server.xml.j2
+    dest: "{{ USER_INSTALL_DIR }}/conf/server.xml"
+
+- name: Patch webapps directory for missing webapps/crawlers-admin directory & files
+  unarchive:
+    src: webapps-crawlers-admin.zip
+    dest:  "{{ USER_INSTALL_DIR }}/webapps"
+
+- name: Patch webapps directory for missing webapps/ROOT directory & files
+  unarchive:
+    src: webapps-ROOT.zip
+    dest:  "{{ USER_INSTALL_DIR }}/webapps"
+
+
+- name: Patch service named where system variable for ID is used ...
+  template:
+    src: otif-wsm-crawler-1.service.j2
+    dest: /etc/systemd/system/otif-wsm-crawler-1.service
+
+- name: Patch service definition for infofusion-web-crawling-1.service
+  template:
+    src: infofusion-web-crawling-1.service.j2
+    dest: /etc/systemd/system/infofusion-web-crawling-1.service
+
+- name: Delete wrong service name (variable name still there)
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/systemd/system/otif-wsm-crawler-$INSTANCE_ID$.service"
+      
+  
+#- pause:
+#    prompt: "PATCHED!"
+
+
+

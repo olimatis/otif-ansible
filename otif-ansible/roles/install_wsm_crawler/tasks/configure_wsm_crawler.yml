@@ -1,0 +1,49 @@
+---
+# tasks file for configure_wsm_crawler
+
+
+# Add a sql query to add a Twitter key
+# Add a sql query to add a sample Twitter crawling job
+# Add a sql query to add a sample Web crawling job
+
+- name: Create query to add admin user to the database
+  template:
+    src:  "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "add_admin.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_admin.sql" }
+    - { src: "add_twitter_access_token.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_twitter_access_token.sql" }
+    - { src: "add_sample_jobs.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_sample_jobs.sql" }
+
+
+- name: Initialize the database used by InfoFusion Crawler for Web & Social Media
+  become: true
+  become_user: "{{ playbook_user }}"
+  command: "{{ item }}"
+  with_items:
+    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/otif-wsm-crawler-schema.sql" 
+    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_admin.sql" 
+    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_twitter_access_token.sql"
+    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_sample_jobs.sql"
+    
+
+- name: Open port 10100 used to access InfoFusion Crawler for Web & Social Media Admin UI
+  become: true
+  firewalld:
+    zone: public
+    port: "{{ item }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - "10010"
+
+- name: Set directory ownership for deamon user
+  file:
+    path: "{{ item }}"
+    owner: "{{ wsm_crawler_deamon_user }}"
+    group: "{{ wsm_crawler_deamon_user }}"
+    state: directory
+    recurse: true
+  with_items:
+    - "{{ USER_INSTALL_DIR }}"

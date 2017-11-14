@@ -1,6 +1,6 @@
 # The default Ansible inventory to deploy InfoFusion for Web & Social Media on 3 nodes
 
-[web-crawler]
+[wsm-crawler]
 box1  ansible_host=192.168.56.101 
 
 [pipeline]
@@ -18,16 +18,16 @@ kafka
 
 [postgresql:children]
 pipeline
-web-crawler
+wsm-crawler
 
 [zookeeper:children]
 pipeline
 
 [kafka:children]
-web-crawler
+wsm-crawler
 
 [mongodb:children]
-web-crawler
+wsm-crawler
 
 
 

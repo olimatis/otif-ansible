@@ -4,7 +4,7 @@
 - name: Make sure Zookeeper is removed if it exists
   block:
     
-    - name: Check that the somefile.conf exists
+    - name: Check if the ot-zk.service exists
       stat:
         path: /etc/systemd/system/multi-user.target.wants/ot-zk.service
       register: service_is_there
@@ -29,8 +29,10 @@
  
 - name: Install dependencies
   yum:
-    name: unzip
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - "unzip"
 
 - name: Make sure download folder exists
   include_role:

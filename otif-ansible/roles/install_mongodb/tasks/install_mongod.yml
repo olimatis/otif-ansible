@@ -9,7 +9,8 @@
       service:
         name: mongod
         state: stopped
-
+      ignore_errors: yes      
+ 
     - name: Uninstall the packages
       become: true
       yum:

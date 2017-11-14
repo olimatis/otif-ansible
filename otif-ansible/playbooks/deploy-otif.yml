@@ -16,7 +16,7 @@
 
 - import_playbook: deploy-pipeline.yml
 
-- import_playbook: deploy-web-crawler.yml
+- import_playbook: deploy-wsm-crawler.yml
 
 - import_playbook: deploy-ecm-crawler.yml
 

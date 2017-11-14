@@ -1,0 +1,44 @@
+#SDL registration parameters.
+crawler.service.zookeeper.ensemble={{ zookeeper_fqdn }}:2181
+crawler.service.name=crawler-twitter
+crawler.service.scheme=http
+crawler.service.host={{ wsm_crawler_fqdn }}
+crawler.service.port=10010
+
+crawler.service.retry.baseSleepTimeMs
+crawler.service.retry.maxRetries
+crawler.service.retry.maxSleepMs
+
+#Kafka producer properties.
+crawler.kafka.producer.client.id=twitter-crawler
+
+crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_fqdn }}:9092
+
+crawler.kafka.producer.max.in.flight.requests.per.connection=10
+crawler.kafka.producer.acks=1
+crawler.kafka.producer.retries=5
+
+#Common crawler properties
+crawler.security.authentication.enable=true
+crawler.security.authenticator=com.opentext.otif.crawler.common.authentication.BasicAuthenticator
+crawler.security.token.secret=S3cr3tUn1d3ntif1@ble
+crawler.security.token.issuer=OTIFTwitterCrawler
+crawler.security.token.age.insec=3600
+crawler.security.basic.user.username=crawlers-admin
+crawler.security.basic.user.password=OpenText123$
+
+crawler.kafka.topic.name=TopicTwitterCrawler
+
+# Twitter crawler parameters
+crawler.twitter.tweets.batch.size=1
+crawler.twitter.jobs.stream.max.load=20
+crawler.twitter.jobs.search.max.load=20
+crawler.twitter.proxy.host
+crawler.twitter.proxy.port
+crawler.twitter.proxy.user
+crawler.twitter.proxy.password
+crawler.twitter.stream.pipe.type
+crawler.twitter.authentication.type
+crawler.twitter.authentication.mode
+crawler.twitter.tweet.mode.extended
+

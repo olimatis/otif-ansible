@@ -3,6 +3,18 @@
 # Default domain
 domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
+zookeeper_host: "{{hostvars[ansible_hostname]['groups']['zookeeper'][0]}}"
+zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn']}}"
+
+wsm_crawler_host: "{{hostvars[ansible_hostname]['groups']['wsm-crawler'][0]}}"
+wsm_crawler_fqdn: "{{hostvars[wsm_crawler_host]['ansible_fqdn']}}"
+
+pipeline_host: "{{hostvars[ansible_hostname]['groups']['pipeline'][0]}}"
+pipeline_fqdn: "{{hostvars[pipeline_host]['ansible_fqdn']}}"
+
+text_mining_host: "{{hostvars[ansible_hostname]['groups']['text-mining'][0]}}"
+text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn']}}"
+
 #Default Network Adapter
 network_interface: "enp0s3"
 
