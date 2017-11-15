@@ -1,7 +1,7 @@
 ---
 # defaults file for install_kafka
 
-
+#URL for the Kafka package to use
 kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz"
 
 # Both Kafka are setup to run on their default ports. Role would need to be changed
@@ -11,4 +11,4 @@ kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10
 
 
 # Remove existing Kafka
-remove_kafka: true
+remove_kafka: True

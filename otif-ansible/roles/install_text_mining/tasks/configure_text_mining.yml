@@ -1,0 +1,37 @@
+---
+
+
+- name: Install license key file (etc/tme.license)
+  copy:
+    src: tme.license
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.license"
+    owner: "{{ master_username }}"
+    group: "{{ master_username }}"
+    mode: 0774
+    backup: yes
+
+- name: patch tme script to run on CentoOS
+  become: true
+  lineinfile:
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/bin/tme"
+    regexp: '^[ ]*JAVA_HOME=(.*)$'
+    line: '#JAVA_HOME=\1'
+    backrefs: true
+
+- name: Create services for Text Mining Engine
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: otif-text-mining.service.j2, dest: /etc/systemd/system/otif-text-mining.service }
+
+- name: Open port 40002
+  become: true
+  firewalld:
+    zone: public
+    port: "{{item}}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - 40002

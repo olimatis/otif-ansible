@@ -1,0 +1,100 @@
+---
+# tasks file for install_text_mining
+
+#- name: Make sure the Text Mining Engine package is found @ "{{ download_folder }}/{{ tme_core_package }}"
+#  local_action: stat path="{{ download_folder }}/{{ tme_core_package }}"
+#  register: tme_core
+#  failed_when: tme_core.stat.exists == False
+  
+#- name: Make sure the Text Mining Engine Data is found @ "{{ download_folder }}/{{ tme_data_package }}"
+#  local_action: stat path="{{ download_folder }}/{{ tme_data_package }}"
+#  register: tme_data
+#  failed_when: tme_data.stat.exists == False
+
+- name: Create a group for admin user
+  group:
+    name: "{{ master_username }}"
+    state: present
+
+- name: Create a user that will run TME deamon
+  user:
+    name: "{{ master_username }}"
+    group: "{{ master_username }}"
+    comment: "This user manages InfoFusion Text Mining deamon"    
+    state: present
+
+- name: Add current user to admin group
+  user:
+    name: "{{ playbook_user }}"
+    groups: "{{ master_username }}"
+    state: present
+
+- name: Install dependencies (unzip)
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "unzip"
+   
+- name: Make sure Text Mining Engine is removed if it exists
+  block:
+    
+    - name: Check if the otif-text-mining.service exists
+      stat:
+        path: /etc/systemd/system/otif-text-mining.service
+      register: service_is_there
+
+    - name: Stop service if it's there
+      systemd:
+        name: otif-text-mining
+        state: stopped
+      when: service_is_there.stat.exists == True    
+ 
+    - name: Remove service
+      file:
+        path: "/etc/systemd/system/otif-text-mining.service"
+        state: absent    
+
+    - name: Remove TME directory if it exists
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ tme_target_dir }}/{{ tme_package_basename }}"        
+
+
+  when: remove_text_mining
+
+#- pause:
+#    prompt: "Text Mining Engine should be removed if remove_text_mining is set accordingly."
+ 
+- name: Make sure target directory exists
+  file:
+    path: "{{ tme_target_dir }}"
+    state: directory
+    mode: 0744
+    owner: "{{ master_username }}"
+    group: "{{ master_username }}"
+
+
+- name: Unzip TME core (from "{{ download_folder }}/{{ tme_core_package }}" to "{{ tme_target_dir }}") 
+  unarchive:
+    src: "{{ download_folder }}/{{ tme_core_package }}"
+    dest: "{{ tme_target_dir }}"
+    keep_newer: yes
+    owner: "{{ master_username }}"
+    group: "{{ master_username }}"
+    mode: 0774
+
+- name: Unzip TME data (from "{{ download_folder }}/{{ tme_data_package }}" to "{{ tme_target_dir }}/{{ tme_package_basename }}") ... hold on it takes a while (2-10 minutes)
+  unarchive:
+    src: "{{ download_folder }}/{{ tme_data_package }}"
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}"
+    keep_newer: yes
+    owner: "{{ master_username }}"
+    group: "{{ master_username }}"
+    mode: 0774
+
+
+
+

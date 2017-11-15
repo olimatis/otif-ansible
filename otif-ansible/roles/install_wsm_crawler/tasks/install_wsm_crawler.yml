@@ -45,7 +45,7 @@
 #- pause:
 #    prompt: "Crawler for Web & Social Media should not be there!"
 
-- name: Install dependencies
+- name: Install dependencies (unzip)
   yum:
     name: "{{ item }}"
     state: latest

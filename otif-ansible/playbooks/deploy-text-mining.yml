@@ -8,6 +8,6 @@
     include_role:
       name: install_text_mining
     tags: 'install-text-mining'
-    when: inventory_hostname in groups['_text-mining']    
+    when: inventory_hostname in groups['text-mining']    
 
 

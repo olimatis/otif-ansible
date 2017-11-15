@@ -1,0 +1,30 @@
+---
+
+
+- name: Start Text Mining Engine service
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-text-mining }
+
+- name: Wait Text Mining Engine for listening on port 40002 ...
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item.port }}"
+    delay: 5
+    state: started
+  with_items:
+    - { port: 40002 }
+
+- name:
+  vars:
+    msg: |
+         InfoFusion Text Mining has been deployed on {{ansible_host}}.
+         You can validate deployement by opening http://{{ansible_host}}:40002
+         Default credentials are admin/admin.
+         You can also test the REST API using a REST client like Postman.
+  debug:
+    msg: "{{ msg.split('\n') }}"  

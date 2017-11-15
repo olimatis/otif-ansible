@@ -1,0 +1,10 @@
+---
+
+tme_core_package: "tme-16.2.0.0-bin.zip"
+tme_data_package: "tme-16.2.0.0-data.zip"
+tme_target_dir: "/opt/infofusion-16.2"
+
+#tme_basename: "{{ tme_core_package | basename | regex_replace('^([^.]*\\.[0-9]+).*$','\\1') }}"
+tme_package_basename: "{{ tme_core_package | regex_replace('\\-bin\\.[^.]+$') }}"
+
+remove_text_mining: True
