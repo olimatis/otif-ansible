@@ -43,11 +43,33 @@ $ git clone https://github.com/olimatis/otif-ansible
 $ cd otif-ansible/otif-ansible
 ```
 
-* Set up SSH
+* Modify the inventory file according to your cluster
+Host name (box1, ...) and ip most probably need to be updated.
 ```
-$ 
+$ nano inventory/hosts
 ```
 
+* Modify the netwar adapter to use to get proper ip
+Take not of the adapter to use using 'ip ad' command.
+```
+$ nano inventory/group_vars/all.yml
+...
+
+network_interface= ????
+...
+```
+
+* Set up SSH
+This command will enable create a user otif-admin on all node and rotate key for SSH access
+```
+$ sudo ./ansible-role all set_ssh 
+```
+
+* Set hosts file
+This will add new entries to /etc/hosts file on each node.
+```
+
+```
 ## "Auto-pilot" mode
 
 ```
@@ -69,14 +91,14 @@ $ ansible-playbook init-nodes.yml -t "set-limits"
 
 3. Create and 'otif-admin' user on all nodes and enable passwordless ssh with public key for this user
 ```
-$ ansible-playbook init-nodes.yml -t "set-ssh" -e "username=otif-admin passwrd=0t1f-adm1n"
+$ ansible-playbook init-nodes.yml -t "set-ssh"
 ```
 
 4. Update the hosts file according to the Ansible invetory (inventory/hosts)
 * To create a host file with a custom domain with provided network adaper. Overwrite /etc/host and restart network service
 * Use '$ ip ad' to know which network adapter is providing access you need. Default is "enp0s3"
 ```
-$ ansible-playbook init-nodes.yml -t "set-hosts-file" -e "domain=magellan.net adapter=enp0s3 overwrite=true"
+$ ansible-playbook init-nodes.yml -t "set-hosts-file" -e "domain=magellan.net network_interface=enp0s3 overwrite=true"
 ```
 
 5. Install InfoFusion dependencies
