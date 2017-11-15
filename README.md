@@ -2,7 +2,7 @@
 
 #### This Ansible project is meant to ease OpenText InfoFusion "headless" deployement on CentOS. 
 
-## Prerequisite: Ansible 
+## Prerequisite: Ansible & Git
 
 * Become root ...
 ```
@@ -28,6 +28,23 @@ $ yum -y install ansible
 ```
 $ ansible --version
 ansible x.y.z
+```
+
+* Install git
+```
+$ yum -y install git-all
+```
+
+* Create a folder for you Git repository
+```
+$ cd ~/Desktop
+$ mkdir git_repo
+$ cd git_repo
+``
+
+* Clone this Ansible project on the host used to orchestrate deployment
+```
+git clone https://github.com/olimatis/otif-ansible
 ```
 
 ## "Auto-pilot" mode
