@@ -40,7 +40,7 @@ $ yum -y install git-all
 $ cd ~/Desktop
 $ mkdir git_repo
 $ cd git_repo
-``
+```
 
 * Clone this Ansible project on the host used to orchestrate deployment
 ```
