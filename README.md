@@ -16,7 +16,7 @@ $ yum repolist | grep epel
 
 * If there is no results, then:
 ```
-$ yum install epel-release
+$ yum -y install epel-release
 ```
 
 * Then install Ansible
@@ -35,16 +35,12 @@ ansible x.y.z
 $ yum -y install git-all
 ```
 
-* Create a folder for you Git repository
-```
-$ cd ~/Desktop
-$ mkdir git_repo
-$ cd git_repo
-```
-
 * Clone this Ansible project on the host used to orchestrate deployment
 ```
+cd ~
 git clone https://github.com/olimatis/otif-ansible
+...
+cd otif-ansible/otif-ansible
 ```
 
 ## "Auto-pilot" mode
