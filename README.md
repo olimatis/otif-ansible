@@ -5,26 +5,31 @@
 * Prerequisite: Ansible 
 
   * Become root ...
+
 '''
 $ su -
 '''
 
   * See if EPEL repository is already available
+
 '''
 $ yum repolist | grep epel
 '''
 
   * If there is no results, then:
+
 '''
 $ yum install epel-release
 '''
 
   * Then install Ansible
+
 '''
 $ yum -y install ansible
 '''
 
   * Once Ansible is installed, make sure it’s working properly
+
 '''
 $ ansible --version
 ansible x.y.z
