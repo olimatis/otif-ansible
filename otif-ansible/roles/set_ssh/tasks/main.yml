@@ -21,10 +21,10 @@
 ##              ...
 
 
-   - name: 1. Creating user "{{ username }}" with admin access on host and all nodes
+   - name: 1. Creating user "{{ master_username }}" with admin access on host and all nodes
      user: 
-       name: "{{ username }}"
-       password: "{{ userpwd |password_hash('sha512') }}"
+       name: "{{ master_username }}"
+       password: "{{ master_password |password_hash('sha512') }}"
        generate_ssh_key: yes
        ssh_key_passphrase: ""
        groups: wheel
@@ -36,9 +36,9 @@
 #       msg: "Public key: {{ userkey.ssh_public_key }}"
 #     when: userkey is defined
 
-   - name: 2. Installing '"{{ username }}"' public key on every node
+   - name: 2. Installing '"{{ master_username }}"' public key on every node
      authorized_key:
-       user: "{{ username }}"
+       user: "{{ master_username }}"
        key: "{{ userkey.ssh_public_key }}"
      delegate_to: "{{ item }}"
      with_items: "{{ groups['all'] }}"

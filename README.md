@@ -37,16 +37,21 @@ $ yum -y install git-all
 
 * Clone this Ansible project on the host used to orchestrate deployment
 ```
-cd ~
-git clone https://github.com/olimatis/otif-ansible
+$ cd ~
+$ git clone https://github.com/olimatis/otif-ansible
 ...
-cd otif-ansible/otif-ansible
+$ cd otif-ansible/otif-ansible
+```
+
+* Set up SSH
+```
+$ 
 ```
 
 ## "Auto-pilot" mode
 
 ```
-$ ansible-playbook deploy-otif.yml -k -K
+$ ansible-playbook deploy-otif.yml
 ```
 
 ## Assisted mode
