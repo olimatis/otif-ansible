@@ -1,13 +1,13 @@
 #!/bin/sh
 
-# This script aims at showing status for OTIF 16.x services
-# Martin Brousseau (November 3rd 2017)
+# This script aims at showing status for OTIF services
+
 
 case "$1" in
 
     'services')
         # Test Services
-	systemctl status postgresql-9.4 mongod ot-zk-1 kafka infofusion-web-crawling-1 otif-wsm-crawler-1 | grep -E '●|Active'
+        systemctl status postgresql-9.4 mongod ot-zk-1 kafka infofusion-web-crawling-1 otif-wsm-crawler-1 otif-ingestion-api-1 otif-text-mining| grep -E '●|Active'
         ;;
 
     'ports')
@@ -18,6 +18,9 @@ case "$1" in
         echo "*** Kafka on port 9092" && ss -ntlup | grep 9092
         echo "*** WSM Crawler on port 10010" && ss -ntlup | grep 10010
         echo "*** Web Crawler on port 10011" && ss -ntlup | grep 10011
+        echo "*** Ingestion Pipeline API on port 7071" && ss -ntlup | grep 7071
+        echo "*** Ingestion Pipeline Admin API on port 7171" && ss -ntlup | grep 7171
+        echo "*** Text Mining Engine on port 40002" && ss -ntlup | grep 40002
         ;;
 
 
