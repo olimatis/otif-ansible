@@ -12,15 +12,15 @@ case "$1" in
 
     'ports')
         # Test if services are listening on default ports
-        echo "*** PostgreSQL on port 5432" && ss -ntlup | grep 5432
-        echo "*** MongoDB on port 27017" && ss -ntlup | grep 27017
-        echo "*** Zookeeper on port 2181" && ss -ntlup | grep 2181
-        echo "*** Kafka on port 9092" && ss -ntlup | grep 9092
-        echo "*** WSM Crawler on port 10010" && ss -ntlup | grep 10010
-        echo "*** Web Crawler on port 10011" && ss -ntlup | grep 10011
-        echo "*** Ingestion Pipeline API on port 7071" && ss -ntlup | grep 7071
-        echo "*** Ingestion Pipeline Admin API on port 7171" && ss -ntlup | grep 7171
-        echo "*** Text Mining Engine on port 40002" && ss -ntlup | grep 40002
+        echo "● PostgreSQL on port 5432" && ss -ntlup | grep 5432
+        echo "● MongoDB on port 27017" && ss -ntlup | grep 27017
+        echo "● Zookeeper on port 2181" && ss -ntlup | grep 2181
+        echo "● Kafka on port 9092" && ss -ntlup | grep 9092
+        echo "● WSM Crawler on port 10010" && ss -ntlup | grep 10010
+        echo "● Web Crawler on port 10011" && ss -ntlup | grep 10011
+        echo "● Ingestion Pipeline API on port 7071" && ss -ntlup | grep 7071
+        echo "● Ingestion Pipeline Admin API on port 7171" && ss -ntlup | grep 7171
+        echo "● Text Mining Engine on port 40002" && ss -ntlup | grep 40002
         ;;
 
 
