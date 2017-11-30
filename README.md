@@ -1,6 +1,6 @@
 # otif-ansible
 
-#### This Ansible project is meant to ease OpenText InfoFusion "headless" deployement on CentOS. 
+#### This Ansible project is meant to automate OpenText InfoFusion "headless" deployement on CentOS. 
 
 ##### Warning: some roles are not implemented yet or incomplete: install_wsm_crawler, install_pipeline, Install_ecm_crawler,
 ##### install_conversion_service, install_search. All other roles are fully functional but could require minor adjustments
