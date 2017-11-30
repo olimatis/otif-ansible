@@ -59,6 +59,8 @@ $ nano inventory/hosts
 
 * Modify the network adapter to use to get proper ip
 Take not of the adapter to use using 'ip ad' command.
+This variable is used by role ```set_hosts``` to generate a hosts file based on inventory information.
+We also assume that the same interface name is used on all nodes. 
 ```
 $ nano inventory/group_vars/all.yml
 ...
