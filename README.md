@@ -79,7 +79,7 @@ $ sudo ./ansible-role all set_ssh
 This will add new entries to /etc/hosts file on each node.
 Set 'overwrite' to false (default value) if you want to create a file /etc/ansible-hosts for validation before to overwrite the existing hosts file and restart network service.
 ```
-sudo .ansible-role all set_hosts -e "overwrite=true"
+sudo ./ansible-role all set_hosts -e "overwrite=true"
 ```
 ## "Auto-pilot" mode
 
