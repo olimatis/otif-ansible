@@ -6,6 +6,9 @@
 ##### install_conversion_service, install_search. All other roles are fully functional but could require minor adjustments
 ##### from one environment to another. In all cased, the inventry file needs to be updated for every deployement.
 
+Note: Ansible module ```expect``` is current considered to be used to run installers in console mode wuth automated answers bropided by Ansible instead of the user.
+
+
 ## Prerequisite: Ansible & Git
 
 * Become root ...
