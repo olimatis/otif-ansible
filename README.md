@@ -4,7 +4,7 @@
 
 ##### Warning: some roles are not implemented yet or incomplete: install_wsm_crawler, install_pipeline, Install_ecm_crawler,
 ##### install_conversion_service, install_search. All other roles are fully functional but could require minor adjustments
-##### from one environment to another. In all cased, the inventry file needs to be updated for every deployement.
+##### from one environment to another. In all cases, the inventry file (inventory/hosts) needs to be updated for every deployement. /etc/hosts file alos need to be set properly. SSH needs to be enabled between nodes. Roles set_ssh and set_hosts can be used for that.
 
 Note: Ansible module ```expect``` is current considered to be used to run installers in console mode wuth automated answers bropided by Ansible instead of the user.
 http://docs.ansible.com/ansible/latest/expect_module.html
