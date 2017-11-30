@@ -7,6 +7,7 @@
 ##### from one environment to another. In all cased, the inventry file needs to be updated for every deployement.
 
 Note: Ansible module ```expect``` is current considered to be used to run installers in console mode wuth automated answers bropided by Ansible instead of the user.
+http://docs.ansible.com/ansible/latest/expect_module.html
 
 
 ## Prerequisite: Ansible & Git
