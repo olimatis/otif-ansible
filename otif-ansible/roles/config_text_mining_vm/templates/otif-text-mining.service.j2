@@ -1,0 +1,19 @@
+[Unit]
+Description=Magellan Text Mining Engine
+Documentation=http://www.opentext.com
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User={{ master_username }}
+Group={{ master_username }}
+ExecStart={{ tme_location }} start
+ExecStop={{ tme_location }} stop
+ExecReload={{ tme_location }} restart
+RestartSec=5s
+TimeoutStartSec=10s
+
+[Install]
+WantedBy=multi-user.target

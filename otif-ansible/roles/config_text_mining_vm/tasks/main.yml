@@ -1,0 +1,78 @@
+---
+# tasks file for config_text_mining_vm
+
+- name: Create a group for admin user
+  group:
+    name: "{{ master_username }}"
+    state: present
+
+- name: Create a user that will run TME deamon
+  user:
+    name: "{{ master_username }}"
+    group: "{{ master_username }}"
+    comment: "This user manages InfoFusion Text Mining deamon"
+    state: present
+
+- name: Add current user to admin group
+  user:
+    name: "{{ playbook_user }}"
+    groups: "{{ master_username }}"
+    state: present
+
+
+- name: Create variable from command
+  command: "find / -path '*/bin/tme'"
+  register: tme_location
+
+- debug: 
+    msg: "Text Mining Engine has been found under {{tme_location.stdout}}" 
+
+- set_fact:
+    tme_location: "{{ tme_location.stdout }}"
+
+#- debug:
+#    msg: " Root: {{ tme_location | regex_replace('^(.*)\\/bin\\/tme$', '\\1') }}"
+
+
+- name: Create services for Text Mining Engine
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: otif-text-mining.service.j2, dest: /etc/systemd/system/otif-text-mining.service }
+
+- name: Change owner for Text Mining Engine directory  
+  file:
+    path: "{{ tme_location | regex_replace('^(.*)\\/bin\\/tme$', '\\1') }}"
+    owner: "{{ master_username }}"
+    group: "{{ master_username }}"
+    recurse: yes
+
+
+- name: Start Text Mining Engine service
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-text-mining }
+
+- name: Wait Text Mining Engine for listening on port 40002 ...
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item.port }}"
+    delay: 5
+    state: started
+  with_items:
+    - { port: 40002 }
+
+- name:
+  vars:
+    msg: |
+         Magellan Text Mining has been configured on {{ansible_host}}.
+         You can validate deployement by opening http://{{ansible_host}}:40002
+         Default credentials are admin/admin.
+         You can also test the REST API using a REST client like Postman to test the API.
+  debug:
+    msg: "{{ msg.split('\n') }}"

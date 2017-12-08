@@ -8,5 +8,5 @@
     include_role:
       name: install_pipeline
     tags: 'install-pipeline'
-    when: inventory_hostname in groups['_pipeline']
+    when: inventory_hostname in groups['pipeline']
 

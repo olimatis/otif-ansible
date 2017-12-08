@@ -1,0 +1,16 @@
+---
+  
+ 
+# The following tasks manage deployement of InfoFusion services
+
+- import_playbook: config-pipeline-vm.yml
+
+- import_playbook: config-text-mining-vm.yml
+
+
+- import_playbook: config-wsm-crawler-vm.yml
+
+#- import_playbook: config-ecm-crawler-vm.yml
+
+#- import_playbook: config-search-vm.yml   
+

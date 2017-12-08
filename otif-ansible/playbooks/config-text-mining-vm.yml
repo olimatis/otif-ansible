@@ -1,0 +1,12 @@
+---
+
+- hosts: text-mining
+
+  tasks:
+
+  - name: Configure InfoFusion Text Mining 16.2 VM
+    include_role:
+      name: config_text_mining_vm
+    tags: 'config-test-mining-vm'
+    when: inventory_hostname in groups['text-mining']
+

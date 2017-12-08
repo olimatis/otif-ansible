@@ -1,0 +1,132 @@
+---
+# tasks file for config_pipeline_vm
+
+- name: Make sure Zookeeper, PostgreSQL and Pipeline  services ar running
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-ingestion-api-1 }
+    - { name: ot-zk-1 }
+    - { name: postgresql-9.4 }
+  when: inventory_hostname in groups['pipeline']
+
+
+- name: Wait for Pipeline API & UI on port 7071 & 7171. Zookeeper on port 2181 and PostgreSQL on 5432.
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item.port }}"
+    delay: 1
+    state: started
+  with_items:
+    - { port: 7071 }
+    - { port: 7171 }
+    - { port: 2181 }
+    - { port: 5432 }
+  when: inventory_hostname in groups['pipeline']
+
+- set_fact:
+    text_mining_host: "{{hostvars[inventory_hostname]['groups']['text-mining'][0]}}"
+
+- debug:
+    msg: "Text Mining Host: {{ text_mining_host }}"
+
+- set_fact:
+    text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn']}}"
+
+- debug:
+    msg: "Text Mining FQDN: {{ text_mining_fqdn }}"
+
+
+- name: Install kazoo dependency - needed for the Ansible znode module used to talk to Zookeeper
+  become: true
+  easy_install:
+    name: kazoo
+    state: latest
+
+- name: Check if znode exists to text mining configuration in the Pipeline
+  znode:
+    hosts: 'localhost:2181'
+    name: /otif/ingestion-api/config/analyzer
+    value: |
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <analyzer version="1">
+        <enabled value="true" defaultValue="true"/>
+        <name value="Analyzer" defaultValue="Analyzer"/>
+        <activationRules>
+            <value/>
+        </activationRules>
+        <encoding value="UTF-8" defaultValue="UTF-8"/>
+        <baseExtensionKey value="otca" defaultValue="otca"/>
+        <otcaServiceMaxAttempts value="3" defaultValue="3"/>
+        <otcaServiceDelay value="10000" defaultValue="10000"/>
+        <otcaSocketTimeout value="30000" defaultValue="30000"/>
+        <otcaConnectionTimeout value="1000" defaultValue="1000"/>
+        <profileSelectionRules>
+            <value>
+                <profileSelectionRule location="document.metadata.attributes" field="normalizedFileType" value="Tweet" profilePrefix="otif-tweets_"/>
+                <profileSelectionRule location="document.metadata.attributes" field="normalizedFileType" value="HTML" profilePrefix="otif-web_"/>
+            </value>
+        </profileSelectionRules>
+        <cleaningRules/>
+      </analyzer>
+    state: present
+
+- name: Add Text Mining Engine URL to Zookeeper
+  znode:
+    hosts: 'localhost:2181'
+    name: /otif/ingestion-api/config/analyzer-services/1
+    value: |
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <analyzerService version="1">
+          <id>1</id>
+          <url>http://{{ text_mining_fqdn }}:40002/rs/</url>
+      </analyzerService>
+    state: present
+
+- name: WSM Crawler URL and credentials to  Zookeeper
+  znode:
+    hosts: 'localhost:2181'
+    name: /otif/ingestion-api/config/scraper
+    value: |
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <scraper version="2">
+          <enabled value="true" defaultValue="true"/>
+          <name value="Scraper" defaultValue="Scraper"/>
+          <activationRules>
+              <value/>
+          </activationRules>
+          <encoding value="UTF-8" defaultValue="UTF-8"/>
+          <scrapingRulesIdField>
+              <fieldSelections>
+                  <fieldSelection>
+                      <field location="document" name="repositoryId"/>
+                      <selectionRule operator="OR">
+                          <conditions>
+                              <condition operator="equals" value="Web">
+                                  <field location="document.attributes" name="crawlerType"/>
+                              </condition>
+                          </conditions>
+                      </selectionRule>
+                  </fieldSelection>
+              </fieldSelections>
+          </scrapingRulesIdField>
+          <timeToLive value="30000" defaultValue="30000"/>
+          <adminClientSocketTimeout value="30000" defaultValue="30000"/>
+          <adminClientConnectionTimeout value="1000" defaultValue="1000"/>
+          <webCrawlerAdminUrl>http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1</webCrawlerAdminUrl>
+          <webCrawlerAdminUser>admin</webCrawlerAdminUser>
+          <webCrawlerAdminPassword>vc87WcQpJH4=</webCrawlerAdminPassword>
+      </scraper>
+    state: present
+
+- name:
+  vars:
+    msg: |
+         Magellan Ingestion Pipeline has been configured on {{ansible_host}}.
+         You can validate deployement by opening http://{{ansible_host}}:7171
+         Default credentials are admin/admin.
+  debug:
+    msg: "{{ msg.split('\n') }}"

@@ -1,0 +1,14 @@
+---
+
+- hosts: pipeline
+
+  tasks:
+
+  - name: Configure InfoFusion Ingestion Pipeline 16.2 VM
+    include_role:
+      name: config_pipeline_vm
+    tags: 'config-pipeline-vm'
+    when: inventory_hostname in groups['pipeline']
+
+
+
