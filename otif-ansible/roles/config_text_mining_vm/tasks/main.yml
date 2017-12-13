@@ -20,7 +20,7 @@
     state: present
 
 
-- name: Create variable from command
+- name: Find where tme is installed and create a variable from the output 
   command: "find / -path '*/bin/tme'"
   register: tme_location
 

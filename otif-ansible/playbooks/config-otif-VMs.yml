@@ -1,14 +1,26 @@
 ---
-  
+
+- name: Magellan VMs configuration
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Gather facts from ALL hosts (regardless of limit or tags)
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      when: hostvars[item]['ansible_default_ipv4'] is not defined
+      with_items: "{{ groups['all'] }}"  
  
-# The following tasks manage deployement of InfoFusion services
+# The following playbboks manage configuartion of InfoFusion on 3 Magellan VMs
 
 - import_playbook: config-pipeline-vm.yml
 
 - import_playbook: config-text-mining-vm.yml
 
-
 - import_playbook: config-wsm-crawler-vm.yml
+
+
 
 #- import_playbook: config-ecm-crawler-vm.yml
 
