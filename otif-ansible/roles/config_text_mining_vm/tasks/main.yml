@@ -34,6 +34,13 @@
 #    msg: " Root: {{ tme_location | regex_replace('^(.*)\\/bin\\/tme$', '\\1') }}"
 
 
+- name: Change default timeout in etc/tme.xml. Set it to 10sec.
+  lineinfile:
+    path: "{{ tme_location | regex_replace('^(.*)\\/bin\\/tme$', '\\1') }}/etc/tme.xml"
+    regexp: '^(.*)<property name="requestTimeout" value="([0-9]+)" />'
+    line: '\g<1><property name="requestTimeout" value="10000" />'
+    backrefs: true    
+
 - name: Create services for Text Mining Engine
   template:
     src: "{{ item.src }}"
@@ -51,7 +58,7 @@
 
 - name: Start Text Mining Engine service
   systemd:
-    state: started
+    state: restarted
     daemon_reload: yes
     enabled: yes
     name: "{{ item.name }}"
