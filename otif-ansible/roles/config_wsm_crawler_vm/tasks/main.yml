@@ -1,6 +1,31 @@
 ---
 # tasks file for config_wsm_crawler_vm
 
+- name: Find where Nutch configuration configuration is located
+  command: "find / -path '*/conf/nutch-site.xml'"
+  register: conf_location
+
+- debug:
+    msg: "Nutch configurartion file has been found uner {{conf_location.stdout}}"
+
+
+# The Ansible xml module seems to have limitation to deal with schema used by Nutch
+#  - name: Set Nutch fetcher.threads.per.queue property to 5
+#    xml:
+#      path: "{{ conf_location.stdout }}"
+#      backup: yes
+#      xpath: /configuration
+#      add_children: 
+#        - property: bla
+#      pretty_print: yes
+#      state: present
+
+- name: Use updated nutch-site.xml file to replace the default one
+  copy:
+    src: nutch-site.xml
+    dest: "{{ conf_location.stdout }}"
+    backup: yes
+    
 - name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and Pipeline  services ar running
   systemd:
     state: started
@@ -28,8 +53,8 @@
     - { port: 5432 }
     - { port: 10010 }
     - { port: 10011 }
-    
 
+    
 - name: Install kazoo & pymongo dependency - needed for the Ansible znode module used to talk to Zookeeper
   become: true
   easy_install:
@@ -46,7 +71,7 @@
     recursive: yes
     state: absent
 
-- name: Set authentication for admin user
+- name: Set MongoDB authentication for admin user
   mongodb_user:
     database: admin
     name: "admin"
@@ -70,7 +95,7 @@
     - { name: "admin", pwd: "admin", roles: "userAdmin" }
 
 
-- name: Authenticate to the Admin UI to get cookie
+- name: Authenticate to the WSM- Crawler Admin UI to get cookie
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/authentication/login"
     method: POST
