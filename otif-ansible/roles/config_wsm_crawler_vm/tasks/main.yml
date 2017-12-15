@@ -26,9 +26,9 @@
     dest: "{{ conf_location.stdout }}"
     backup: yes
     
-- name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and Pipeline  services ar running
+- name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and wsm crawler services are running
   systemd:
-    state: started
+    state: restarted
     daemon_reload: yes
     enabled: yes
     name: "{{ item.name }}"
