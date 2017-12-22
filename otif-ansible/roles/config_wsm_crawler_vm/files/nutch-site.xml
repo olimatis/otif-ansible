@@ -56,7 +56,7 @@
         </property>
         <property>
                 <name>kafka.producer.conf.bootstrap.servers</name>
-                <value>otif-crawler.opentext.net:9092</value>
+                <value>ussm-mag-crawler.lab.opentext.com:9092</value>
         </property>
         <property>
                 <name>kafka.producer.conf.client.id</name>

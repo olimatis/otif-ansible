@@ -86,6 +86,22 @@
       </analyzerService>
     state: present
 
+- name: Register Text Mining Engine in Discovery Service
+  znode:
+    hosts: 'localhost:2181'
+    name: /ot/service-registry/permanent/otca-service/1
+    value: |
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <details>
+          <scheme>http</scheme>
+          <id>1</id>
+          <host>ot-election-dev-otca.eastus.cloudapp.azure.com</host>
+          <port>40002</port>
+          <basePath>/rs/</basePath>
+          <name>otca-service</name>
+      </details>
+    state: present
+
 - name: WSM Crawler URL and credentials to  Zookeeper
   znode:
     hosts: 'localhost:2181'
