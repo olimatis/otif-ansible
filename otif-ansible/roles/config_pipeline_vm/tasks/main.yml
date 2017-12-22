@@ -95,7 +95,7 @@
       <details>
           <scheme>http</scheme>
           <id>1</id>
-          <host>ot-election-dev-otca.eastus.cloudapp.azure.com</host>
+          <host>{{ text_mining_fqdn }}</host>
           <port>40002</port>
           <basePath>/rs/</basePath>
           <name>otca-service</name>
