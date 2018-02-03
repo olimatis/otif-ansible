@@ -1,8 +1,11 @@
 ---
 # defaults file for install_kafka
 
-#URL for the Kafka package to use
-kafka_package_url: "http://www-us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz"
+# Name of  the Kafka installer package
+kafka_installer_package: "infofusion-kafka-installer-0.0.1-20180201.211732-218-linux.bin"
+
+# Where to install Kafka
+kafka_destination_path: "/opt/infofusion-16.4/kafka"
 
 # Both Kafka are setup to run on their default ports. Role would need to be changed
 # to used the commented variable below if custom ports are needed.

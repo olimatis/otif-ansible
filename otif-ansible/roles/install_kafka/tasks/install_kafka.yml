@@ -1,43 +1,25 @@
 ---
 
-- name: Make sure download folder exists
-  include_role: 
-    name: common
-    tasks_from: create_download_folder.yml
-
-- name: Make sure Kafka and Zookeeper are not already running
-  systemd:
-    state: stopped
-    name: "{{ item.name }}"
-  with_items:
-    - { name: zookeeper }
-    - { name: kafka }
-
-- name: Remove existing instalation
-  block:
-
-    - name: Delete existing download 
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - "{{ download_folder }}/{{ kafka_package_url | basename}}"
-        - "/opt/kafka"
-        - "/opt/{{  kafka_package_url | basename | regex_replace('\\.[^.]+$') }}"
-        - "/var/lib/zookeeper"
-        - "/var/lib/kafka"
-        - "/etc/systemd/system/zookeeper.service"        
-        - "/etc/systemd/system/kafka.service"
-
-  when: remove_kafka
-
-- name: Download Kafka package
-  get_url:
-    url: "{{ kafka_package_url }}"
-    dest: "{{ download_folder }}"
+- name: Check that the installer exists and is executable
+  file:
+    path: "{{download_folder}}/{{kafka_installer_package}}"
+    state: touch
     owner: "{{ playbook_user }}"
     group: "{{ playbook_user }}"
-  register: kafka_package
+    mode: "u+x"
+
+# To uninstall 
+# .*Choose Instance Management Option.*  : '2'
+# .*Choose the instance to modify.*   : '1'
+# .*DEFAULT.* : '1'
+# .* TO CONTINUE.* : ''
+
+
+- name: Install pexpect dependency
+  become: true
+  easy_install:
+    name: pexpect 
+    state: latest
 
 - name: Create a group for Kafka user
   group:
@@ -48,20 +30,28 @@
   user:
     name: kafka
     group: kafka
-    comment: "This user manages Kafka deamon"    
+    comment: "This user manages Kafka deamon"
 
-- name: Extract Kafka from the package
-  unarchive:
-    src: "{{ kafka_package.dest }}"
-    dest: "/opt"
-    owner: kafka
-    group: kafka
+- name: Execute Kafka installer in console mode
+  expect:
+    command: "{{ download_folder }}/{{ kafka_installer_package }} -i console"
+    creates: "{{ kafka_destination_path }}"
+    echo: true
+    timeout: 10
+    responses:
+      PRESS \<ENTER\> TO CONTINUE.* : ''
+      .*type ''skip''.*             : 'skip'
+      .*LICENSE AGREEMENT.*         : 'Y'
+      .*ABSOLUTE PATH.*             : '{{ kafka_destination_path }}'
+      .*IS THIS CORRECT.*           : 'Y'
+      .*Current Host.*              : '{{ kafka_host }}'
+      .*Zookeeper Host.*            : '{{ zookeeper_host }}'
     
-- name: Create a link for the Kafka install folder
-  file:
-    src: "/opt/{{ kafka_package.dest | basename | regex_replace('\\.[^.]+$') }}"
-    dest: "/opt/kafka"
-    state: link
-    owner: kafka
-    group: kafka
-
+- name: Wait Kafka to be listening on port 9092 
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item }}"
+    delay: 5
+    state: started
+  with_items:
+    - "9092"

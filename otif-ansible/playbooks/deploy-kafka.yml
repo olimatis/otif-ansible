@@ -1,0 +1,12 @@
+---
+
+- hosts: kafka
+
+  tasks:
+
+  - name: Install Kafka for InfoFusion - dependency for all ESM Crawler
+    include_role:
+      name: install_kafka
+    tags: 'install-kafka'
+    when: inventory_hostname in groups['kafka']
+

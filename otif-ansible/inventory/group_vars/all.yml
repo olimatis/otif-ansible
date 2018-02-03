@@ -6,6 +6,9 @@ domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 zookeeper_host: "{{hostvars[inventory_hostname]['groups']['zookeeper'][0]}}"
 zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn']}}"
 
+kafka_host: "{{hostvars[inventory_hostname]['groups']['kafka'][0]}}"
+kafka_fqdn: "{{hostvars[kafka_host]['ansible_fqdn']}}"
+
 wsm_crawler_host: "{{hostvars[inventory_hostname]['groups']['wsm-crawler'][0]}}"
 wsm_crawler_fqdn: "{{hostvars[wsm_crawler_host]['ansible_fqdn']}}"
 

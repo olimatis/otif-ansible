@@ -4,8 +4,8 @@
 - name: Install Apache Kafka
   include_tasks: install_kafka.yml
 
-- name: Configure Apache Kafka
-  include_tasks: configure_kafka.yml
+#- name: Configure Apache Kafka
+#  include_tasks: configure_kafka.yml
 
-- name: Start Apache Kafka
-  include_tasks: start_kafka.yml
+#- name: Start Apache Kafka
+#  include_tasks: start_kafka.yml
