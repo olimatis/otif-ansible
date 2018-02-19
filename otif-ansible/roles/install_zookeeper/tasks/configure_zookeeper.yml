@@ -1,11 +1,12 @@
 ---
 # tasks file for install_zookeeper
 
-- name: Openport 2181 used by Zookeeper service
-  become: true
+- name: Open port 2181 used by Zookeeper service
+  become: yes
+  ignore_errors: yes
   firewalld:
     zone: public
-    port: "{{ item}}/tcp"
+    port: "{{ item }}/tcp"
     permanent: true
     immediate: true
     state: enabled

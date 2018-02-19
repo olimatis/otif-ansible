@@ -24,10 +24,11 @@
       tags: [ 'install-mongodb', 'dependencies' ]
       when: inventory_hostname in groups['mongodb']
 
-    - name: Install Apache Kafka - dependency for InfoFusion Web Crawler for Web & Social Media
-      include_role:
-        name: install_kafka
-      tags: [ 'install-kafka', 'dependencies' ]
-      when: inventory_hostname in groups['kafka']
+# Not needed starting with 16.4. InfoFusion provides its own Kafka installer
+#    - name: Install Apache Kafka - dependency for InfoFusion Web Crawler for Web & Social Media
+#      include_role:
+#        name: install_kafka
+#      tags: [ 'install-kafka', 'dependencies' ]
+#      when: inventory_hostname in groups['kafka']
 
 

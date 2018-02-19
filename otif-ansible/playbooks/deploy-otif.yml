@@ -5,12 +5,15 @@
 - import_playbook: init-nodes.yml
 
 # The follwoing tasks manage deployement of dependencies
+# Java, PostgreSQL, MongoDB
 
 - import_playbook: deploy-otif-dependencies.yml
  
 # The following tasks manage deployement of InfoFusion services
 
 - import_playbook: deploy-zookeeper.yml
+
+- import_playbook: deploy-kafka.yml
 
 - import_playbook: deploy-text-mining.yml
 

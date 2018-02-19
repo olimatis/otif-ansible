@@ -1,0 +1,74 @@
+---
+# file: vars/java-builds.yml
+
+java_builds:
+  9:
+    1:
+      build: 11
+    4:
+      build: 11
+      download_id: 'c2514751926b4512b076cc82f959763f'
+  8:
+    162:
+      build: 12
+      download_id: '0da788060d494f5095bf8624735fa2f1'
+    161:
+      build: 12
+      download_id: '2f38c3b165be4555a1fa6e98c45e0808'
+    152:
+      build: 16
+      download_id: 'aa0333dd3019491ca4f6ddbe78cdb6d0'
+    151:
+      build: 12
+      download_id: 'e758a0de34e24606bca991d704f6dcbf'
+    144:
+      build: 01
+      download_id: '090f390dda5b47b9b721c7dfaa008135'
+    141:
+      build: 15
+      download_id: '336fa29ff2bb4ef291e347e091f7f4a7'
+    131:
+      build: 11
+      download_id: 'd54c1d3a095b4ff2b6607d096fa80163'
+    121:
+      build: 13
+      download_id: 'e9e7ea248e2c4826b92b3f075a80e441'
+    112:
+      build: 15
+    111:
+      build: 14
+    102:
+      build: 14
+    101:
+      build: 13
+    91:
+      build: 14
+    92:
+      build: 14
+    77:
+      build: 03
+    74:
+      build: 02
+    73:
+      build: 02
+    72:
+      build: 15
+    66:
+      build: 17
+    65:
+      build: 17
+    60:
+      build: 27
+    51:
+      build: 16
+    45:
+      build: 14
+    31:
+      build: 13
+  7:
+    80:
+      build: 15
+    79:
+      build: 15
+    75:
+      build: 13

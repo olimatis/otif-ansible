@@ -1,11 +1,14 @@
 ---
 # defaults file for install_kafka
 
-# Name of  the Kafka installer package
-kafka_installer_package: "infofusion-kafka-installer-0.0.1-20180201.211732-218-linux.bin"
+# Note: Location of the installer is defined with global variable {{ installer_location }}
+#       Selection of the bin file to used is based on a lookup in the location for a file
+#       matching the regex ^.*kafka.*\\.bin$
 
-# Where to install Kafka
-kafka_destination_path: "/opt/infofusion-16.4/kafka"
+# Where to install Kafka - Change as needed
+# kafka_destination_path: "/opt/infofusion-16.4/kafka"
+kafka_destination_path: "{{ default_installation_path }}/kafka"
+
 
 # Both Kafka are setup to run on their default ports. Role would need to be changed
 # to used the commented variable below if custom ports are needed.

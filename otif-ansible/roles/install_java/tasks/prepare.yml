@@ -1,0 +1,32 @@
+---
+# file: tasks/prepare.yml
+
+- name: Check if Required Version has already installed.
+  shell: 'java -version'
+  register: shell_output
+  changed_when: false
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Set java_version_found to True.
+  set_fact:
+    java_version_found: true
+  when: shell_output.stdout|regex_search(java_version) or
+        shell_output.stderr|regex_search(java_version)
+
+- name: Ensure that all required packages are installed.
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ packages }}'
+
+- name: Prepare path for downloaded archive.
+  file:
+    path: "{{ java_distr_path }}"
+    state: directory
+
+- name: Prepare home path for JDK.
+  file:
+    path: "{{ java_home|dirname }}"
+    state: directory

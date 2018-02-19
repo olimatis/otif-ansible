@@ -1,0 +1,6 @@
+---
+# file: vars/CentOS.yml
+
+packages:
+  - tar
+  - libselinux-python

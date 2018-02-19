@@ -1,0 +1,33 @@
+---
+# file: tasks/check-vars.yml
+
+- name: Check java_major_version variable
+  fail: msg="Specify java_major_version variable, please."
+  when: java_major_version is not defined
+
+- name: Check java_minor_version variable
+  fail: msg="Specify java_minor_version variable, please."
+  when: java_minor_version is not defined
+
+- name: Check java_distr_path variable
+  fail: msg="Specify java_distr_path variable, please."
+  when: java_distr_path is not defined
+
+- name: Check java_from_oracle variable
+  fail: msg="Specify java_from_oracle variable, please."
+  when: java_from_oracle is not defined
+
+- name: Check java_clear_after variable
+  fail: msg="Specify java_clear_after variable, please."
+  when: java_clear_after is not defined
+
+- name: Check java_set_home variable
+  fail: msg="Specify java_set_home variable, please."
+  when: java_set_home is not defined
+
+- name: Check oracleID Credentials variable for accessing to Oracle OTN
+  fail: msg="Specify oracle_id_username and oracle_id_password variables"
+  when: java_from_oracle and
+        (java_major_version|int == 7 or java_major_version|int == 8) and
+        java_minor_version|int < 152 and
+        (oracle_id_username is not defined and oracle_id_password is not defined)

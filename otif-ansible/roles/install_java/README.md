@@ -1,38 +1,85 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Role name in Ansible Galaxy: **[DovnarAlexander/oracle-java](https://galaxy.ansible.com/DovnarAlexander/oracle-java)**
 
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+You can use this role to install any version of JDK from Oracle Site + .
+This role could be used on any distributive with YUM or APT package manager.
 
 Role Variables
 --------------
+### Mandatory variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+# If you need to install old version of JDK (less then 8u151), you need specify valid Oracle ID credentials.
+oracle_id_username: user
+oracle_id_password: password
+```
 
-Dependencies
-------------
+### Optional variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+There are the following variables by default:
+
+```yaml
+# file: defaults/main.yml
+
+# Java major version 7 or 8
+java_major_version: 8
+# Java minor version
+java_minor_version: 162
+
+# Parent path to install JDK
+java_root_path: /opt/java
+
+# Path to download archives with JDK
+java_distr_path: /tmp
+# True if you want to use oracle web site to download archive
+# False if you have already had downloaded tar archive:
+# Just put this file in folder under files folder
+# Name should be in format jdk-<major_version>u<minor_version>-linux-x<64_or_86>.tar.gz
+java_from_oracle: True
+
+# True if you want to clear download files from java_distr_path folder
+java_clear_after: False
+
+# Do you want to set up JAVA_HOME global variable in Linux
+java_set_home: True
+```
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Step 1: add role
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Add role name `DovnarAlexander.oracle-java` to your playbook file.
 
-License
--------
+### Step 2: add variables
 
-BSD
+Set vars in your playbook file.
 
-Author Information
-------------------
+Simple example:
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+---
+# file: simple-playbook.yml
+
+- hosts: all
+
+  roles:
+    - DovnarAlexander.oracle-java
+
+  vars:
+    java_major_version: 9
+    java_minor_version: 1
+```
+
+### Step 3: add java group in your inventory file
+
+```ini
+---
+# file:inventory.ini
+
+[java]
+your_host
+
+```

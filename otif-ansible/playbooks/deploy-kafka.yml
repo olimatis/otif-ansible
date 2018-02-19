@@ -1,10 +1,10 @@
 ---
 
-- hosts: kafka
+- hosts: kafka, pipeline
 
   tasks:
 
-  - name: Install Kafka for InfoFusion - dependency for all ESM Crawler
+  - name: Install Kafka for InfoFusion - dependency for all WSM Crawlers
     include_role:
       name: install_kafka
     tags: 'install-kafka'
