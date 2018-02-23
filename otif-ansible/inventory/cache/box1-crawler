@@ -24,23 +24,23 @@
         "vconsole.keymap": "us"
     }, 
     "ansible_date_time": {
-        "date": "2018-02-18", 
-        "day": "18", 
-        "epoch": "1518978069", 
-        "hour": "10", 
-        "iso8601": "2018-02-18T18:21:09Z", 
-        "iso8601_basic": "20180218T102109390371", 
-        "iso8601_basic_short": "20180218T102109", 
-        "iso8601_micro": "2018-02-18T18:21:09.390470Z", 
-        "minute": "21", 
+        "date": "2018-02-22", 
+        "day": "22", 
+        "epoch": "1519348715", 
+        "hour": "17", 
+        "iso8601": "2018-02-23T01:18:35Z", 
+        "iso8601_basic": "20180222T171835190436", 
+        "iso8601_basic_short": "20180222T171835", 
+        "iso8601_micro": "2018-02-23T01:18:35.190536Z", 
+        "minute": "18", 
         "month": "02", 
-        "second": "09", 
-        "time": "10:21:09", 
+        "second": "35", 
+        "time": "17:18:35", 
         "tz": "PST", 
         "tz_offset": "-0800", 
-        "weekday": "Sunday", 
-        "weekday_number": "0", 
-        "weeknumber": "07", 
+        "weekday": "Thursday", 
+        "weekday_number": "4", 
+        "weeknumber": "08", 
         "year": "2018"
     }, 
     "ansible_default_ipv4": {
@@ -64,7 +64,7 @@
         }, 
         "labels": {
             "sr0": [
-                "INFOFUSION_16_4"
+                "INFOFUSION_16_4_SNAPSHOTS"
             ]
         }, 
         "masters": {}, 
@@ -82,7 +82,7 @@
                 "773cb15b-8098-4935-ae28-0808b2ab728b"
             ], 
             "sr0": [
-                "2018-02-16-11-50-14-00"
+                "2018-02-20-16-44-49-00"
             ]
         }
     }, 
@@ -230,11 +230,11 @@
                     "ata-VMware_Virtual_IDE_CDROM_Drive_00000000000000000001"
                 ], 
                 "labels": [
-                    "INFOFUSION_16_4"
+                    "INFOFUSION_16_4_SNAPSHOTS"
                 ], 
                 "masters": [], 
                 "uuids": [
-                    "2018-02-16-11-50-14-00"
+                    "2018-02-20-16-44-49-00"
                 ]
             }, 
             "model": "VMware IDE CDR00", 
@@ -244,9 +244,9 @@
             "sas_address": null, 
             "sas_device_handle": null, 
             "scheduler_mode": "cfq", 
-            "sectors": "8149248", 
+            "sectors": "7993216", 
             "sectorsize": "2048", 
-            "size": "15.54 GB", 
+            "size": "15.25 GB", 
             "support_discard": "0", 
             "vendor": "NECVMWar", 
             "virtual": 1
@@ -343,6 +343,7 @@
     }, 
     "ansible_env": {
         "HOME": "/root", 
+        "JAVA_HOME": "/opt/java/jdk1.8.0_162", 
         "LANG": "en_US.UTF-8", 
         "LESSOPEN": "||/usr/bin/lesspipe.sh %s", 
         "LOGNAME": "root", 
@@ -351,13 +352,13 @@
         "PWD": "/root", 
         "SHELL": "/bin/bash", 
         "SHLVL": "2", 
-        "SSH_CLIENT": "192.168.2.146 48872 22", 
-        "SSH_CONNECTION": "192.168.2.146 48872 192.168.2.149 22", 
-        "SSH_TTY": "/dev/pts/3", 
+        "SSH_CLIENT": "192.168.2.146 43902 22", 
+        "SSH_CONNECTION": "192.168.2.146 43902 192.168.2.149 22", 
+        "SSH_TTY": "/dev/pts/0", 
         "TERM": "xterm-16color", 
         "USER": "root", 
         "XDG_RUNTIME_DIR": "/run/user/0", 
-        "XDG_SESSION_ID": "1896", 
+        "XDG_SESSION_ID": "360", 
         "_": "/usr/bin/python"
     }, 
     "ansible_fips": false, 
@@ -450,16 +451,16 @@
     }, 
     "ansible_machine": "x86_64", 
     "ansible_machine_id": "f3204761ec424812b5583e8c97c9b4db", 
-    "ansible_memfree_mb": 1194, 
+    "ansible_memfree_mb": 8607, 
     "ansible_memory_mb": {
         "nocache": {
-            "free": 14269, 
-            "used": 1617
+            "free": 11305, 
+            "used": 4581
         }, 
         "real": {
-            "free": 1194, 
+            "free": 8607, 
             "total": 15886, 
-            "used": 14692
+            "used": 7279
         }, 
         "swap": {
             "cached": 0, 
@@ -471,20 +472,52 @@
     "ansible_memtotal_mb": 15886, 
     "ansible_mounts": [
         {
-            "block_available": 1917438, 
+            "block_available": 4619919, 
             "block_size": 4096, 
             "block_total": 6625296, 
-            "block_used": 4707858, 
+            "block_used": 2005377, 
             "device": "/dev/sda2", 
             "fstype": "ext3", 
-            "inode_available": 1550525, 
+            "inode_available": 1556537, 
             "inode_total": 1692432, 
-            "inode_used": 141907, 
+            "inode_used": 135895, 
             "mount": "/", 
             "options": "rw,relatime,data=ordered", 
-            "size_available": 7853826048, 
+            "size_available": 18923188224, 
             "size_total": 27137212416, 
             "uuid": "a093e04a-93dd-4714-a0a9-19111529edec"
+        }, 
+        {
+            "block_available": 0, 
+            "block_size": 2048, 
+            "block_total": 1998014, 
+            "block_used": 1998014, 
+            "device": "/dev/sr0", 
+            "fstype": "udf", 
+            "inode_available": 0, 
+            "inode_total": 7, 
+            "inode_used": 7, 
+            "mount": "/mnt/dvd", 
+            "options": "ro,relatime,utf8", 
+            "size_available": 0, 
+            "size_total": 4091932672, 
+            "uuid": "2018-02-20-16-44-49-00"
+        }, 
+        {
+            "block_available": 31086685, 
+            "block_size": 4096, 
+            "block_total": 32994561, 
+            "block_used": 1907876, 
+            "device": "/dev/sdb1", 
+            "fstype": "ext4", 
+            "inode_available": 8385989, 
+            "inode_total": 8388608, 
+            "inode_used": 2619, 
+            "mount": "/OpenText", 
+            "options": "rw,relatime,data=ordered", 
+            "size_available": 127331061760, 
+            "size_total": 135145721856, 
+            "uuid": "773cb15b-8098-4935-ae28-0808b2ab728b"
         }, 
         {
             "block_available": 22276, 
@@ -503,22 +536,6 @@
             "uuid": "b7146b63-08bd-4e4e-8c49-af73367bf58a"
         }, 
         {
-            "block_available": 31229358, 
-            "block_size": 4096, 
-            "block_total": 32994561, 
-            "block_used": 1765203, 
-            "device": "/dev/sdb1", 
-            "fstype": "ext4", 
-            "inode_available": 8387945, 
-            "inode_total": 8388608, 
-            "inode_used": 663, 
-            "mount": "/OpenText", 
-            "options": "rw,relatime,data=ordered", 
-            "size_available": 127915450368, 
-            "size_total": 135145721856, 
-            "uuid": "773cb15b-8098-4935-ae28-0808b2ab728b"
-        }, 
-        {
             "block_available": 0, 
             "block_size": 4096, 
             "block_total": 0, 
@@ -529,26 +546,10 @@
             "inode_total": 0, 
             "inode_used": 0, 
             "mount": "/misc", 
-            "options": "rw,relatime,fd=6,pgrp=2361,timeout=300,minproto=5,maxproto=5,indirect", 
+            "options": "rw,relatime,fd=6,pgrp=10336,timeout=300,minproto=5,maxproto=5,indirect", 
             "size_available": 0, 
             "size_total": 0, 
             "uuid": "N/A"
-        }, 
-        {
-            "block_available": 0, 
-            "block_size": 2048, 
-            "block_total": 2037035, 
-            "block_used": 2037035, 
-            "device": "/dev/sr0", 
-            "fstype": "udf", 
-            "inode_available": 0, 
-            "inode_total": 7, 
-            "inode_used": 7, 
-            "mount": "/mnt/dvd", 
-            "options": "ro,relatime,utf8", 
-            "size_available": 0, 
-            "size_total": 4171847680, 
-            "uuid": "2018-02-16-11-50-14-00"
         }
     ], 
     "ansible_nodename": "ussm-mag-crawler", 
@@ -662,7 +663,7 @@
     ], 
     "ansible_system_capabilities_enforced": "True", 
     "ansible_system_vendor": "VMware, Inc.", 
-    "ansible_uptime_seconds": 937367, 
+    "ansible_uptime_seconds": 176366, 
     "ansible_user_dir": "/root", 
     "ansible_user_gecos": "root", 
     "ansible_user_gid": 0, 

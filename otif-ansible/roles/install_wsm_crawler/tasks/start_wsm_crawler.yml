@@ -1,12 +1,6 @@
 ---
 # tasks file for start_web_crawler
 
-#- name: Start Crawler for Web & Social Media service
-#  command: "{{ USER_INSTALL_DIR }}/bin/otif.sh start"  
-#  register: start_wsm_crawler
-
-#- debug:
-#    msg: "{{ start_wsm_crawler.stdout_lines }}"
 
 - name: Enable service for Web & Social Media service
   systemd:
@@ -16,9 +10,9 @@
     name: "{{ item.name }}"
   with_items:
     - { name: otif-wsm-crawler-1 }
+    - { name: infofusion-web-crawling-1 }
 
-
-- name: Wait Crawler for Web & Social Media to be listening on port 10010
+- name: Wait service depedencies for Crawler for Web & Social Media
   wait_for:
     host: "127.0.0.1"
     port: "{{ item }}"
@@ -26,7 +20,16 @@
     state: started
   with_items:
     - "10010"
+    - "10011"
 
-- debug:
-    msg: "Test by accessing http:\\{{wsm_crawler_fqdn}}:10010. You should get the loggin screen."
+- name:
+  vars:
+    msg: |
+         Magellan Crawler for Web & Social Media has been configured on {{ ansible_host }}.
+         Two sample crawling jobs have bee created to test with.
+         You can validate deployement by opening http://{{ ansible_host }}:10010
+         Default credentials are admin/admin.
+  debug:
+    msg: "{{ msg.split('\n') }}"
+
 

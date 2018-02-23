@@ -1,6 +1,6 @@
 ---
 
-- hosts: kafka, pipeline
+- hosts: kafka, zookeeper
 
   tasks:
 

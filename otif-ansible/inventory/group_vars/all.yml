@@ -2,6 +2,8 @@
 
 otif_version: "16.4"
 
+timestamp: "{{ ansible_date_time.date }}"
+
 # Default domain
 domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
@@ -25,6 +27,10 @@ text_mining_host: "{{hostvars[inventory_hostname]['groups']['text-mining'][0]}}"
 text_mining_hostname: "{{hostvars[text_mining_host]['ansible_hostname']}}"
 text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn']}}"
 
+mongodb_host: "{{hostvars[inventory_hostname]['groups']['mongodb'][0]}}"
+mongodb_hostname: "{{hostvars[mongodb_host]['ansible_hostname']}}"
+mongodb_fqdn: "{{hostvars[mongodb_host]['ansible_fqdn']}}"
+
 #Default Network Adapter
 network_interface: "otif1"
 
@@ -34,14 +40,18 @@ playbook_user: "{{ lookup('env','USER') }}"
 # Home folder for the playbook_user
 playbook_user_home: "{{ lookup('env','HOME') }}"
 
-# Location where to download/find the packages (wget) 
-default_download_folder: "{{ lookup('env','HOME') }}/otif-packages"
+# DEPRECATED - Location where to download/find the packages (wget) 
+# default_download_folder: "{{ lookup('env','HOME') }}/otif-packages"
+
+# Location of the mounted iso containing InfoFusion installers
 default_installer_location: "/mnt/dvd"
+
 default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 
 # Master db name, username and password
-# Use these as global defults for db names, username and password.
+# Use these as global defaults for db names, username and password.
 master_dbname: infofusion
 master_username: otif-admin
 master_password: 0t1f-adm1n
-
+# Password for 'postgres' admin
+psql_admin_password: psql-admin

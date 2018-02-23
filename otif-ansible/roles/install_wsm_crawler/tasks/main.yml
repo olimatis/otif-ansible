@@ -7,11 +7,6 @@
 - name: Configure InfoFusion Crawler for Web & Social Media
   include_tasks: configure_wsm_crawler.yml
 
-# The following is needed due to problem with the silent mode of the installer.
-# This should be fixed
-- name: Patch InfoFusion Crawler for Web & Social Media
-  include_tasks: patch_wsm_crawler.yml
-
 - name: Start InfoFusion Crawler for Web & Social Media
   include_tasks: start_wsm_crawler.yml
 

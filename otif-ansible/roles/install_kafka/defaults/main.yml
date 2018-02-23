@@ -6,8 +6,8 @@
 #       matching the regex ^.*kafka.*\\.bin$
 
 # Where to install Kafka - Change as needed
-# kafka_destination_path: "/opt/infofusion-16.4/kafka"
-kafka_destination_path: "{{ default_installation_path }}/kafka"
+# kafka_installation_path: "/opt/infofusion-16.4/kafka"
+kafka_installation_path: "{{ default_installation_path }}/kafka"
 
 
 # Both Kafka are setup to run on their default ports. Role would need to be changed

@@ -6,8 +6,8 @@
 #       matching the regex ^.*zookeeper.*\\.bin$
 
 # Destination path for Zookeeper - Change as needed
-#zookeeper_destination_path: /opt/infofusion-16.4/zookeeper
-zookeeper_destination_path: "{{ default_installation_path }}/zookeeper"
+#zookeeper_installtion_path: /opt/infofusion-16.4/zookeeper
+zookeeper_installation_path: "{{ default_installation_path }}/zookeeper"
 
 # Set remove_zookeeper to True in order to check for existing install with InstallAnywhere and uninstall it 
 remove_zookeeper: True

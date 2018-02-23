@@ -1,0 +1,26 @@
+---
+
+- name: Delete temp files ...
+  shell: rm -rf /tmp/install.dir*
+
+- name: Find WSM Crawler installer package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*crawler-web-social-media-installer.*\\.bin$"
+    use_regex: yes
+  register: crawler_installer
+
+- fail:
+    msg: "No WSM Crawler installer found in {{ default_installer_location }}"
+  when: crawler_installer.matched == 0
+
+- name: Install pexpect dependency
+  become: true
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - pexpect
+
+- include_tasks: remove_wsm_crawler.yml  
+
+

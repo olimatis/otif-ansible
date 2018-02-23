@@ -1,9 +1,9 @@
 ---
 # tasks file for install_zookeeper
 
-- name: Mount DVD read-only
+- name: Mount DVD at {{ default_installer_location }}. The Zookeeper installer is meant to be there.
   mount:
-    path: /mnt/dvd
+    path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
@@ -89,7 +89,7 @@
     msg: "Zookeeper will be installed using '{{ zookeeper_installer.files[0].path }}'"
 
 - debug:
-    msg: "Zookeeper will be installed in {{ zookeeper_destination_path }}"
+    msg: "Zookeeper will be installed in {{ zookeeper_installation_path }}"
 
 #- pause:
 #    prompt: "PRESS <ENTER> TO START"
@@ -103,7 +103,7 @@
       .*to reach the end of this text.*: "skip"
       PRESS \<ENTER\> TO CONTINUE: ""
       .*DO YOU ACCEPT THE TERMS.*: "Y"
-      .*ENTER AN ABSOLUTE PATH.*: "{{ zookeeper_destination_path }}"
+      .*ENTER AN ABSOLUTE PATH.*: "{{ zookeeper_installation_path }}"
       .*IS THIS CORRECT.*: "Y"
       .*Current Host.*: ""
       .*TO ACCEPT THE DEFAULT.*: ""

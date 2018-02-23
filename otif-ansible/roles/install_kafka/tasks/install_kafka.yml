@@ -11,9 +11,9 @@
     - { port: 2181 }
   register: wait
 
-- name: Mount DVD read-only
+- name: Mount DVD at {{ default_installer_location }}. Kafka installer is expected to be there.
   mount:
-    path: /mnt/dvd
+    path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
@@ -99,7 +99,7 @@
     msg: "Kafka will be installed using '{{ kafka_installer.files[0].path }}'"
 
 - debug:
-    msg: "Kafka will be installed in {{ kafka_destination_path }}"
+    msg: "Kafka will be installed in {{ kafka_installation_path }}"
 
 #- pause:
 #    prompt: "PRESS <ENTER> TO START"
@@ -113,7 +113,7 @@
       .*to reach the end of this text.*: "skip"
       PRESS \<ENTER\> TO CONTINUE: ""
       .*DO YOU ACCEPT THE TERMS.*: "Y"
-      .*ENTER AN ABSOLUTE PATH.*: "{{ kafka_destination_path }}"
+      .*ENTER AN ABSOLUTE PATH.*: "{{ kafka_installation_path }}"
       .*IS THIS CORRECT.*: "Y"
       .*Current Host.*: ""
       .*Zookeeper Host.*: "{{ zookeeper_hostname }}"

@@ -1,0 +1,2 @@
+{% set master_password = 'MAGELLA-OT' + master_password %}
+INSERT INTO public.users(username, password) VALUES ('{{ master_username }}', '{{  master_password |  hash('sha512') }}');

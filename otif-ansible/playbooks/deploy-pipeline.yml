@@ -1,6 +1,6 @@
 ---
 
-- hosts: pipeline
+- hosts: pipeline, zookeeper, kafka, mongodb, text-mining
 
   tasks:
 

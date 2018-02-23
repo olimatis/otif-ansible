@@ -1,0 +1,9 @@
+---
+
+- name: create database
+  shell: "PGPASSWORD={{ master_password }} createdb -h {{ ansible_hostname }} -U {{ master_username }} -T template1 {{ item }}"
+  with_items: {{ master_dbname }}
+    
+- name: import databases
+  shell: "PGPASSWORD={{ master_password }} pg_restore -h {{ ansible_hostname }} -U {{ master_username }} -Fc -j{{ ansible_processor_count }} -d {{ item.value }} /tmp/{{ master_dbname }}.{{ timestamp }}.backup"
+  with_items: {{ master_dbname }}

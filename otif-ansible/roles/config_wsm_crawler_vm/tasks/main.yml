@@ -71,6 +71,12 @@
     recursive: yes
     state: absent
 
+# - name: Make sure DB is propertly cponfigured in WSM Cralwer local config
+#   property crawleradmin.db.host needs to point to localhost (ansible_hostname)
+
+# - name: make sure Zookeeper is set properly in the WSM Cralwer local config  
+#  Property crawleradmin.servicediscovery.zookeeper.ensembleurl should point to the ZK on the pipeline, not the crawler host
+
 - name: Set MongoDB authentication for admin user
   mongodb_user:
     database: admin
@@ -109,7 +115,11 @@
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter/configs"
     method: POST
-    body: {"config_id":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},{"prop_name":"CONSUMER_SECRET","prop_value":"9CJYOOBR9mSBL0gC1alejvyvfICXFiFMts66NKIk3vInQLj3FZ"},{"prop_name":"ACCESS_TOKEN","prop_value":"12842652-i1qoXufhBX7ZHyrq6xyA32Z3SGVTvRBRFzyNlWSmz"},{"prop_name":"ACCESS_SECRET","prop_value":"COlIFpmBWjaHs66HhkwwIUTFCUkiDCoyfyWaOGtUT5oSb"}]}
+    body: > 
+      {"config_id":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},
+      {"prop_name":"CONSUMER_SECRET","prop_value":"9CJYOOBR9mSBL0gC1alejvyvfICXFiFMts66NKIk3vInQLj3FZ"},
+      {"prop_name":"ACCESS_TOKEN","prop_value":"12842652-i1qoXufhBX7ZHyrq6xyA32Z3SGVTvRBRFzyNlWSmz"},
+      {"prop_name":"ACCESS_SECRET","prop_value":"COlIFpmBWjaHs66HhkwwIUTFCUkiDCoyfyWaOGtUT5oSb"}]}
     status_code: 201, 400
     body_format: json
     timeout: 10
@@ -125,7 +135,15 @@
   uri: 
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/jobs"
     method: POST
-    body: {"schedule_info":{"repeat_count":0,"recurrence":0},"search_text":{"criteria":{"type":"twitter_search","words":{"include_all_these":[],"include_any_of_these":[],"not_include_these":[],"include_these_hashtags":["#opentext"],"exact_phrase":null},"dates":null,"language":null,"surrounding_to":null,"people":null,"others":{"positive":false,"negative":false,"question":false,"include_retweets":false,"result_type":"mixed"}}},"job_id":1,"name":"Sample Twitter Crawling Job","status":"Unscheduled","description":"This is a sample Twitter crawling job","crawler_subtype":"Twitter Search","job_group":"OpenText","exec_info":{"id":0,"job_id":1}}
+    body: >
+      {"schedule_info":{"repeat_count":0,"recurrence":0},
+      "search_text":{"criteria":{"type":"twitter_search","words":{"include_all_these":[],"include_any_of_these":[],
+      "not_include_these":[],"include_these_hashtags":["#opentext"],"exact_phrase":null},
+      "dates":null,"language":null,"surrounding_to":null,"people":null,
+      "others":{"positive":false,"negative":false,"question":false,"include_retweets":false,"result_type":"mixed"}}},
+      "job_id":1,"name":"Sample Twitter Crawling Job","status":"Unscheduled",
+      "description":"This is a sample Twitter crawling job",
+      "crawler_subtype":"Twitter Search","job_group":"OpenText","exec_info":{"id":0,"job_id":1}}
     status_code: 201, 400
     body_format: json
     timeout: 10
@@ -141,7 +159,21 @@
   uri: 
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/jobs"
     method: POST
-    body: {"schedule_info":{"repeat_count":0,"recurrence":0},"search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},"urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],"url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},{"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},{"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"}],"scrapingRules":[{"targetField":"document.metadata.attributes.creationDate","textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},"textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]},{"targetField":"document.metadata.extensions.crawler.web_content_source","textExtraction":{"concatenate":false,"xpaths":["//*[@property=\"og:site_name\"]/@content"]},"textTransformation":[{"type":"regexSubstitution","parameters":{"regex":"(.*)","replacement":"$1"}}]}]},"job_id":2,"name":"Sample Web Crawling Job","status":"Unscheduled","description":"This is a sample Web crawling job","crawler_subtype":"Nutch","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
+    body: >
+      {"schedule_info":{"repeat_count":0,"recurrence":0},
+      "search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},
+      "urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],
+      "url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},
+      {"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},
+      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"}],
+      "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
+      "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]},
+      {"targetField":"document.metadata.extensions.crawler.web_content_source",
+      "textExtraction":{"concatenate":false,"xpaths":["//*[@property=\"og:site_name\"]/@content"]},
+      "textTransformation":[{"type":"regexSubstitution","parameters":{"regex":"(.*)","replacement":"$1"}}]}]},
+      "job_id":2,"name":"Sample Web Crawling Job","status":"Unscheduled",
+      "description":"This is a sample Web crawling job","crawler_subtype":"Nutch","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
     status_code: 201, 400
     body_format: json
     timeout: 10

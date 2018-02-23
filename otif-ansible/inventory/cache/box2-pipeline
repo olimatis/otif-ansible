@@ -24,23 +24,23 @@
         "vconsole.keymap": "us"
     }, 
     "ansible_date_time": {
-        "date": "2018-02-18", 
-        "day": "18", 
-        "epoch": "1518983343", 
-        "hour": "11", 
-        "iso8601": "2018-02-18T19:49:03Z", 
-        "iso8601_basic": "20180218T114903123261", 
-        "iso8601_basic_short": "20180218T114903", 
-        "iso8601_micro": "2018-02-18T19:49:03.123415Z", 
-        "minute": "49", 
+        "date": "2018-02-22", 
+        "day": "22", 
+        "epoch": "1519348863", 
+        "hour": "17", 
+        "iso8601": "2018-02-23T01:21:03Z", 
+        "iso8601_basic": "20180222T172103026057", 
+        "iso8601_basic_short": "20180222T172103", 
+        "iso8601_micro": "2018-02-23T01:21:03.026232Z", 
+        "minute": "21", 
         "month": "02", 
         "second": "03", 
-        "time": "11:49:03", 
+        "time": "17:21:03", 
         "tz": "PST", 
         "tz_offset": "-0800", 
-        "weekday": "Sunday", 
-        "weekday_number": "0", 
-        "weeknumber": "07", 
+        "weekday": "Thursday", 
+        "weekday_number": "4", 
+        "weeknumber": "08", 
         "year": "2018"
     }, 
     "ansible_default_ipv4": {
@@ -64,7 +64,7 @@
         }, 
         "labels": {
             "sr0": [
-                "DOWNLOADS"
+                "INFOFUSION_16_4_SNAPSHOTS"
             ]
         }, 
         "masters": {}, 
@@ -82,7 +82,7 @@
                 "00f83889-2329-450f-a215-8da090ba2bdd"
             ], 
             "sr0": [
-                "2018-02-03-15-38-55-00"
+                "2018-02-20-16-44-49-00"
             ]
         }
     }, 
@@ -230,11 +230,11 @@
                     "ata-VMware_Virtual_IDE_CDROM_Drive_00000000000000000001"
                 ], 
                 "labels": [
-                    "DOWNLOADS"
+                    "INFOFUSION_16_4_SNAPSHOTS"
                 ], 
                 "masters": [], 
                 "uuids": [
-                    "2018-02-03-15-38-55-00"
+                    "2018-02-20-16-44-49-00"
                 ]
             }, 
             "model": "VMware IDE CDR00", 
@@ -244,9 +244,9 @@
             "sas_address": null, 
             "sas_device_handle": null, 
             "scheduler_mode": "cfq", 
-            "sectors": "2385024", 
+            "sectors": "7993216", 
             "sectorsize": "2048", 
-            "size": "4.55 GB", 
+            "size": "15.25 GB", 
             "support_discard": "0", 
             "vendor": "NECVMWar", 
             "virtual": 1
@@ -351,6 +351,7 @@
     "ansible_env": {
         "CVS_RSH": "ssh", 
         "HOME": "/root", 
+        "JAVA_HOME": "/opt/java/jdk1.8.0_162", 
         "LANG": "en_US.UTF-8", 
         "LESSOPEN": "||/usr/bin/lesspipe.sh %s", 
         "LOGNAME": "root", 
@@ -360,13 +361,13 @@
         "PWD": "/root", 
         "SHELL": "/bin/bash", 
         "SHLVL": "2", 
-        "SSH_CLIENT": "192.168.2.146 52552 22", 
-        "SSH_CONNECTION": "192.168.2.146 52552 192.168.2.146 22", 
-        "SSH_TTY": "/dev/pts/9", 
+        "SSH_CLIENT": "192.168.2.146 56348 22", 
+        "SSH_CONNECTION": "192.168.2.146 56348 192.168.2.146 22", 
+        "SSH_TTY": "/dev/pts/5", 
         "TERM": "xterm-16color", 
         "USER": "root", 
         "XDG_RUNTIME_DIR": "/run/user/0", 
-        "XDG_SESSION_ID": "1898", 
+        "XDG_SESSION_ID": "359", 
         "_": "/usr/bin/python"
     }, 
     "ansible_fips": false, 
@@ -466,16 +467,16 @@
     }, 
     "ansible_machine": "x86_64", 
     "ansible_machine_id": "f3204761ec424812b5583e8c97c9b4db", 
-    "ansible_memfree_mb": 5909, 
+    "ansible_memfree_mb": 14190, 
     "ansible_memory_mb": {
         "nocache": {
-            "free": 14948, 
-            "used": 938
+            "free": 15201, 
+            "used": 685
         }, 
         "real": {
-            "free": 5909, 
+            "free": 14190, 
             "total": 15886, 
-            "used": 9977
+            "used": 1696
         }, 
         "swap": {
             "cached": 0, 
@@ -487,42 +488,42 @@
     "ansible_memtotal_mb": 15886, 
     "ansible_mounts": [
         {
-            "block_available": 2832103, 
+            "block_available": 4895040, 
             "block_size": 4096, 
             "block_total": 6625296, 
-            "block_used": 3793193, 
+            "block_used": 1730256, 
             "device": "/dev/sda2", 
             "fstype": "ext3", 
-            "inode_available": 1536429, 
+            "inode_available": 1541569, 
             "inode_total": 1692432, 
-            "inode_used": 156003, 
+            "inode_used": 150863, 
             "mount": "/", 
             "options": "rw,relatime,data=ordered", 
-            "size_available": 11600293888, 
+            "size_available": 20050083840, 
             "size_total": 27137212416, 
             "uuid": "a093e04a-93dd-4714-a0a9-19111529edec"
         }, 
         {
-            "block_available": 31239392, 
-            "block_size": 4096, 
-            "block_total": 32994561, 
-            "block_used": 1755169, 
-            "device": "/dev/sdb1", 
-            "fstype": "ext4", 
-            "inode_available": 8388124, 
-            "inode_total": 8388608, 
-            "inode_used": 484, 
-            "mount": "/OpenText", 
-            "options": "rw,relatime,data=ordered", 
-            "size_available": 127956549632, 
-            "size_total": 135145721856, 
-            "uuid": "00f83889-2329-450f-a215-8da090ba2bdd"
+            "block_available": 0, 
+            "block_size": 2048, 
+            "block_total": 1998014, 
+            "block_used": 1998014, 
+            "device": "/dev/sr0", 
+            "fstype": "udf", 
+            "inode_available": 0, 
+            "inode_total": 7, 
+            "inode_used": 7, 
+            "mount": "/mnt/dvd", 
+            "options": "ro,relatime,utf8", 
+            "size_available": 0, 
+            "size_total": 4091932672, 
+            "uuid": "2018-02-20-16-44-49-00"
         }, 
         {
-            "block_available": 18964, 
+            "block_available": 18966, 
             "block_size": 1024, 
             "block_total": 198337, 
-            "block_used": 179373, 
+            "block_used": 179371, 
             "device": "/dev/sda1", 
             "fstype": "ext2", 
             "inode_available": 50853, 
@@ -530,9 +531,25 @@
             "inode_used": 347, 
             "mount": "/boot", 
             "options": "rw,relatime", 
-            "size_available": 19419136, 
+            "size_available": 19421184, 
             "size_total": 203097088, 
             "uuid": "b7146b63-08bd-4e4e-8c49-af73367bf58a"
+        }, 
+        {
+            "block_available": 31239329, 
+            "block_size": 4096, 
+            "block_total": 32994561, 
+            "block_used": 1755232, 
+            "device": "/dev/sdb1", 
+            "fstype": "ext4", 
+            "inode_available": 8388118, 
+            "inode_total": 8388608, 
+            "inode_used": 490, 
+            "mount": "/OpenText", 
+            "options": "rw,relatime,data=ordered", 
+            "size_available": 127956291584, 
+            "size_total": 135145721856, 
+            "uuid": "00f83889-2329-450f-a215-8da090ba2bdd"
         }, 
         {
             "block_available": 0, 
@@ -545,26 +562,10 @@
             "inode_total": 0, 
             "inode_used": 0, 
             "mount": "/misc", 
-            "options": "rw,relatime,fd=7,pgrp=1799,timeout=300,minproto=5,maxproto=5,indirect,pipe_ino=24922", 
+            "options": "rw,relatime,fd=7,pgrp=11264,timeout=300,minproto=5,maxproto=5,indirect,pipe_ino=32361", 
             "size_available": 0, 
             "size_total": 0, 
             "uuid": "N/A"
-        }, 
-        {
-            "block_available": 0, 
-            "block_size": 2048, 
-            "block_total": 595994, 
-            "block_used": 595994, 
-            "device": "/dev/sr0", 
-            "fstype": "udf", 
-            "inode_available": 0, 
-            "inode_total": 5, 
-            "inode_used": 5, 
-            "mount": "/mnt/dvd", 
-            "options": "ro,relatime,utf8", 
-            "size_available": 0, 
-            "size_total": 1220595712, 
-            "uuid": "2018-02-03-15-38-55-00"
         }
     ], 
     "ansible_nodename": "ussm-mag-pipeline", 
@@ -678,7 +679,7 @@
     ], 
     "ansible_system_capabilities_enforced": "True", 
     "ansible_system_vendor": "VMware, Inc.", 
-    "ansible_uptime_seconds": 942971, 
+    "ansible_uptime_seconds": 176489, 
     "ansible_user_dir": "/root", 
     "ansible_user_gecos": "root", 
     "ansible_user_gid": 0, 
