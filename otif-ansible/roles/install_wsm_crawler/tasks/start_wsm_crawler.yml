@@ -25,9 +25,9 @@
 - name:
   vars:
     msg: |
-         Magellan Crawler for Web & Social Media has been configured on {{ ansible_host }}.
-         Two sample crawling jobs have bee created to test with.
-         You can validate deployement by opening http://{{ ansible_host }}:10010
+         Magellan Crawler for Web & Social Media has been configured on {{ ansible_hostname }}.
+         Two sample crawling jobs have been created to test with.
+         You can validate deployement by opening http://{{ ansible_hostname }}:10010
          Default credentials are admin/admin.
   debug:
     msg: "{{ msg.split('\n') }}"

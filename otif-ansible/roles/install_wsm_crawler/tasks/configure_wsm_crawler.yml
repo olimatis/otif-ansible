@@ -37,6 +37,12 @@
   with_items:
     - "10010"
 
+- name: Restart WSM Service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: otif-wsm-crawler-1
+
 - name: Authenticate to the WSM Crawler Admin UI to get cookie
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/authentication/login"
@@ -47,18 +53,34 @@
       Content-Type: "application/x-www-form-urlencoded"
   register: login
 
-- name: Create a sample Twitter Access Token
+- name: Create a sample Twitter Access Token for Twitter Search API
   uri:
-    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter/configs"
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter%20Search/configs"
     method: POST
     body: >
-      {"config_id":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},
+      {"config_name":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},
       {"prop_name":"CONSUMER_SECRET","prop_value":"9CJYOOBR9mSBL0gC1alejvyvfICXFiFMts66NKIk3vInQLj3FZ"},
       {"prop_name":"ACCESS_TOKEN","prop_value":"12842652-i1qoXufhBX7ZHyrq6xyA32Z3SGVTvRBRFzyNlWSmz"},
       {"prop_name":"ACCESS_SECRET","prop_value":"COlIFpmBWjaHs66HhkwwIUTFCUkiDCoyfyWaOGtUT5oSb"}]}
     status_code: 201, 400
     body_format: json
-    timeout: 10
+    timeout: 30
+    headers:
+      Cookie: "{{login.set_cookie}}"
+  register: request_otif
+
+- name: Create a sample Twitter Access Token for Twitter Stream API
+  uri:
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter%20Stream/configs"
+    method: POST
+    body: >
+      {"config_name":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},
+      {"prop_name":"CONSUMER_SECRET","prop_value":"9CJYOOBR9mSBL0gC1alejvyvfICXFiFMts66NKIk3vInQLj3FZ"},
+      {"prop_name":"ACCESS_TOKEN","prop_value":"12842652-i1qoXufhBX7ZHyrq6xyA32Z3SGVTvRBRFzyNlWSmz"},
+      {"prop_name":"ACCESS_SECRET","prop_value":"COlIFpmBWjaHs66HhkwwIUTFCUkiDCoyfyWaOGtUT5oSb"}]}
+    status_code: 201, 400
+    body_format: json
+    timeout: 30
     headers:
       Cookie: "{{login.set_cookie}}"
   register: request_otif
@@ -79,7 +101,7 @@
       "others":{"positive":false,"negative":false,"question":false,"include_retweets":false,"result_type":"mixed"}}},
       "job_id":1,"name":"Sample Twitter Crawling Job","status":"Unscheduled",
       "description":"This is a sample Twitter crawling job",
-      "crawler_subtype":"Twitter Search","job_group":"OpenText","exec_info":{"id":0,"job_id":1}}
+      "crawler_type":"Twitter Search","job_group":"OpenText","exec_info":{"id":0,"job_id":1}}
     status_code: 201, 400
     body_format: json
     timeout: 10
@@ -101,15 +123,15 @@
       "urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],
       "url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},
       {"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},
-      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"}],
+      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
+      "ingestion_filters":[{"expression":"http://www.nasdaq.com/symbol/otex/news-headlines","type":"EXCLUDE"},
+      {"expression":".","type":"EXCLUDE"}],
+      "pipeline_custom_properties":[{"wikipedia_url":"https://en.wikipedia.org/wiki/OpenText"}],
       "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
       "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
-      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]},
-      {"targetField":"document.metadata.extensions.crawler.web_content_source",
-      "textExtraction":{"concatenate":false,"xpaths":["//*[@property=\"og:site_name\"]/@content"]},
-      "textTransformation":[{"type":"regexSubstitution","parameters":{"regex":"(.*)","replacement":"$1"}}]}]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]}]},
       "job_id":2,"name":"Sample Web Crawling Job","status":"Unscheduled",
-      "description":"This is a sample Web crawling job","crawler_subtype":"Nutch","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
+      "description":"This is a sample Web crawling job","crawler_type":"Web","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
     status_code: 201, 400
     body_format: json
     timeout: 10

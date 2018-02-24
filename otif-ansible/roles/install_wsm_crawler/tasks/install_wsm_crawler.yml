@@ -91,6 +91,12 @@
       .*Please enter Crawler Web Service Name.*: ""
       .*Please enter Topic Name for Web Crawler.*: ""
       .*TO EXIT THE INSTALLER.*: ""
+  register: installer_output
 
+- debug:
+    var: installer_output.stdout_lines
+
+#- pause:
+#    prompt: "TESTING"
 
 
