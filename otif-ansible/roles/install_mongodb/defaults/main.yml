@@ -12,7 +12,9 @@ mongodb_repo_gpgkey:  "https://www.mongodb.org/static/pgp/server-{{ mongodb_vers
 
 
 remove_mongodb: true
-remove_mongodb_data: true    # WARNING! If this is set to true, all existing collections will be erased during installation. 
+
+# WARNING! If the following is set to true, all existing collections will be erased during installation.
+remove_mongodb_data: true 
 
 mongodb_config: /etc/mongod.conf
 mongodb_port: 27017

@@ -1,15 +1,7 @@
 ---
 # defaults file for install_pipeline
 
+#pipeline_destination_path: 
+pipeline_installation_path: "{{ default_installation_path }}/pipeline"
 
-USER_INSTALL_DIR: /opt/infofusion-16.2/pipeline
-REGISTRY_ZK_URL: otif-pipeline.opentext.net:2181
-DB_HOST: otif-pipeline.opentext.net:5432
-DB_NAME: "{{ master_dbname }}"
-DB_USER: "{{ master_username }}"
-
-KAFKA_URL: otif-crawler.opentext.net:9092
-MONGO_URL: otif-crawler.opentext.net:27017
-MONGO_DB_NAME: "{{ master_dbname }}"
-MONGO_USER: "{{ master_username }}"
-
+remove_pipeline: true

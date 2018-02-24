@@ -1,15 +1,51 @@
 ---
 # tasks file for install_text_mining
 
-#- name: Make sure the Text Mining Engine package is found @ "{{ download_folder }}/{{ tme_core_package }}"
-#  local_action: stat path="{{ download_folder }}/{{ tme_core_package }}"
-#  register: tme_core
-#  failed_when: tme_core.stat.exists == False
-  
-#- name: Make sure the Text Mining Engine Data is found @ "{{ download_folder }}/{{ tme_data_package }}"
-#  local_action: stat path="{{ download_folder }}/{{ tme_data_package }}"
-#  register: tme_data
-#  failed_when: tme_data.stat.exists == False
+- name: Wait until Zookeeper is listening on port 2181 (mandatory)
+  wait_for:
+    host: "{{ zookeeper_hostname }}"
+    port: "{{ item.port }}"
+    delay: 5
+    timeout: 20
+    state: started
+  with_items:
+    - { port: 2181 }
+  register: wait
+
+- name: Mount DVD read-only - just in case - Installers are meant to be there ...
+  mount:
+    path: /mnt/dvd
+    src: /dev/cdrom
+    fstype: udf
+    state: mounted
+
+- name: Find TME binary  package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*tme.*-bin\\.zip$"
+    use_regex: yes
+  register: tmebin_installer
+
+- name: Find TME data package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*tme.*-data\\.zip$"
+    use_regex: yes
+  register: tmedata_installer
+
+- fail:
+    msg: "No Text Mining Engine installer found in {{ default_installer_location }}"
+  when: tmebin_installer.matched == 0
+
+- fail:
+    msg: "No Text Mining data package found in {{ default_installer_location }}"
+  when: tmedata_installer.matched == 0
+
+- set_fact:
+    tme_package_basename: "{{ tmebin_installer.files[0].path | basename | regex_replace('\\-bin\\.[^.]+$') }}"
+
+- debug:
+    var: tme_package_basename
 
 - name: Create a group for admin user
   group:
@@ -42,13 +78,13 @@
     - name: Check if the otif-text-mining.service exists
       stat:
         path: /etc/systemd/system/otif-text-mining.service
-      register: service_is_there
+      register: service_location
 
     - name: Stop service if it's there
       systemd:
         name: otif-text-mining
         state: stopped
-      when: service_is_there.stat.exists == True    
+      when: service_location.stat.exists == True    
  
     - name: Remove service
       file:
@@ -62,11 +98,10 @@
       with_items:
         - "{{ tme_target_dir }}/{{ tme_package_basename }}"        
 
-
   when: remove_text_mining
 
-#- pause:
-#    prompt: "Text Mining Engine should be removed if remove_text_mining is set accordingly."
+- pause:
+    prompt: "Text Mining Engine should now be removed if remove_text_mining is set accordingly."
  
 - name: Make sure target directory exists
   file:
@@ -76,19 +111,20 @@
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
 
-
-- name: Unzip TME core (from "{{ download_folder }}/{{ tme_core_package }}" to "{{ tme_target_dir }}") 
+- name: Unzip TME binaries (from "{{ tmebin_installer.files[0].path }}" to "{{ tme_target_dir }}") 
   unarchive:
-    src: "{{ download_folder }}/{{ tme_core_package }}"
+    remote_src: yes
+    src: "{{ tmebin_installer.files[0].path }}"
     dest: "{{ tme_target_dir }}"
     keep_newer: yes
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
     mode: 0774
 
-- name: Unzip TME data (from "{{ download_folder }}/{{ tme_data_package }}" to "{{ tme_target_dir }}/{{ tme_package_basename }}") ... hold on it takes a while (2-10 minutes)
+- name: Unzip TME data (from "{{ tmedata_installer.files[0].path }}" to "{{ tme_target_dir }}/{{ tme_package_basename }}") ... hold on! it takes a while depending on i/o and network latency (2-10 minutes)
   unarchive:
-    src: "{{ download_folder }}/{{ tme_data_package }}"
+    remote_src: yes
+    src: "{{ tmedata_installer.files[0].path }}"
     dest: "{{ tme_target_dir }}/{{ tme_package_basename }}"
     keep_newer: yes
     owner: "{{ master_username }}"

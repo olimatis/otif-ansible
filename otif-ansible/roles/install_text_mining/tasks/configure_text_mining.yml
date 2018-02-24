@@ -10,7 +10,7 @@
     mode: 0774
     backup: yes
 
-- name: patch tme script to run on CentoOS
+- name: patch tme script to run on CentoOS and rely on existing JAVA_HOME
   become: true
   lineinfile:
     dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/bin/tme"
@@ -26,6 +26,7 @@
     - { src: otif-text-mining.service.j2, dest: /etc/systemd/system/otif-text-mining.service }
 
 - name: Open port 40002
+  ignore_errors: true
   become: true
   firewalld:
     zone: public
@@ -34,4 +35,4 @@
     immediate: true
     state: enabled
   with_items:
-    - 40002
+    - "40002"
