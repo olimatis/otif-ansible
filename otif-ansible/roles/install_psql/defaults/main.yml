@@ -11,7 +11,7 @@ min_version: 6
 psql_rpm_release: 3
 
 # Password for PostgreSQL user
-psql_admin_pw: psql-admin
+psql_admin_pw: "{{ psql_admin_password }}"
 
 # Default DB, user and pw
 psql_otif_db: "{{ master_dbname }}"
@@ -32,6 +32,6 @@ update_config: yes
 # Set the following to true to crate a ~/pgpass file 
 # This will allow to use psql and pass password automatically
 # using 'psql otif-admin -d infofusion'
-# Needed to run the SQL querys needed to initialize the InfoFusion database
+# Needed to run the SQL queries needed to initialize the InfoFusion database
 # For improved security, this file can be deleted once installation is completed
 create_pgpass: true

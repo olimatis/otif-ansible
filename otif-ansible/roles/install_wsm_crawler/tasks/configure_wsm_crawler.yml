@@ -1,34 +1,33 @@
 ---
 # tasks file for configure_wsm_crawler
 
-
-# Add a sql query to add a Twitter key
-# Add a sql query to add a sample Twitter crawling job
-# Add a sql query to add a sample Web crawling job
+- name: Make sure the {{ master_dbname }} exists in postgresql.
+  postgresql_db:
+    name: "{{ master_dbname }}"
+    login_user: postgres
+    login_password: "{{ psql_admin_password }}"
+    owner: "{{ master_username }}"
+    encoding: UTF-8
+    state: present  
 
 - name: Create query to add admin user to the database
   template:
     src:  "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "add_admin.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_admin.sql" }
-    - { src: "add_twitter_access_token.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_twitter_access_token.sql" }
-    - { src: "add_sample_jobs.sql.j2", dest: "{{ USER_INSTALL_DIR }}/etc/add_sample_jobs.sql" }
-
+    - { src: "add_admin.sql.j2", dest: "{{ crawler_installation_path }}/etc/add_admin.sql" }
 
 - name: Initialize the database used by InfoFusion Crawler for Web & Social Media
-  become: true
-  become_user: "{{ playbook_user }}"
-  command: "{{ item }}"
+#  become: true
+#  become_user: "{{ playbook_user }}"
+  shell: "{{ item.command }}"
   with_items:
-    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/otif-wsm-crawler-schema.sql" 
-    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_admin.sql" 
-    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_twitter_access_token.sql"
-    - "psql {{ master_username }} -d {{ master_dbname }} -f {{ USER_INSTALL_DIR }}/etc/add_sample_jobs.sql"
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }} -f {{ crawler_installation_path }}/etc/otif-wsm-crawler-schema.sql" }
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }} -f {{ crawler_installation_path }}/etc/add_admin.sql" }
     
-
 - name: Open port 10100 used to access InfoFusion Crawler for Web & Social Media Admin UI
   become: true
+  ignore_errors: true
   firewalld:
     zone: public
     port: "{{ item }}/tcp"
@@ -38,12 +37,87 @@
   with_items:
     - "10010"
 
-- name: Set directory ownership for deamon user
-  file:
-    path: "{{ item }}"
-    owner: "{{ wsm_crawler_deamon_user }}"
-    group: "{{ wsm_crawler_deamon_user }}"
-    state: directory
-    recurse: true
-  with_items:
-    - "{{ USER_INSTALL_DIR }}"
+- name: Authenticate to the WSM Crawler Admin UI to get cookie
+  uri:
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/authentication/login"
+    method: POST
+    body: "username=admin&password=admin"
+    status_code: 200
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+  register: login
+
+- name: Create a sample Twitter Access Token
+  uri:
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter/configs"
+    method: POST
+    body: >
+      {"config_id":"test","props":[{"prop_name":"CONSUMER_KEY","prop_value":"jCF3SP0aFiqkDwvw5UO52pzEm"},
+      {"prop_name":"CONSUMER_SECRET","prop_value":"9CJYOOBR9mSBL0gC1alejvyvfICXFiFMts66NKIk3vInQLj3FZ"},
+      {"prop_name":"ACCESS_TOKEN","prop_value":"12842652-i1qoXufhBX7ZHyrq6xyA32Z3SGVTvRBRFzyNlWSmz"},
+      {"prop_name":"ACCESS_SECRET","prop_value":"COlIFpmBWjaHs66HhkwwIUTFCUkiDCoyfyWaOGtUT5oSb"}]}
+    status_code: 201, 400
+    body_format: json
+    timeout: 10
+    headers:
+      Cookie: "{{login.set_cookie}}"
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
+- name: Create a sample Twitter crawling job
+  uri:
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/jobs"
+    method: POST
+    body: >
+      {"schedule_info":{"repeat_count":0,"recurrence":0},
+      "search_text":{"criteria":{"type":"twitter_search","words":{"include_all_these":[],"include_any_of_these":[],
+      "not_include_these":[],"include_these_hashtags":["#opentext"],"exact_phrase":null},
+      "dates":null,"language":null,"surrounding_to":null,"people":null,
+      "others":{"positive":false,"negative":false,"question":false,"include_retweets":false,"result_type":"mixed"}}},
+      "job_id":1,"name":"Sample Twitter Crawling Job","status":"Unscheduled",
+      "description":"This is a sample Twitter crawling job",
+      "crawler_subtype":"Twitter Search","job_group":"OpenText","exec_info":{"id":0,"job_id":1}}
+    status_code: 201, 400
+    body_format: json
+    timeout: 10
+    headers:
+      Cookie: "{{login.set_cookie}}"
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
+- name: Create a sample Web crawling job
+  uri:
+    url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/jobs"
+    method: POST
+    body: >
+      {"schedule_info":{"repeat_count":0,"recurrence":0},
+      "search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},
+      "urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],
+      "url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},
+      {"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},
+      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"}],
+      "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
+      "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]},
+      {"targetField":"document.metadata.extensions.crawler.web_content_source",
+      "textExtraction":{"concatenate":false,"xpaths":["//*[@property=\"og:site_name\"]/@content"]},
+      "textTransformation":[{"type":"regexSubstitution","parameters":{"regex":"(.*)","replacement":"$1"}}]}]},
+      "job_id":2,"name":"Sample Web Crawling Job","status":"Unscheduled",
+      "description":"This is a sample Web crawling job","crawler_subtype":"Nutch","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
+    status_code: 201, 400
+    body_format: json
+    timeout: 10
+    headers:
+      Cookie: "{{login.set_cookie}}"
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
