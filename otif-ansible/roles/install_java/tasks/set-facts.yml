@@ -1,0 +1,59 @@
+---
+# file: tasks/set-facts.yml
+
+- name: Include all required variables.
+  include_vars: '{{ item }}.yml'
+  with_items:
+    - 'java-builds'
+    - '{{ ansible_os_family }}'
+
+- name: Basic variable setting.
+  set_fact:
+    java_build_number: "{{ java_builds[java_major_version|int][java_minor_version|int]['build'] }}"
+    java_os_arch: "{{ 'i586' if ansible_architecture == 'i386' else 'x64' }}"
+    java_tar_link_id: ''
+    java_version_found: False
+    oracle_auth: False
+
+- block:
+  - name: Version dependend variables setting (7th/8th version).
+    set_fact:
+      java_version: "1.{{ java_major_version }}.0_{{ java_minor_version }}"
+      java_home: "{{ java_home | default ( java_root_path + '/jdk1.' + java_major_version|string + '.0_' + java_minor_version|string ) }}"
+      java_tar_path: "{{ java_major_version }}u{{ java_minor_version }}-b{{ java_build_number }}"
+      java_tar_name: "jdk-{{ java_major_version }}u{{ java_minor_version }}-linux-{{ java_os_arch }}.tar.gz"
+      oracle_rep: 'otn-pub'
+  - name: Set tar link for downloadID.
+    set_fact:
+      java_tar_link_id: "{{ java_builds[java_major_version|int][java_minor_version|int]['download_id'] }}/"
+    when: "java_builds[java_major_version|int][java_minor_version|int]['download_id'] is defined"
+  - name: Update Oracle rep location of JDK <8.152.
+    set_fact:
+      oracle_rep: 'otn'
+      oracle_auth: True
+    when: java_minor_version|int <= 152
+  when: java_major_version|int == 7 or java_major_version|int == 8
+
+- block:
+  - name: Version dependend variables setting (9th version).
+    set_fact:
+      java_home: "{{ java_home | default ( java_root_path + '/jdk-' + java_major_version|string + '.0.' + java_minor_version|string ) }}"
+      java_version: "jdk-{{ java_major_version }}.0.{{ java_minor_version }}"
+      java_tar_path: "{{ java_major_version }}.0.{{ java_minor_version }}+{{ java_builds[java_major_version|int][java_minor_version|int]['build'] }}"
+      java_tar_name: "jdk-{{ java_major_version }}.0.{{ java_minor_version }}_linux-{{ java_os_arch }}_bin.tar.gz"
+      oracle_rep: 'otn-pub'
+  - name: Set tar link for downloadID.
+    set_fact:
+      java_tar_link_id: "{{ java_builds[java_major_version|int][java_minor_version|int]['download_id'] }}/"
+    when: "java_builds[java_major_version|int][java_minor_version|int]['download_id'] is defined"
+  - name: Update Oracle rep location of JDK 9.0.1.
+    set_fact:
+      oracle_rep: 'otn'
+      oracle_auth: True
+      java_tar_path: "{{ java_major_version }}.0.{{ java_minor_version }}+{{ java_builds[java_major_version|int][java_minor_version|int]['build'] }}"
+    when: java_minor_version|int == 1
+  when: java_major_version|int == 9
+
+- name: Set final URL for JDK downloading
+  set_fact:
+    java_tar_url: "http://download.oracle.com/{{ oracle_rep }}/java/jdk/{{ java_tar_path }}/{{ java_tar_link_id }}{{ java_tar_name }}"

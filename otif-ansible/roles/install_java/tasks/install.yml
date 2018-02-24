@@ -1,0 +1,44 @@
+---
+# file: tasks/install.yml
+
+- name: Download TAR archive from oracle site.
+  get_url:
+    url: "{{ java_tar_url }}"
+    headers: "Cookie:oraclelicense=accept-securebackup-cookie"
+    dest: "{{ java_distr_path }}/{{ java_tar_name }}"
+    force: no
+    validate_certs: no
+    timeout: 600
+  when: java_from_oracle and not oracle_auth
+
+- name: Download TAR archive from oracle site with Oracle Account ID.
+  get_url:
+    url: "{{ java_tar_url }}"
+    headers: "Cookie:oraclelicense=accept-securebackup-cookie"
+    dest: "{{ java_distr_path }}/{{ java_tar_name }}"
+    force: no
+    force_basic_auth: yes
+    url_username: '{{ oracle_id_username }}'
+    url_password: '{{ oracle_id_password }}'
+    validate_certs: no
+    timeout: 600
+  when: java_from_oracle and oracle_auth
+
+- name: Copy TAR archive from local.
+  copy:
+    src: "{{ java_tar_name }}"
+    dest: "{{ java_distr_path }}/{{ java_tar_name }}"
+  when: not java_from_oracle
+
+- name: Unarchive TAR archive with JDK.
+  unarchive:
+    src: "{{ java_distr_path }}/{{ java_tar_name }}"
+    dest: "{{ java_root_path }}"
+    copy: no
+    creates: '{{ java_home }}'
+
+- name: Remove downloaded TAR JDK archive.
+  file:
+    path: "{{ java_distr_path }}/{{ java_tar_name }}"
+    state: absent
+  when: java_clear_after

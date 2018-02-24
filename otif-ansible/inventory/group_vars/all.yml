@@ -1,22 +1,38 @@
 # Global variables
 
+otif_version: "16.4"
+
+timestamp: "{{ ansible_date_time.date }}"
+
 # Default domain
 domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
 zookeeper_host: "{{hostvars[inventory_hostname]['groups']['zookeeper'][0]}}"
 zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn']}}"
+zookeeper_hostname: "{{hostvars[zookeeper_host]['ansible_hostname']}}"
+
+kafka_host: "{{hostvars[inventory_hostname]['groups']['kafka'][0]}}"
+kafka_hostname: "{{hostvars[kafka_host]['ansible_hostname']}}"
+kafka_fqdn: "{{hostvars[kafka_host]['ansible_fqdn']}}"
 
 wsm_crawler_host: "{{hostvars[inventory_hostname]['groups']['wsm-crawler'][0]}}"
+wsm_crawler_hostname: "{{hostvars[wsm_crawler_host]['ansible_hostname']}}"
 wsm_crawler_fqdn: "{{hostvars[wsm_crawler_host]['ansible_fqdn']}}"
 
 pipeline_host: "{{hostvars[inventory_hostname]['groups']['pipeline'][0]}}"
+pipeline_hostname: "{{hostvars[pipeline_host]['ansible_hostname']}}"
 pipeline_fqdn: "{{hostvars[pipeline_host]['ansible_fqdn']}}"
 
 text_mining_host: "{{hostvars[inventory_hostname]['groups']['text-mining'][0]}}"
+text_mining_hostname: "{{hostvars[text_mining_host]['ansible_hostname']}}"
 text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn']}}"
 
+mongodb_host: "{{hostvars[inventory_hostname]['groups']['mongodb'][0]}}"
+mongodb_hostname: "{{hostvars[mongodb_host]['ansible_hostname']}}"
+mongodb_fqdn: "{{hostvars[mongodb_host]['ansible_fqdn']}}"
+
 #Default Network Adapter
-network_interface: "enp0s3"
+network_interface: "otif1"
 
 # User running the playbooks
 playbook_user: "{{ lookup('env','USER') }}"
@@ -24,12 +40,15 @@ playbook_user: "{{ lookup('env','USER') }}"
 # Home folder for the playbook_user
 playbook_user_home: "{{ lookup('env','HOME') }}"
 
-# Location where to download/find the packages (wget) 
-download_folder: "{{ lookup('env','HOME') }}/otif-packages"
+# Location of the mounted iso containing InfoFusion installers
+default_installer_location: "/mnt/dvd"
+
+default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 
 # Master db name, username and password
-# Use these as global defults for db names, username and password.
+# Use these as global defaults for db names, username and password.
 master_dbname: infofusion
 master_username: otif-admin
 master_password: 0t1f-adm1n
-
+# Password for 'postgres' admin
+psql_admin_password: psql-admin

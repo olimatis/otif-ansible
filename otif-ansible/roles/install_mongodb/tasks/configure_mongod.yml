@@ -29,8 +29,9 @@
        regexp: "^#?[ ]*port:"
        line: "  port: {{mongodb_port }} # The playbook will make sure this port is opened."
 
-   - name: Open port "{{mongodb_port}}" for MongoDB
+   - name: Open port "{{mongodb_port}}" for MongoDB - error reported if firewall not running
      become: true
+     ignore_errors: true
      firewalld:
        zone: public
        port: "{{mongodb_port}}/tcp"
