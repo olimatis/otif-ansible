@@ -1,0 +1,10 @@
+---
+
+- name: Prepare Pipeline removal ...
+  include_role:
+   name: install_pipeline
+   tasks_from: checkup
+
+- include_tasks: remove_pipeline.yml  
+
+

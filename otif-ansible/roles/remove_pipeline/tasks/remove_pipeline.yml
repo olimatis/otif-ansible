@@ -1,0 +1,127 @@
+---
+# tasks file for remove_wsm_crawler.yml
+
+- name: Make sure Pipeline is removed if it exists
+  block:
+
+    - name: Check if Pipeline is in the InstallAnywhere registry
+      stat:
+        path: /var/.com.zerog.registry.xml
+      register: installanywhere_registry_is_there
+
+    - name: If Registry is present ...
+      block:
+
+      - name: Look if Pipeline is already registred
+        xml:
+          path: /var/.com.zerog.registry.xml
+          xpath: /registry/products/product//feature[@short_name='Pipeline']
+          count: yes
+        register: hits
+        when: installanywhere_registry_is_there.stat.exists == true
+
+      - name: Get location where Pipeline is already installed
+        xml:
+          path: /var/.com.zerog.registry.xml
+          xpath: /registry/products/product[@name='OpenText InfoFusion Ingestion Pipeline']
+          content: attribute
+          attribute: location
+        register: pipeline_location
+        when: hits.count > 0
+
+      - debug:
+          msg: "Pipeline is already installed in {{ pipeline_location.matches[0].product.location }}."
+        when: hits.count > 0
+
+      - name: Removing Ingestion Pipeline ...
+        expect:
+          command: "{{ pipeline_installer.files[0].path }} -i console"
+          echo: yes
+          timeout: 45
+          responses:
+            .*Choose Instance Management Option.*: "2"
+            .*Choose the instance to modify.*: "1"
+            .*DEFAULT.*: "1"
+            .*TO CONTINUE.*: ""
+        when: hits.count > 0
+
+      - name: Removing Pipeline directory
+        file:
+          path: "{{ item }}"
+          state: absent
+        with_items:
+          - "{{ pipeline_location.matches[0].product.location }}"
+        when: hits.count > 0
+
+      when: installanywhere_registry_is_there.stat.exists == true
+
+    - name: Remove reference to Pipeline in Zookeeper
+      block:
+
+        - name: Install kazoo dependency - needed for the Ansible znode module used to talk to Zookeeper
+          become: true
+          easy_install:
+            name: kazoo
+            state: latest
+
+        - name: Remove Pipeline from Service Registry in Zookeeper
+          znode:
+            hosts: "{{ zookeeper_hostname }}:2181"
+            name: "{{ item }}"
+            recursive: true
+            state: absent
+          with_items:
+            - /ot/service-registry/ingestion-api
+            - /ot/service-registry/ingestion-api-admin
+            - /otif/ingestion-api 
+
+      when: cleanup_zookeeper
+
+    - name: Creating PostgreSQL backup (support for PostgreSQL only)
+      block:
+        
+        - name: Create backup folder if it does not exist
+          file:
+            path: "{{ default_installation_path }}/backup"
+            state: directory
+            mode: "u=rw,g=r,o=r"
+
+        - name: Backup database {{ master_dbname }} (create a backup in folder {{ default_installation_path }}/backup/)
+          postgresql_db:
+            name: "{{ master_dbname }}"
+            login_user: "{{ master_username }}"
+            login_password: "{{ master_password }}"
+            state: dump
+            target: "{{ default_installation_path }}/backup/psql-{{ansible_hostname}}-{{ master_dbname }}.{{ timestamp }}.sql.gz"
+
+        - debug:
+            msg: |
+              Backup created in {{ default_installation_path }}/backup/.
+              Can be used with pg_restore.
+
+      when: backup_database
+
+    - name: Dropping PostgreSQL database {{ master_dbname }} ...
+      block:
+
+        - name: Drop database (support for PostgreSQL only)
+          postgresql_db:
+            name: "{{ master_dbname }}"
+            login_user: "{{ master_username }}"
+            login_password: "{{ master_password }}"
+            state: absent          
+
+      when: drop_database
+
+    - debug:
+        msg: "Ingestion Pipeline should not be on {{ansible_hostname}} anymore!"
+ 
+    - pause:
+        prompt: "Press any key to continue."
+      when: with_pause
+
+  when: remove_pipeline
+
+
+
+

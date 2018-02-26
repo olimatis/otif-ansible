@@ -1,0 +1,22 @@
+---
+
+
+- name: Create InfoFusion database
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: "{{psql_otif_db}}"
+    owner: "{{ psql_otif_un }}"
+    encoding: UTF-8
+    state: present
+
+- name: Ensure no other user can access the database
+  become: true
+  become_user: postgres
+  postgresql_privs:
+    db: "{{ psql_otif_db }}"
+    role: PUBLIC
+    type: database
+    priv: ALL
+    state: absent
+

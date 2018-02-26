@@ -1,0 +1,17 @@
+---
+# defaults file for install_wsm_crawler
+
+crawler_installation_path: "{{ default_installation_path }}/wsm-crawler"
+
+# Enanble removal or not
+remove_wsm_crawler: true
+
+# Delete associated node and information in Zookeeper
+cleanup_zookeeper: true
+
+# Create a backup of the WSM Crawler database (used to store crawling job definitions)
+backup_database: true
+
+# Drop the database or not
+drop_database: true
+
