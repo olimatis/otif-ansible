@@ -1,7 +1,7 @@
 ---
-# tasks file for install_zookeeper
+# tasks file for configure_pipeline
 
-- name: Open port 2181 used by Zookeeper service
+- name: Open ports 7071 & 7171 used by Pipeline service.
   become: yes
   ignore_errors: yes
   firewalld:
@@ -11,4 +11,11 @@
     immediate: true
     state: enabled
   with_items:
-    - "2181" 
+    - "7071"
+    - "7171"
+
+- name: Initialize the database used by the Pipeline
+  shell: "{{ item.command }}"
+  with_items:
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }} -f {{ pipeline_installation_path }}/etc/ingestion-api/defaults-dbadapter/postgresql/dbAdapterConfig-postgresql-sql-tables.sql" }
+ 

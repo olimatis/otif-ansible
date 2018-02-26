@@ -37,7 +37,7 @@
         expect:
           command: "{{ crawler_installer.files[0].path }} -i console"
           echo: yes
-          timeout: 45
+          timeout: 60
           responses:
             .*Choose Instance Management Option.*: "2"
             .*Choose the instance to modify.*: "1"
@@ -68,6 +68,7 @@
           znode:
             hosts: "{{ zookeeper_hostname }}:2181"
             name: "{{ item }}"
+            recursive: true
             state: absent
           with_items:
             - /ot/service-registry/crawler-twitter
@@ -84,18 +85,12 @@
             mode: "u=rw,g=r,o=r"
 
         - name: Backup database {{ master_dbname }} (create a backup in folder {{ default_installation_path }}/backup/)
-#         shell: >
-#           PGPASSWORD={{ master_password }} pg_dump
-#           -h {{ ansible_hostname }} -U {{ master_username }}
-#           -Fc -Z9 -f {{ default_installation_path }}/backup/wsm-crawler-{{ item }}.{{ timestamp }}.backup {{ item }}
-#         with_items: 
-#           - "{{ master_dbname }}"
           postgresql_db:
             name: "{{ master_dbname }}"
             login_user: "{{ master_username }}"
             login_password: "{{ master_password }}"
             state: dump
-            target: "{{ default_installation_path }}/backup/wsm-crawler-{{ master_dbname }}.{{ timestamp }}.sql.gz"
+            target: "{{ default_installation_path }}/backup/psql-wsm-crawler-{{ansible_hostname}}-{{ master_dbname }}.{{ timestamp }}.sql.gz"
 
         - debug:
             msg: |
@@ -108,9 +103,6 @@
       block:
 
         - name: Drop database (support for PostgreSQL only)
-#         shell: >
-#           PGPASSWORD={{ master_password }} dropdb
-#           -h {{ ansible_hostname }} -U {{ master_username }} --if-exists {{ master_dbname }}
           postgresql_db:
             name: "{{ master_dbname }}"
             login_user: "{{ master_username }}"
@@ -119,8 +111,9 @@
 
       when: drop_database
 
-    - debug:
-        msg: "Crawler for Web & Social Media should not be on {{ansible_hostname}} anymore!"
+    - pause:
+        prompt: "Crawler for Web & Social Media should not be on {{ansible_hostname}} anymore!"
+      when: with_pause
 
   when: remove_wsm_crawler
 

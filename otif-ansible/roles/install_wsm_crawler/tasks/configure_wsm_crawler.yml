@@ -120,16 +120,16 @@
     body: >
       {"schedule_info":{"repeat_count":0,"recurrence":0},
       "search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},
-      "urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],
+      "urls":["http://investors.opentext.com/press-releases?aa7708e5_year[value]=_none"],
       "url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},
-      {"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},
-      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
-      "ingestion_filters":[{"expression":"http://www.nasdaq.com/symbol/otex/news-headlines","type":"EXCLUDE"},
-      {"expression":".","type":"EXCLUDE"}],
+      {"expression":"http://investors.opentext.com/press-releases*","type":"INCLUDE"},
+      {"expression":"http://investors.opentext.com/news-releases/news-release-details*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
+      "ingestion_filters":[{"expression":"http://investors.opentext.com/press-releases*","type":"EXCLUDE"},
+      {"expression":".","type":"INCLUDE"}],
       "pipeline_custom_properties":[{"wikipedia_url":"https://en.wikipedia.org/wiki/OpenText"}],
       "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
-      "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
-      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]}]},
+      "textExtraction":{"concatenate":false,"xpaths":["//div[contains(@class,'news-date')]/div/text()"]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"MMM d, YYY"}}]}]},
       "job_id":2,"name":"Sample Web Crawling Job","status":"Unscheduled",
       "description":"This is a sample Web crawling job","crawler_type":"Web","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
     status_code: 201, 400

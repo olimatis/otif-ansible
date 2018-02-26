@@ -1,10 +1,10 @@
 ---
 
-- hosts: pipeline, zookeeper, kafka, mongodb, text-mining
+- hosts: pipeline, zookeeper, kafka, mongodb, text-mining, wsm-crawler
 
   tasks:
 
-  - name: Depploy InfoFusion Ingestion Pipeline
+  - name: Deploy InfoFusion Ingestion Pipeline
     include_role:
       name: install_pipeline
     tags: 'install-pipeline'

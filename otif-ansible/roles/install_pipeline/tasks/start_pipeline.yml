@@ -10,11 +10,21 @@
   with_items:
     - { name: otif-ingestion-api-1 }
 
-- name: Wait until Pipeline is listening on port 7171
+- name: Wait until Pipeline is listening on ports 7071 & 7171  
   wait_for:
     host: 127.0.0.1
     port: "{{ item.port }}"
     delay: 5
     state: started
   with_items:
+    - { port: 7071 }
     - { port: 7171 }
+
+- name:
+  vars:
+    msg: |
+         Magellan Crawler Pipeline has been configured on {{ ansible_hostname }}.
+         You can validate deployement by opening http://{{ ansible_hostname }}:7171
+         Default credentials are admin/admin.
+  debug:
+    msg: "{{ msg.split('\n') }}"

@@ -2,6 +2,8 @@
 
 otif_version: "16.4"
 
+with_pause: false
+
 timestamp: "{{ ansible_date_time.date }}"
 
 # Default domain

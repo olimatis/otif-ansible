@@ -1,52 +1,18 @@
 ---
 # tasks file for install_wsm_crawler
 
-- name: Delete temp files ...
-  shell: rm -rf /tmp/install.dir*
-
 - name: Testing services dependencies -  Zookeeper, Kafka, MongoDB
   wait_for:
-    host: "{{ item.hostname }}"
+    host: "{{ item.host }}"
     port: "{{ item.port }}"
     delay: 5
     timeout: 10
     state: started
   with_items:
-    - { hostname: "{{zookeeper_hostname}}", port: 2181 }
-    - { hostname: "{{kafka_hostname}}", port: 9092 }
-    - { hostname: "{{mongodb_hostname}}", port: 27017 }
+    - { host: "{{zookeeper_hostname}}", port: 2181 }
+    - { host: "{{kafka_hostname}}", port: 9092 }
+    - { host: "{{mongodb_hostname}}", port: 27017 }
   register: wait
-
-- name: Mount DVD at {{ default_installer_location }}. WSM Crawler Installer is exepected to be there
-  mount:
-    path: "{{ default_installer_location }}"
-    src: /dev/cdrom
-    fstype: udf
-    state: mounted
-
-- name: Find WSM Crawler installer package in '{{ default_installer_location }}'
-  find:
-    paths: "{{ default_installer_location }}"
-    patterns: "^.*crawler-web-social-media-installer.*\\.bin$"
-    use_regex: yes
-  register: crawler_installer
-
-- fail:
-    msg: "No WSM Crawler installer found in {{ default_installer_location }}"
-  when: crawler_installer.matched == 0
-
-- name: Install pexpect dependency
-  become: true
-  easy_install:
-    name: "{{ item }}"
-  with_items:
-    - pexpect
-
-- name: Check if WSM Crawler needs to be removed ...
-  include_role:
-    name: remove_wsm_crawler
-    tasks_from: remove_wsm_crawler
-  when: remove_wsm_crawler
 
 - debug:
     msg: "WSM Crawler will be installed using '{{ crawler_installer.files[0].path }}'"
@@ -96,7 +62,9 @@
 - debug:
     var: installer_output.stdout_lines
 
-#- pause:
-#    prompt: "TESTING"
+- pause:
+    prompt: "Installation completed. WSM Crawler will now be configured."
+  when: with_pause
+
 
 
