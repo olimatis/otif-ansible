@@ -6,7 +6,7 @@
   register: conf_location
 
 - debug:
-    msg: "Nutch configurartion file has been found uner {{conf_location.stdout}}"
+    msg: "Nutch configuration file has been found under {{conf_location.stdout}}"
 
 
 # The Ansible xml module seems to have limitation to deal with schema used by Nutch
@@ -27,11 +27,11 @@
     backup: yes
 
 - name: Find where WSM Crawler configuration is located
-  command: "find / -path '*/etc/otif-crawler.properties'"
+  command: "find / -path '/OpenText/*/etc/otif-crawler.properties'"
   register: conf_location
 
 - debug:
-    msg: "Nutch configurartion file has been found uner {{conf_location.stdout}}"
+    msg: "WSM Crawler configuration file has been found under {{conf_location.stdout}}"
 
 - name: Update WSM Crawler configuration file {{conf_location.stdout}}
   become: true
@@ -40,16 +40,16 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: "^crawler.service.zookeeper.ensemble=", item.line: "crawler.service.zookeeper.ensemble={{ zookeeper_hostname }}" }
-    - { regexp: "^crawler.service.host=", item.line: "crawler.service.host={{ wsm_crawler_hostname }}" }
-    - { regexp: "^crawler.kafka.producer.bootstrap.servers=", item.line: "crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_hostname }}" }
+    - { regexp: "^crawler.service.zookeeper.ensemble=", line: "crawler.service.zookeeper.ensemble={{ zookeeper_hostname }}" }
+    - { regexp: "^crawler.service.host=", line: "crawler.service.host={{ wsm_crawler_hostname }}" }
+    - { regexp: "^crawler.kafka.producer.bootstrap.servers=", line: "crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_hostname }}" }
 
 - name: Find where WSM Crawler Admin configuration is located
-  command: "find / -path '*/etc/crawleradmin.properties'"
+  command: "find / -path '/OpenText/*/etc/crawleradmin.properties'"
   register: conf_location
 
 - debug:
-    msg: "Nutch configurartion file has been found uner {{conf_location.stdout}}"
+    msg: "WSM Crawler Admin configuration file has been found under {{conf_location.stdout}}"
 
 - name: Update WSM Crawler Admin configuration file {{conf_location.stdout}}
   become: true
@@ -58,7 +58,7 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: "^crawleradmin.db.host=", item.line: "crawleradmin.db.host={{ wsm_crawler_hostname }}" }
+    - { regexp: "^crawleradmin.db.host=", line: "crawleradmin.db.host={{ wsm_crawler_hostname }}" }
     
 - name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and wsm crawler services are running
   systemd:
@@ -135,7 +135,7 @@
     - { name: "admin", pwd: "admin", roles: "userAdmin" }
 
 
-- name: Authenticate to the WSM- Crawler Admin UI to get cookie
+- name: Authenticate to the WSM Crawler Admin REST API
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/authentication/login"
     method: POST
@@ -145,7 +145,7 @@
       Content-Type: "application/x-www-form-urlencoded"
   register: login
 
-- name: Create a sample Twitter Access Token
+- name: Create a sample Twitter Access Token (for testing only!)
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/crawlertypes/Twitter/configs"
     method: POST
@@ -196,13 +196,12 @@
     body: >
       {"schedule_info":{"repeat_count":0,"recurrence":0},
       "search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},
-      "urls":["http://www.nasdaq.com/symbol/otex/news-headlines"],
-      "url_filters":[{"expression":".*/amp$","type":"EXCLUDE"},
-      {"expression":"http://www.nasdaq.com/symbol/otex/news-headlines*","type":"INCLUDE"},
-      {"expression":"http://www.nasdaq.com/article/*","type":"INCLUDE"}],
+      "urls":["http://investors.opentext.com/press-releases?aa7708e5_year[value]=_none"],
+      "url_filters":[{"expression":"http://investors.opentext.com/press-releases*","type":"INCLUDE"},
+      {"expression":"http://investors.opentext.com/press-releases*","type":"INCLUDE"}],
       "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
-      "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
-      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'HH:mm:ssZ"}}]},
+      "textExtraction":{"concatenate":false,"xpaths":["//div[contains(@class,'news-date')]/div/text()"]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"MMM d, YYY"}}]},
       {"targetField":"document.metadata.extensions.crawler.web_content_source",
       "textExtraction":{"concatenate":false,"xpaths":["//*[@property=\"og:site_name\"]/@content"]},
       "textTransformation":[{"type":"regexSubstitution","parameters":{"regex":"(.*)","replacement":"$1"}}]}]},
@@ -224,7 +223,7 @@
     msg: |
          Magellan Crawler for Web & Social Media has been configured on {{ansible_host}}.
          Two sample crawling jobs have bee created to test with.
-         You can validate deployement by opening http://{{ansible_host}}:10010
+         You can validate deployement by opening http://{{ansible_hostname}}:10010
          Default credentials are admin/admin.
   debug:
     msg: "{{ msg.split('\n') }}"
