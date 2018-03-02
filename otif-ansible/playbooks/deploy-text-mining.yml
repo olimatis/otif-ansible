@@ -1,6 +1,6 @@
 ---
 
-- hosts: text-mining
+- hosts: text-mining, pipeline
 
   tasks: 
 

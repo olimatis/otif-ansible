@@ -98,10 +98,12 @@
       with_items:
         - "{{ tme_target_dir }}/{{ tme_package_basename }}"        
 
+    - pause:
+        prompt: "Text Mining Engine should have been removed."
+      when: with_pause
+
   when: remove_text_mining
 
-- pause:
-    prompt: "Text Mining Engine should now be removed if remove_text_mining is set accordingly."
  
 - name: Make sure target directory exists
   file:
