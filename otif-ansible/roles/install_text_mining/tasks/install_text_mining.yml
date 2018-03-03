@@ -1,7 +1,7 @@
 ---
 # tasks file for install_text_mining
 
-- name: Wait until Zookeeper is listening on port 2181 (mandatory)
+- name: Wait until Zookeeper is listening on port 2181 (for service registry)
   wait_for:
     host: "{{ zookeeper_hostname }}"
     port: "{{ item.port }}"
@@ -98,11 +98,12 @@
       with_items:
         - "{{ tme_target_dir }}/{{ tme_package_basename }}"        
 
+    - pause:
+        prompt: "Text Mining Engine should have been removed removed."
+      when: with_pause
+
   when: remove_text_mining
 
-- pause:
-    prompt: "Text Mining Engine should now be removed if remove_text_mining is set accordingly."
- 
 - name: Make sure target directory exists
   file:
     path: "{{ tme_target_dir }}"
@@ -121,7 +122,7 @@
     group: "{{ master_username }}"
     mode: 0774
 
-- name: Unzip TME data (from "{{ tmedata_installer.files[0].path }}" to "{{ tme_target_dir }}/{{ tme_package_basename }}") ... hold on! it takes a while depending on i/o and network latency (2-10 minutes)
+- name: Unzip TME data (from "{{ tmedata_installer.files[0].path }}" to "{{ tme_target_dir }}/{{ tme_package_basename }}") ... hold on! It takes a while depending on i/o and network latency (2-5 minutes)
   unarchive:
     remote_src: yes
     src: "{{ tmedata_installer.files[0].path }}"
