@@ -40,7 +40,7 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: "^crawler.service.zookeeper.ensemble=", line: "crawler.service.zookeeper.ensemble={{ zookeeper_hostname }}" }
+    - { regexp: "^crawler.service.zookeeper.ensemble=", line: "crawler.service.zookeeper.ensemble={{ zookeeper_hostname }}:2181" }
     - { regexp: "^crawler.service.host=", line: "crawler.service.host={{ wsm_crawler_hostname }}" }
     - { regexp: "^crawler.kafka.producer.bootstrap.servers=", line: "crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_hostname }}" }
 
@@ -59,7 +59,7 @@
     line: "{{ item.line }}"
   with_items:
     - { regexp: "^crawleradmin.db.host=", line: "crawleradmin.db.host={{ wsm_crawler_hostname }}" }
-    - { regexp: "^crawleradmin.servicediscovery.zookeeper.ensembleurl=", line: "crawleradmin.servicediscovery.zookeeper.ensembleurl={{ pipeline_hostname }}:2181" }    
+    - { regexp: "^crawleradmin.servicediscovery.zookeeper.ensembleurl=", line: "crawleradmin.servicediscovery.zookeeper.ensembleurl={{ zookeeper_hostname }}:2181" }    
 
 - name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and wsm crawler services are running
   systemd:
