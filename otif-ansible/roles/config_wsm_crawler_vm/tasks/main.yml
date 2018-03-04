@@ -59,7 +59,8 @@
     line: "{{ item.line }}"
   with_items:
     - { regexp: "^crawleradmin.db.host=", line: "crawleradmin.db.host={{ wsm_crawler_hostname }}" }
-    
+    - { regexp: "^crawleradmin.servicediscovery.zookeeper.ensembleurl=", line: "crawleradmin.servicediscovery.zookeeper.ensembleurl={{ pipeline_hostname }}" }    
+
 - name: Make sure Kafka/Zookeeper, MongoDB, PostgreSQL and wsm crawler services are running
   systemd:
     state: restarted
