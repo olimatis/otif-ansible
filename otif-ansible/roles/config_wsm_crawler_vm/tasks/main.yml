@@ -207,7 +207,7 @@
       "search_text":{"numberOfCycles":5,"batchSize":50,"configuration":{},
       "urls":["http://investors.opentext.com/press-releases?aa7708e5_year[value]=_none"],
       "url_filters":[{"expression":"http://investors.opentext.com/press-releases*","type":"INCLUDE"},
-      {"expression":"http://investors.opentext.com/press-releases*","type":"INCLUDE"}],
+      {"expression":"http://investors.opentext.com/news-releases/news-release-details/*","type":"INCLUDE"}],
       "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
       "textExtraction":{"concatenate":false,"xpaths":["//div[contains(@class,'news-date')]/div/text()"]},
       "textTransformation":[{"type":"dateFormatting","parameters":{"format":"MMM d, YYY"}}]},
