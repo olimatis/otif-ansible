@@ -42,7 +42,7 @@
   with_items:
     - { regexp: "^crawler.service.zookeeper.ensemble=", line: "crawler.service.zookeeper.ensemble={{ zookeeper_hostname }}:2181" }
     - { regexp: "^crawler.service.host=", line: "crawler.service.host={{ wsm_crawler_hostname }}" }
-    - { regexp: "^crawler.kafka.producer.bootstrap.servers=", line: "crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_hostname }}" }
+    - { regexp: "^crawler.kafka.producer.bootstrap.servers=", line: "crawler.kafka.producer.bootstrap.servers={{ wsm_crawler_hostname }}:9092" }
 
 - name: Find where WSM Crawler Admin configuration is located
   command: "find / -path '/OpenText/*/etc/crawleradmin.properties'"
@@ -105,6 +105,14 @@
     name: '/ot'
     recursive: yes
     state: absent
+
+#- name: Add znode for Twitter Crawler in Registray Service
+#  znode:
+#    hosts: "{{ zookeeper_hostname }}:2181"
+#    name: "/ot/service-registry/crawler-twitter/3d846b93-f419-4d16-96e3-6fd76e42b01e"
+#    value: "{'name':'crawler-twitter','id':'3d846b93-f419-4d16-96e3-6fd76e42b01e','address':'{{ wsm_crawler_hostname }}','port':null,'sslPort':null,'payload':{'@class':'com.opentext.otif.service.$
+#    state: present
+
 
 # - name: Make sure DB is propertly cponfigured in WSM Cralwer local config
 #   property crawleradmin.db.host needs to point to localhost (ansible_hostname)
