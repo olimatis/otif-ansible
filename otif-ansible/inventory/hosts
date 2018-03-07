@@ -8,7 +8,6 @@ box2-pipeline  ansible_host=192.168.2.146
 
 [text-mining]
 box3-tme  ansible_host=192.168.2.148
-box4-tme  ansible_host=192.168.2.173
 
 # The following groups defines taget nodes for depedencies
 

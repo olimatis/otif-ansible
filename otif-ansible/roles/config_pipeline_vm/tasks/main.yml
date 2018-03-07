@@ -1,20 +1,43 @@
 ---
 # tasks file for config_pipeline_vm
 
-- name: Make sure Zookeeper, PostgreSQL and Pipeline  services ar running
+- name: Restart Zookeeper and PostgreSQL services
   systemd:
-    state: started
-    daemon_reload: yes
+    state: restarted
+    # daemon_reload: yes
     enabled: yes
     name: "{{ item.name }}"
   with_items:
-    - { name: otif-ingestion-api-1 }
     - { name: ot-zk-1 }
     - { name: postgresql-9.4 }
   when: inventory_hostname in groups['pipeline']
 
 
-- name: Wait for Pipeline API & UI on port 7071 & 7171. Zookeeper on port 2181 and PostgreSQL on 5432.
+
+- name: Wait for Zookeeper on port 2181 and PostgreSQL on 5432.
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ item.port }}"
+    delay: 1
+    state: started
+  with_items:
+    - { port: 2181 }
+    - { port: 5432 }
+  when: inventory_hostname in groups['pipeline']
+
+
+- name: Then restart Pipeline services ...
+  systemd:
+    state: restarted
+    # daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-ingestion-api-1 }
+  when: inventory_hostname in groups['pipeline']
+
+
+- name: Wait for Pipeline API & Admin on port 7071 & 7171.
   wait_for:
     host: "127.0.0.1"
     port: "{{ item.port }}"
@@ -23,9 +46,8 @@
   with_items:
     - { port: 7071 }
     - { port: 7171 }
-    - { port: 2181 }
-    - { port: 5432 }
   when: inventory_hostname in groups['pipeline']
+
 
 - set_fact:
     text_mining_host: "{{hostvars[inventory_hostname]['groups']['text-mining'][0]}}"
