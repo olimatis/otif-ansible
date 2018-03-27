@@ -52,8 +52,8 @@ default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 
 # Master db name, username and password
 # Use these as global defaults for db names, username and password.
-master_dbname: infofusion
-master_username: otif-admin
-master_password: 0t1f-adm1n
+master_dbname: magellan
+master_username: maguser
+master_password: Mage11an
 # Password for 'postgres' admin
 psql_admin_password: psql-admin

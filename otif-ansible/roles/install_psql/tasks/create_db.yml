@@ -5,18 +5,27 @@
   become: true
   become_user: postgres
   postgresql_db:
-    name: "{{psql_otif_db}}"
+    name: "{{psql_otif_db}}_{{ item }}"
     owner: "{{ psql_otif_un }}"
     encoding: UTF-8
     state: present
+  with_items:
+    - wsm
+    - ecm
+    - dashboard
+    - is
 
 - name: Ensure no other user can access the database
   become: true
   become_user: postgres
   postgresql_privs:
-    db: "{{ psql_otif_db }}"
+    db: "{{ psql_otif_db }}_{{ item }}"
     role: PUBLIC
     type: database
     priv: ALL
     state: absent
-
+  with_items:
+    - wsm
+    - ecm
+    - dashboard
+    - is 
