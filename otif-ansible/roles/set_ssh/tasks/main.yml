@@ -10,7 +10,7 @@
 ## Date: 10/23/2017 
 
 ## Usage example:
-##   $ ansible-playbook setup_ssh.yml -e "username=otif-admin userpwd=magellan" -k
+##   $ ansible-playbook setup_ssh.yml -e "username=maguser userpwd=Mage11an" -k
 ##
 ## Testing:
 ## Once the playbook is completed, become this new user and try ssh to romote host

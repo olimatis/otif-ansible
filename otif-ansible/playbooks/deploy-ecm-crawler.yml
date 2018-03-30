@@ -8,6 +8,6 @@
     include_role:
       name: install_ecm_crawler
     tags: 'install-ecm-crawler'
-    when: inventory_hostname in groups['_ecm-crawler']
+    when: inventory_hostname in groups['ecm-crawler']
 
 

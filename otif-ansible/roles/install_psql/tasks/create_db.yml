@@ -1,7 +1,6 @@
 ---
 
-
-- name: Create InfoFusion database
+- name: Create Magellan databases
   become: true
   become_user: postgres
   postgresql_db:
@@ -14,18 +13,30 @@
     - ecm
     - dashboard
     - is
+  when: inventory_hostname in groups['wsm-crawler']
+
+- name: Create Magellan databases
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: "{{psql_otif_db}}_{{ item }}"
+    owner: "{{ psql_otif_un }}"
+    encoding: UTF-8
+    state: present
+  with_items:
+    - wsm
+    - ecm
+    - dashboard
+    - is
+  when: inventory_hostname in groups['wsm-crawler']
 
 - name: Ensure no other user can access the database
   become: true
   become_user: postgres
   postgresql_privs:
-    db: "{{ psql_otif_db }}_{{ item }}"
+    db: "{{ psql_otif_db }}"
     role: PUBLIC
     type: database
     priv: ALL
     state: absent
-  with_items:
-    - wsm
-    - ecm
-    - dashboard
-    - is 
+  when: inventory_hostname in groups['pipeline']

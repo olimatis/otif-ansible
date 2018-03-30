@@ -1,19 +1,18 @@
 # The default Ansible inventory to deploy InfoFusion for Web & Social Media on 3 nodes
 
 [wsm-crawler]
-magellan-wsm-crawler  ansible_host=10.18.50.120 
+magellan-wsm-crawler  ansible_host=192.168.2.184 
 
 [pipeline]
-magellan-pipeline  ansible_host=10.18.50.135
+magellan-pipeline  ansible_host=192.168.2.185
 
 [text-mining]
-magellan-text-mining  ansible_host=10.18.50.139
+magellan-text-mining  ansible_host=192.168.2.186
 
 # The following groups defines taget nodes for depedencies
 
 [java:children]
 text-mining
-# kafka (Kafka installer 16.4 + includes JRE)
 
 [postgresql:children]
 pipeline
@@ -23,7 +22,7 @@ wsm-crawler
 pipeline
 
 [kafka:children]
-wsm-crawler
+pipeline
 
 [mongodb:children]
 wsm-crawler

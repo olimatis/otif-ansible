@@ -1,8 +1,11 @@
 ---
+
+# First thing first - deploy Zookeeper used for Service Registry and centralized configuration
+- import_playbook: deploy-zookeeper.yml
   
 # The following tasks initialize nodes
   
-- import_playbook: init-nodes.yml
+#- import_playbook: init-nodes.yml
 
 # The follwoing tasks manage deployement of dependencies
 # Java, PostgreSQL, MongoDB
@@ -11,15 +14,14 @@
  
 # The following tasks manage deployement of InfoFusion services
 
-- import_playbook: deploy-zookeeper.yml
 
 - import_playbook: deploy-kafka.yml
 
 - import_playbook: deploy-text-mining.yml
 
-- import_playbook: deploy-pipeline.yml
+#- import_playbook: deploy-pipeline.yml
 
-- import_playbook: deploy-wsm-crawler.yml
+#- import_playbook: deploy-wsm-crawler.yml
 
 - import_playbook: deploy-ecm-crawler.yml
 

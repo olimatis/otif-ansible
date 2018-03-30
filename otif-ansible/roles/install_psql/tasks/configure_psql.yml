@@ -9,11 +9,6 @@
     password: "{{ psql_otif_pw }}"
     priv: "{{ psql_otif_priv }}"
     state: present
-  with_items:
-    - wsm
-    - ecm
-    - dashboard
-    - is
 
 - name: Create database {{ master_dbname }}
   include_tasks: create_db.yml

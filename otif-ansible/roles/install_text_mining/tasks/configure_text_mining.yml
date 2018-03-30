@@ -3,7 +3,7 @@
 
 - name: Install license key file (etc/tme.license)
   copy:
-    src: tme.license
+    src: esnecil.emt
     dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.license"
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
@@ -17,6 +17,17 @@
     regexp: '^[ ]*JAVA_HOME=(.*)$'
     line: '#JAVA_HOME=\1'
     backrefs: true
+
+- name: Register Text Mining Engine into Zookeeper
+  become: true
+  lineinfile:
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.properties"
+    regexp: "^(.*{{ item.lookup }}.*)=(.*)$"
+    line: "\1={{ item.fqdn }}"
+    backrefs: true
+  with_items:
+    - { lookup: "zookeeper.ensemble", fqdn: "{{ zookeeper_fqdn }}:2181" },
+    - { lookup: "service.host", fqdn: "{{ text_mining_fqdn }}" }
 
 - name: Create services for Text Mining Engine
   template:

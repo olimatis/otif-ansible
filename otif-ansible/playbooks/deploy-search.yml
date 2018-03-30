@@ -8,5 +8,5 @@
     include_role:
       name: install_search
     tags: 'install-search'
-    when: iventory_hostname in groups['search']
+    when: inventory_hostname in groups['search']
 
