@@ -1,11 +1,16 @@
 ---
 # tasks file for install_text_mining
 
-- name: Install InfoFusion Text Mining
-  include_tasks: install_text_mining.yml
+- name: Install Magellan Text Mining
+  block:
 
-- name: Configure InfoFusion Text Mining
-  include_tasks: configure_text_mining.yml
+    - name: Install InfoFusion Text Mining
+      include_tasks: install_text_mining.yml
 
-- name: Start InfoFusion Text Mining
-  include_tasks: start_text_mining.yml
+    - name: Configure InfoFusion Text Mining
+      include_tasks: configure_text_mining.yml
+
+    - name: Start InfoFusion Text Mining
+      include_tasks: start_text_mining.yml
+
+  when: inventory_hostname in groups['text-mining'] 

@@ -19,12 +19,24 @@
     msg: "No Zookeeper installer found in {{ default_installer_location }}"
   when: zookeeper_installer.matched == 0 
 
+- name: Install easy_install
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
 - name: Install pexpect dependency
   become: true
   easy_install:
     name: "{{ item }}"
   with_items:
     - pexpect
+    - lxml
 
 - name: Make sure Zookeeper is removed if it exists
   block:

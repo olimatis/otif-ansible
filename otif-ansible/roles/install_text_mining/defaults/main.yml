@@ -10,3 +10,6 @@ tme_target_dir: "{{ default_installation_path }}"
 #tme_package_basename: "{{ tme_core_package | regex_replace('\\-bin\\.[^.]+$') }}"
 
 remove_text_mining: True
+
+# Set to true to skip tme data deployement 
+skip_data: False

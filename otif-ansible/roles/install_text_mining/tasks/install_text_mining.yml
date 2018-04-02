@@ -131,7 +131,7 @@
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
     mode: 0774
-
+  when: not skip_data
 
 
 
