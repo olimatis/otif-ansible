@@ -1,13 +1,17 @@
 ---
 # tasks file for install_zookeeper
 
-- name: Install Zookeeper for InfoFusion
-  include_tasks: install_zookeeper.yml
+- name: Deploy Zookeeper for InfoFusion
+  block:
 
-- name: Configure Zookeeper for InfoFusion
-  include_tasks: configure_zookeeper.yml
+    - name: Install Zookeeper for InfoFusion
+      include_tasks: install_zookeeper.yml
 
-- name: Start Zookeeper for InfoFusion
-  include_tasks: start_zookeeper.yml
+    - name: Configure Zookeeper for InfoFusion
+      include_tasks: configure_zookeeper.yml
 
+    - name: Start Zookeeper for InfoFusion
+      include_tasks: start_zookeeper.yml
+
+  when: inventory_hostname in groups['zookeeper']
 

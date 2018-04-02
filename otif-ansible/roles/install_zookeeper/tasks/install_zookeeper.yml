@@ -19,7 +19,7 @@
     msg: "No Zookeeper installer found in {{ default_installer_location }}"
   when: zookeeper_installer.matched == 0 
 
-- name: Install easy_install
+- name: Install Python dependencies ...
   yum:
     name: "{{ item }}"
   with_items:
@@ -30,7 +30,7 @@
     - libxml2-devel
     - libxslt-devel
 
-- name: Install pexpect dependency
+- name: Install Python libraries ...
   become: true
   easy_install:
     name: "{{ item }}"

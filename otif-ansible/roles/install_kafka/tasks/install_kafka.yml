@@ -29,12 +29,24 @@
     msg: "No kafka installer found in {{ default_installer_location }}"
   when: kafka_installer.matched == 0
 
-- name: Install pexpect dependency
+- name: Install Python dependencies ...
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
+- name: Install Python libraries ...
   become: true
   easy_install:
     name: "{{ item }}"
   with_items:
     - pexpect
+    - lxml
 
 - name: Make sure Kafka is removed if it exists
   block:

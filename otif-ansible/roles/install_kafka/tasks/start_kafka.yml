@@ -7,7 +7,7 @@
     enabled: yes
     name: "{{ item.name }}"
   with_items:
-    - { name: kafka }
+    - { name: ot-kafka-1 }
 
 - name: Wait until Kafka is listening on port 9092
   wait_for:
