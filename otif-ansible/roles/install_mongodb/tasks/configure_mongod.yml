@@ -64,7 +64,7 @@
      vars:
        msg: |
             You can now to use the mongo shell with:
-            'mongo infofusion -u otif-admin -p 0t1f-adm1n'
+            'mongo {{mongodb_database}} -u {{mongodb_user}} -p {{mongodb_pw}}'
             Then '> use infofusion'
      debug:
        msg: "{{ msg.split('\n') }}"

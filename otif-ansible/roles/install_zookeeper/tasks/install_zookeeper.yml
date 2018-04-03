@@ -12,7 +12,7 @@
   expect:
     command: "{{ zookeeper_installer.files[0].path }} -i console"
     echo: yes
-    timeout: 30
+    timeout: 60
     responses:
       .*to reach the end of this text.*: "skip"
       PRESS \<ENTER\> TO CONTINUE: ""

@@ -4,6 +4,17 @@
 - name: Installation tasks for MongoDB
   block:
 
+    - name: Install Python dependencies ...
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - python-setuptools
+        - gcc
+        - make
+        - python-devel
+        - libxml2-devel
+        - libxslt-devel
+
     - name: Make sure MongoDB is not already running
       become: true
       service:
