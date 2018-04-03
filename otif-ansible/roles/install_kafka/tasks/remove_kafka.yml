@@ -1,0 +1,67 @@
+---
+
+- name: Make sure Kafka is removed if it exists
+  block:
+
+    - name: Check if Kafka is in the InstallAnywhere registry
+      stat:
+        path: /var/.com.zerog.registry.xml
+      register: installanywhere_registry_is_there
+
+    - name: If Registry is present ...
+      block:
+
+        - name: Look if kafka is already registred
+          xml:
+            path: /var/.com.zerog.registry.xml
+            xpath: /registry/products/product//feature[@short_name='Kafka']
+            count: yes
+          register: hits
+          when: installanywhere_registry_is_there.stat.exists == true
+
+        - name: If Zookeeper is registred by InstallAnywhere         
+          block:
+
+            - name: Get location where kafka is already installed
+              xml:
+                path: /var/.com.zerog.registry.xml
+                xpath: /registry/products/product[@name='Kafka Server for OpenText InfoFusion']
+                content: attribute
+                attribute: location
+              register: kafka_location
+
+            - debug:
+                msg: "Kafka is already installed in {{ kafka_location.matches[0].product.location }}."
+
+            - name: Removing Kafka ...
+              expect:
+                command: "{{ kafka_installer.files[0].path }} -i console"
+                echo: yes
+                timeout: 30
+                responses:
+                  .*Choose Instance Management Option.*: "2"
+                  .*Choose the instance to modify.*: "1"
+                  .*DEFAULT.*: "1"
+                  .*TO CONTINUE.*: ""
+              register: installer_output
+
+            - debug:
+                var: installer_output.stdout_lines
+
+            - name: Removing Kafka directory
+              file:
+                path: "{{ item }}"
+                state: absent
+              with_items:
+                - "{{ kafka_location.matches[0].product.location }}"
+
+            - pause:
+                prompt: "Removal completed. Kafka should have been removed."
+              when: with_pause
+        
+          when: hits.count > 0  
+
+      when: installanywhere_registry_is_there.stat.exists == true
+
+  when: remove_kafka
+

@@ -1,0 +1,52 @@
+---
+
+- name: Wait until Zookeeper is listening on port 2181 (mandatory)
+  wait_for:
+    host: "{{ zookeeper_hostname }}"
+    port: "{{ item.port }}"
+    delay: 5
+    timeout: 10
+    state: started
+  with_items:
+    - { port: 2181 }
+  register: wait
+  when: not skip_zk
+
+- name: Mount DVD at {{ default_installer_location }}. Kafka installer is expected to be there.
+  mount:
+    path: "{{ default_installer_location }}"
+    src: /dev/cdrom
+    fstype: udf
+    state: mounted
+
+- name: Install Python dependencies ...
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
+- name: Install Python libraries ...
+  become: true
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - pexpect
+    - lxml
+
+- name: Find kafka installer package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*kafka.*\\.bin$"
+    use_regex: yes
+  register: kafka_installer
+
+- fail:
+    msg: "No kafka installer found in {{ default_installer_location }}"
+  when: kafka_installer.matched == 0
+
+

@@ -1,0 +1,44 @@
+---
+# tasks file for setup zookeeper install
+
+- name: Mount DVD at {{ default_installer_location }}. The Zookeeper installer is meant to be there.
+  mount:
+    path: "{{ default_installer_location }}"
+    src: /dev/cdrom
+    fstype: udf
+    state: mounted
+
+- name: Install Python dependencies ...
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
+- name: Install Python libraries ...
+  become: true
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - pexpect
+    - lxml
+
+- name: Find zookeeper installer package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*zookeeper.*\\.bin$"
+    use_regex: yes
+  register: zookeeper_installer
+
+- fail:
+    msg: "No Zookeeper installer found in {{ default_installer_location }}"
+  when: zookeeper_installer.matched == 0
+
+
+
+
+
