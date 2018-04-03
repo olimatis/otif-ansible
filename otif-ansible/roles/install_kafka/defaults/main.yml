@@ -18,3 +18,6 @@ kafka_installation_path: "{{ default_installation_path }}/kafka"
 
 # Remove existing Kafka
 remove_kafka: True
+
+with_pause: False
+skip_zk: False

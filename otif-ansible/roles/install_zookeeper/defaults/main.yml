@@ -11,3 +11,4 @@ zookeeper_installation_path: "{{ default_installation_path }}/zookeeper"
 
 # Set remove_zookeeper to True in order to check for existing install with InstallAnywhere and uninstall it 
 remove_zookeeper: True
+with_pause: False

@@ -4,6 +4,12 @@
 - name: Deploy Apache Kafka
   block:
 
+    - name: Initialize and setup dependencies ...
+      include_tasks: setup_kafka.yml
+
+    - name: Remove Kafka if needed ...
+      include_tasks: remove_kafka.yml
+
     - name: Install Apache Kafka
       include_tasks: install_kafka.yml
 

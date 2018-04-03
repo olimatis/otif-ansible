@@ -4,6 +4,12 @@
 - name: Deploy Zookeeper for InfoFusion
   block:
 
+    - name: Initialize and setup dependencies ...
+      include_tasks: setup_zookeeper.yml
+
+    - name: Remove Zookeeper if needed ...
+      include_tasks: remove_zookeeper.yml
+
     - name: Install Zookeeper for InfoFusion
       include_tasks: install_zookeeper.yml
 
