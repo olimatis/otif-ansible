@@ -3,12 +3,37 @@
 - name: Cleanup disk and delete temp files ...
   shell: rm -rf /tmp/install.dir*
 
-- name: Install pexpect dependency
+- name: Install Python dependencies ...
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
+- name: Install Python libraries ...
   become: true
   easy_install:
     name: "{{ item }}"
   with_items:
-    - pexpect
+    - lxml
+
+- name: Install pexpect dependency
+  become: true
+  ignore_errors: yes
+  easy_install:
+    name: pexpect
+  register: pexpect_result
+
+- debug:
+    var: pexpect_result
+
+- name: Fallback in case previous easy_install pexect didn't work
+  command: easy_install pexpect
+  when: pexpect_result.failed == true
 
 - name: Mount DVD at {{ default_installer_location }}. Ingestion Pipeline Installer is exepected to be there
   mount:

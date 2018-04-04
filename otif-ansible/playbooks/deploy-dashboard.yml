@@ -1,0 +1,13 @@
+---
+
+- hosts: wsm-crawler, pipeline
+
+  tasks: 
+
+  - name: Playbook to deploy InfoFusion Dashboard
+    include_role:
+      name: install_dashboard
+    tags: 'install-dashboard'
+    when: inventory_hostname in groups['dashboard']    
+
+

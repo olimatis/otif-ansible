@@ -1,0 +1,47 @@
+---
+
+
+- name: patch tme script to run on CentoOS and rely on existing JAVA_HOME
+  become: true
+  lineinfile:
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/bin/tme"
+    regexp: '^[ ]*JAVA_HOME=(.*)$'
+    line: '#JAVA_HOME=\1'
+    backrefs: true
+
+- name: Register Text Mining Engine into Zookeeper
+  become: true
+  lineinfile:
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.properties"
+    regexp: '^(.*{{ item.lookup }}.*)=(.*)$'
+    line: '\1={{ item.fqdn }}'
+    backrefs: true
+  with_items:
+    - { lookup: "zookeeper.ensemble", fqdn: "{{ zookeeper_fqdn }}:2181" }
+    - { lookup: "service.host", fqdn: "{{ text_mining_fqdn }}" }
+
+- name: Enable Dashboard  registration into ZK
+  become: true
+  lineinfile:
+    dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.wrapper.conf"
+    regexp: "^# wrapper.java.additional.13=-Dspring.profiles.active=service-registration"
+    line: "wrapper.java.additional.13=-Dspring.profiles.active=service-registration"
+
+- name: Create services for InfoFusion Dashboard
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: otif-dashboard.service.j2, dest: /etc/systemd/system/otif-dashboard.service }
+
+- name: Open port 10020
+  ignore_errors: true
+  become: true
+  firewalld:
+    zone: public
+    port: "{{item}}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - "10020"

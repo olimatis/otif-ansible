@@ -27,6 +27,7 @@ pipeline
 [mongodb:children]
 wsm-crawler
 
-
+[dashboard:children]
+wsm-crawler
 
 

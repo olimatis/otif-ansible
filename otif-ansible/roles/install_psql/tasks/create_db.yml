@@ -11,6 +11,7 @@
   with_items:
     - wsm
     - ecm
+    - ic
     - dashboard
     - is
   when: inventory_hostname in groups['wsm-crawler']

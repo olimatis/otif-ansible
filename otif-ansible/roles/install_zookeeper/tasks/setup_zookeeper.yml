@@ -24,8 +24,18 @@
   easy_install:
     name: "{{ item }}"
   with_items:
-    - pexpect
     - lxml
+
+- name: Install pexpect dependency
+  become: true
+  ignore_errors: yes
+  easy_install:
+    name: pexpect
+  register: pexpect_result
+
+- name: Fallback in case previous easy_install pexect didn't work
+  command: easy_install pexpect
+  when: pexpect_result.failed == true
 
 - name: Find zookeeper installer package in '{{ default_installer_location }}'
   find:

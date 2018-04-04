@@ -1,0 +1,16 @@
+---
+# tasks file for install_dashboard
+
+- name: Install InfoFusion Dashboard
+  block:
+
+    - name: Install InfoFusion Dashboard
+      include_tasks: install_dashboard.yml
+
+#    - name: Configure InfoFusion Dashboard
+#      include_tasks: configure_dashboard.yml
+
+#    - name: Start InfoFusion Dashboard
+#      include_tasks: start_dashboard.yml
+
+  when: inventory_hostname in groups['dashboard'] 

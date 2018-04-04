@@ -6,6 +6,20 @@ with_pause: false
 
 timestamp: "{{ ansible_date_time.date }}"
 
+# Download path. Access to OT network needed.
+download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.0/tme-16.4.0.0-bin.zip
+download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.0/tme-16.4.0.0-data.zip
+
+download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/
+download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/
+download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/
+download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/
+download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/service/local/repositories/releases/content/com/opentext/otif/infofusion-dashboard/
+
+download_is: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/is/infofusion-integration-services-installer/
+download_ecm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/infofusion-crawler-ecm-installer/
+download_ecm_project: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/ifcrawler-otic-projects-zip/
+
 # Default domain
 domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
