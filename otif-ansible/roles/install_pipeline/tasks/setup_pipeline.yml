@@ -1,0 +1,30 @@
+---
+
+- name: Cleanup disk and delete temp files ...
+  shell: rm -rf /tmp/install.dir*
+
+- name: Install pexpect dependency
+  become: true
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - pexpect
+
+- name: Mount DVD at {{ default_installer_location }}. Ingestion Pipeline Installer is exepected to be there
+  mount:
+    path: "{{ default_installer_location }}"
+    src: /dev/cdrom
+    fstype: udf
+    state: mounted
+
+- name: Find Pipeline installer package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*pipeline-installer.*\\.bin$"
+    use_regex: yes
+  register: pipeline_installer
+
+- fail:
+    msg: "No Pipeline installer found in {{ default_installer_location }}"
+  when: pipeline_installer.matched == 0
+

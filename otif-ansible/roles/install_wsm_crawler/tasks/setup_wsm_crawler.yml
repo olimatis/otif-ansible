@@ -1,0 +1,39 @@
+---
+
+- name: Cleanup dick and delete temp files ...
+  shell: rm -rf /tmp/install.dir*
+
+- name: Install pexpect dependency
+  become: true
+  ignore_errors: yes
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - pexpect
+  register: pexpect_result
+
+- debug: 
+    var: pexpect_result
+
+- name: Fallback in case previous easy_install pexect didn't work
+  command: easy_install pexpect
+  when: pexpect_result.failed == true
+
+- name: Mount DVD at {{ default_installer_location }}. Ingestion Pipeline Installer is exepected to be there
+  mount:
+    path: "{{ default_installer_location }}"
+    src: /dev/cdrom
+    fstype: udf
+    state: mounted
+
+- name: Find WSM Crawler installer package in '{{ default_installer_location }}'
+  find:
+    paths: "{{ default_installer_location }}"
+    patterns: "^.*crawler-web-social-media-installer.*\\.bin$"
+    use_regex: yes
+  register: crawler_installer
+
+- fail:
+    msg: "No WSM Crawler installer found in {{ default_installer_location }}"
+  when: crawler_installer.matched == 0
+
