@@ -1,24 +1,27 @@
 ---
 # tasks file for install_pipeline
 
-- name: Prepare Installation
-  include_tasks: checkup.yml
+- name: Deploy Ingestion Pipeline
+  block:
 
-- name: Check if Pipeline needs to be removed ...
-  include_role:
-    name: remove_pipeline
-    tasks_from: remove_pipeline
-  when: remove_pipeline
+    - name: Prepare Installation
+      include_tasks: setup_pipeline.yml
 
-- name: Install  InfoFusion Ingestion Pipeline
-  include_tasks: install_pipeline.yml
+    - name: Check if Pipeline needs to be removed ...
+      include_role:
+        name: remove_pipeline
+        tasks_from: remove_pipeline
+      when: remove_pipeline
 
-- name: Configure InfoFusion Ingestion Pipeline
-  include_tasks: configure_pipeline.yml
+    - name: Install  InfoFusion Ingestion Pipeline
+      include_tasks: install_pipeline.yml
 
-- name: Start InfoFusion Ingestion Pipeline
-  include_tasks: start_pipeline.yml
+    - name: Configure InfoFusion Ingestion Pipeline
+      include_tasks: configure_pipeline.yml
 
+    - name: Start InfoFusion Ingestion Pipeline
+      include_tasks: start_pipeline.yml
 
+  when:  inventory_hostname in groups['pipeline'] 
 
 

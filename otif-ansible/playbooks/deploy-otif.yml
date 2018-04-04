@@ -19,9 +19,9 @@
 
 - import_playbook: deploy-text-mining.yml
 
-#- import_playbook: deploy-pipeline.yml
+- import_playbook: deploy-wsm-crawler.yml
 
-#- import_playbook: deploy-wsm-crawler.yml
+#- import_playbook: deploy-pipeline.yml
 
 #- import_playbook: deploy-ecm-crawler.yml
 

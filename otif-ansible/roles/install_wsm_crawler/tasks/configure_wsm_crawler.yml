@@ -3,7 +3,7 @@
 
 - name: Make sure the {{ master_dbname }} exists in postgresql.
   postgresql_db:
-    name: "{{ master_dbname }}"
+    name: "{{ master_dbname }}_wsm"
     login_user: postgres
     login_password: "{{ psql_admin_password }}"
     owner: "{{ master_username }}"
@@ -22,8 +22,8 @@
 #  become_user: "{{ playbook_user }}"
   shell: "{{ item.command }}"
   with_items:
-    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }} -f {{ crawler_installation_path }}/etc/otif-wsm-crawler-schema.sql" }
-    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }} -f {{ crawler_installation_path }}/etc/add_admin.sql" }
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_wsm -f {{ crawler_installation_path }}/etc/otif-wsm-crawler-schema.sql" }
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_wsm -f {{ crawler_installation_path }}/etc/add_admin.sql" }
     
 - name: Open port 10100 used to access InfoFusion Crawler for Web & Social Media Admin UI
   become: true
@@ -47,7 +47,7 @@
   uri:
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/authentication/login"
     method: POST
-    body: "username=admin&password=admin"
+    body: "username={{ master_username }}&password={{ master_password }}"
     status_code: 200
     headers:
       Content-Type: "application/x-www-form-urlencoded"

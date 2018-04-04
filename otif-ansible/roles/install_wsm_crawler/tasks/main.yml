@@ -1,22 +1,25 @@
 ---
 # tasks file for install_web_crawler
 
-- name: Prepare Installation
-  include_tasks: checkup.yml
+- name: Deploy WSM Crawler
+  block:
 
-- name: Check if WSM Crawler needs to be removed ...
-  include_role:
-    name: remove_wsm_crawler
-    tasks_from: remove_wsm_crawler
-  when: remove_wsm-Crawler
+    - name: Prepare Installation
+      include_tasks: setup_wsm_crawler.yml
 
-- name: Install InfoFusion Crawler for Web & Social Media
-  include_tasks: install_wsm_crawler.yml
+    - name: Check if WSM Crawler needs to be removed ...
+      include_role:
+        name: remove_wsm_crawler
+        tasks_from: remove_wsm_crawler
+      when: remove_wsm-Crawler
 
-- name: Configure InfoFusion Crawler for Web & Social Media
-  include_tasks: configure_wsm_crawler.yml
+    - name: Install InfoFusion Crawler for Web & Social Media
+      include_tasks: install_wsm_crawler.yml
 
-- name: Start InfoFusion Crawler for Web & Social Media
-  include_tasks: start_wsm_crawler.yml
+    - name: Configure InfoFusion Crawler for Web & Social Media
+      include_tasks: configure_wsm_crawler.yml
 
+    - name: Start InfoFusion Crawler for Web & Social Media
+      include_tasks: start_wsm_crawler.yml
 
+  when:  inventory_hostname in groups['wsm-crawler']

@@ -28,7 +28,7 @@
          Magellan Crawler for Web & Social Media has been configured on {{ ansible_hostname }}.
          Two sample crawling jobs have been created to test with.
          You can validate deployement by opening http://{{ ansible_hostname }}:10010
-         Default credentials are admin/admin.
+         Default credentials are admin/admin but user '{{ master_username }}/{{ master_password }}' has been added as well.
   debug:
     msg: "{{ msg.split('\n') }}"
 
