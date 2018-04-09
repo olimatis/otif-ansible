@@ -11,8 +11,10 @@ magellan-text-mining  ansible_host=192.168.2.186
 
 # The following groups defines taget nodes for depedencies
 
+# As of 16.4, seperate Java deployement is needed for tme and dashboard
 [java:children]
 text-mining
+wsm-crawler
 
 [postgresql:children]
 pipeline
