@@ -99,7 +99,31 @@
               Backup created in {{ default_installation_path }}/backup/.
               Can be used with pg_restore.
 
-      when: backup_database
+      when: backup_database and custom_data_location is not defined
+
+    - name: Creating PostgreSQL backup in custom data location (support for PostgreSQL only)
+      block:
+
+        - name: Create backup folder if it does not exist
+          file:
+            path: "{{ custom_data_location}}/postgresql/backup"
+            state: directory
+            mode: "u=rw,g=r,o=r"
+
+        - name: Backup database {{ master_dbname }} (create a backup in folder {{ custom_data_location}}/postgresql/backup/)
+          postgresql_db:
+            name: "{{ master_dbname }}"
+            login_user: "{{ master_username }}"
+            login_password: "{{ master_password }}"
+            state: dump
+            target: " {{ custom_data_location}}/postgresql/backup/psql-{{ansible_hostname}}-{{ master_dbname }}.{{ timestamp }}.sql.gz"
+
+        - debug:
+            msg: |
+              Backup created in {{ custom_data_location}}/postgresql/backup/.
+              Can be used with pg_restore.
+
+      when: backup_database and custom_data_location is defined
 
     - name: Dropping PostgreSQL database {{ master_dbname }} ...
       block:

@@ -15,11 +15,19 @@
             - "postgresql{{maj_version}}{{min_version}}-server"
             - "postgresql{{maj_version}}{{min_version}}-contrib"
 
-        - name: Remove data folder
+        - name: Remove default data folder
           become: true
           file:
             state: absent
             path: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/
+          when: custom_data_location is not defined
+
+        - name: Remove custom data folder
+          become: true
+          file:
+            state: absent
+            path: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/
+          when: custom_data_location is defined
 
       when: remove_psql 
 
@@ -46,16 +54,51 @@
         - "postgresql{{maj_version}}{{min_version}}-contrib"
       register: installed_psql
 
-    - name: Intialize PostgreSQL DB
-      command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb"
-      become: true
-      when: installed_psql.changed
+    - name: Initialize PostgreSQL
+      block:
 
-    - name: Enable and Start PostgreSQL
-      become: true
-      service:
-        name: "postgresql-{{maj_version}}.{{min_version}}"
-        state: started
-        enabled: yes
+        - name: Intialize PostgreSQL DB in default location
+          command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb"
+          become: true
+          when: custom_data_location is not defined
+
+        - name: Initialize PostgreSQL DB in custom location
+          block:
+
+            - name: Make sure target directory exists
+              file:
+                path: "{{ custom_data_location }}/postgres"
+                state: directory
+                owner: postgres
+                group: postgres
+                recurse: yes
+
+            - name: Initialize PostgreSQL DB in custom location
+              command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb -D "{{ custom_data_location }}/postgres"
+              become: true
+
+            - name: Configure custom data location - commenting default location 
+              lineinfile:
+                path: "/usr/lib/systemd/system/postgresql-{{maj_version}}.{{min_version}}.service"
+                regexp: "^Environment=PGDATA=(.*)"
+                line: "#Environment=PGDATA=\1"
+                backrefs: yes
+
+            - name: Configure custom data location - insert custom data location
+              lineinfile:
+                path: "/usr/lib/systemd/system/postgresql-{{maj_version}}.{{min_version}}.service"
+                line: "Environment=PGDATA={{ custom_data_location }}/postgres"
+                insertafter: "^#Environment=PGDATA=.*"
+ 
+          when: custom_data_location is defined
+
+        - name: Enable and Start PostgreSQL
+          become: true
+          service:
+            name: "postgresql-{{maj_version}}.{{min_version}}"
+            state: started
+            enabled: yes
+
+      when: installed_psql.changed
 
   when: inventory_hostname in groups['postgresql']

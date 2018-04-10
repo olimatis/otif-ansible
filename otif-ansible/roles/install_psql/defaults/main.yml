@@ -17,6 +17,7 @@ psql_admin_pw: "{{ psql_admin_password }}"
 psql_otif_db: "{{ master_dbname }}"
 psql_otif_un: "{{ master_username }}"
 psql_otif_pw: "{{ master_password }}"
+
 # Set default privileges for the otif admin user
 psql_otif_priv: ALL
 
@@ -28,6 +29,10 @@ remove_psql: true
 
 # Change PostgreSQL config to allow remote connections and enable authentication using md5
 update_config: yes
+
+#Set to overwrite global default location for data. Where to put psql data in case you want to change default location.
+#custom_data_location: 
+
 
 # Set the following to true to crate a ~/pgpass file 
 # This will allow to use psql and pass password automatically

@@ -47,6 +47,10 @@ mongodb_host: "{{hostvars[inventory_hostname]['groups']['mongodb'][0]}}"
 mongodb_hostname: "{{hostvars[mongodb_host]['ansible_hostname']}}"
 mongodb_fqdn: "{{hostvars[mongodb_host]['ansible_fqdn']}}"
 
+dashboard_host: "{{hostvars[inventory_hostname]['groups']['dashboard'][0]}}"
+dashboard_hostname: "{{hostvars[dashboard_host]['ansible_hostname']}}"
+dashboard_fqdn: "{{hostvars[dashboard_host]['ansible_fqdn']}}"
+
 #Default Network Adapter
 network_interface: "otif1"
 
@@ -62,7 +66,13 @@ playbook_user_home: "{{ lookup('env','HOME') }}"
 # Location of the mounted iso containing InfoFusion installers
 default_installer_location: "/mnt/dvd"
 
+# Default path for installation
 default_installation_path: "/OpenText/infofusion-{{otif_version}}"
+#default_installation_path: "/opt/OpenText/infofusion-{{otif_version}}"
+
+# Location for Data (psql, mongo, kafka)
+#custom_data_location: /data 
+custom_data_location: /actu02
 
 # Master db name, username and password
 # Use these as global defaults for db names, username and password.
