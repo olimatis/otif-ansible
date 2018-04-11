@@ -3,6 +3,24 @@
 - name: Cleanup dick and delete temp files ...
   shell: rm -rf /tmp/install.dir*
 
+- name: Install Python dependencies ...
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python-setuptools
+    - gcc
+    - make
+    - python-devel
+    - libxml2-devel
+    - libxslt-devel
+
+- name: Install Python libraries ...
+  become: true
+  easy_install:
+    name: "{{ item }}"
+  with_items:
+    - lxml
+
 - name: Install pexpect dependency
   become: true
   ignore_errors: yes
@@ -14,12 +32,30 @@
   command: easy_install pexpect
   when: pexpect_result.failed == true
 
-- name: Mount DVD at {{ default_installer_location }}. Ingestion Pipeline Installer is exepected to be there
+- name: Mount DVD at {{ default_installer_location }}. The WSM Crawler installer is meant to be there.
   mount:
     path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
+  when: installation_method == "iso"
+
+- name: Download Package ...
+  block:
+
+    - name: Make sure destination folder exists
+      file:
+        path: "{{ default_installer_location }}"
+        state: directory
+        recurse: yes
+
+    - name: Download WSM Crawler from Nexus @ {{ download_wsm_crawler }} ...
+      get_url:
+        url: "{{ download_wsm_crawler }}"
+        dest: "{{ default_installer_location }}/{{ download_wsm_crawler | basename }}"
+        mode: a+x
+
+  when: installation_method == "download"
 
 - name: Find WSM Crawler installer package in '{{ default_installer_location }}'
   find:

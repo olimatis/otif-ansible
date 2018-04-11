@@ -12,6 +12,10 @@
 #    - debug: var=ansible_fqdn
 #    - debug: var=group_names
 
+     - name: Ensure hostname set
+       hostname: name={{ inventory_hostname }}
+       when: not inventory_hostname|match('(\d{1,3}\.){3}\d{1,3}')
+
      - name: Generating /etc/hosts file and restart network.service
        become: true
        template:

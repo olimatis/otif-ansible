@@ -26,7 +26,7 @@
           become: true
           file:
             state: absent
-            path: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/
+            path: "{{ custom_data_location }}/postgres/"
           when: custom_data_location is defined
 
       when: remove_psql 
@@ -73,15 +73,11 @@
                 group: postgres
                 recurse: yes
 
-            - name: Initialize PostgreSQL DB in custom location
-              command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb -D "{{ custom_data_location }}/postgres"
-              become: true
-
             - name: Configure custom data location - commenting default location 
               lineinfile:
                 path: "/usr/lib/systemd/system/postgresql-{{maj_version}}.{{min_version}}.service"
                 regexp: "^Environment=PGDATA=(.*)"
-                line: "#Environment=PGDATA=\1"
+                line: '#Environment=PGDATA=\1'
                 backrefs: yes
 
             - name: Configure custom data location - insert custom data location
@@ -89,6 +85,10 @@
                 path: "/usr/lib/systemd/system/postgresql-{{maj_version}}.{{min_version}}.service"
                 line: "Environment=PGDATA={{ custom_data_location }}/postgres"
                 insertafter: "^#Environment=PGDATA=.*"
+
+            - name: Initialize PostgreSQL DB in custom location
+              command: "/usr/pgsql-{{maj_version}}.{{min_version}}/bin/postgresql{{maj_version}}{{min_version}}-setup initdb"
+              become: true
  
           when: custom_data_location is defined
 

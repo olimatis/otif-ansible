@@ -35,12 +35,30 @@
   command: easy_install pexpect
   when: pexpect_result.failed == true
 
-- name: Mount DVD at {{ default_installer_location }}. Ingestion Pipeline Installer is exepected to be there
+- name: Mount DVD at {{ default_installer_location }}. The Pipeline installer is meant to be there.
   mount:
     path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
+  when: installation_method == "iso"
+
+- name: Download Package ...
+  block:
+
+    - name: Make sure destination folder exists
+      file:
+        path: "{{ default_installer_location }}"
+        state: directory
+        recurse: yes
+
+    - name: Download Pipeline from Nexus @ {{ download_pipeline }} ...
+      get_url:
+        url: "{{ download_pipeline }}"
+        dest: "{{ default_installer_location }}/{{ download_pipeline | basename }}"
+        mode: a+x
+
+  when: installation_method == "download"
 
 - name: Find Pipeline installer package in '{{ default_installer_location }}'
   find:

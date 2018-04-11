@@ -1,5 +1,15 @@
 ---
 
+- name: Define psql config location
+  set_fact:
+    psql_config_location: "/var/lib/pgsql/{{maj_version}}.{{min_version}}/data"
+  when: custom_data_location is not defined
+
+- name: Define psql config location
+  set_fact:
+    psql_config_location: "{{custom_data_location}}/postgres"
+  when: custom_data_location is defined
+
 - name: Create User
   become: true
   become_user: postgres
@@ -35,7 +45,7 @@
       become: true
       copy:
         src: pg_hba.conf
-        dest: "/var/lib/pgsql/{{maj_version}}.{{min_version}}/data/pg_hba.conf"
+        dest: "{{ psql_config_location }}/pg_hba.conf"
         owner: root
         group: root
         mode: 0644
@@ -44,7 +54,7 @@
     - name: Listen from all addresses
       become: true
       lineinfile:
-        dest: "{{ psql_config }}"
+        dest: "{{ psql_config_location }}/postgresql.conf"
         regexp: "^#?listen_addresses"
         line: "listen_addresses ='*'"
       notify: Restart PostgreSQL
@@ -54,7 +64,7 @@
 - name: Set port to "{{psql_port}}"
   become: true
   lineinfile:
-    dest: "{{ psql_config }}"
+    dest: "{{ psql_config_location }}/postgresql.conf"
     regexp: "^#?port "
     line: "port ='{{psql_port}}'"
   notify: Restart PostgreSQL

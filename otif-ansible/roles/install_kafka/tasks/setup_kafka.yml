@@ -12,12 +12,30 @@
   register: wait
   when: not skip_zk
 
-- name: Mount DVD at {{ default_installer_location }}. Kafka installer is expected to be there.
+- name: Mount DVD at {{ default_installer_location }}. The Kafka installer is meant to be there.
   mount:
     path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
+  when: installation_method == "iso"
+
+- name: Download Package ...
+  block:
+
+    - name: Make sure destination folder exists
+      file:
+        path: "{{ default_installer_location }}"
+        state: directory
+        recurse: yes
+
+    - name: Download Kafka from Nexus @ {{ download_kafka }} ...
+      get_url:
+        url: "{{ download_kafka }}"
+        dest: "{{ default_installer_location }}/{{ download_kafka | basename }}"
+        mode: a+x
+
+  when: installation_method == "download"
 
 - name: Install Python dependencies ...
   yum:

@@ -12,12 +12,30 @@
     - { port: 2181 }
   register: wait
 
-- name: Mount DVD read-only - just in case - Installers are meant to be there ...
+- name: Mount DVD at {{ default_installer_location }}. The Dashboard installer is meant to be there.
   mount:
-    path: /mnt/dvd
+    path: "{{ default_installer_location }}"
     src: /dev/cdrom
     fstype: udf
     state: mounted
+  when: installation_method == "iso"
+
+- name: Download Package ...
+  block:
+
+    - name: Make sure destination folder exists
+      file:
+        path: "{{ default_installer_location }}"
+        state: directory
+        recurse: yes
+
+    - name: Download Dashboard from Nexus @ {{ download_dashboard }} ...
+      get_url:
+        url: "{{ download_dashboard }}"
+        dest: "{{ default_installer_location }}/{{ download_dashboard | basename }}"
+        mode: a+x
+
+  when: installation_method == "download"
 
 - name: Find dashboard package in '{{ default_installer_location }}'
   find:

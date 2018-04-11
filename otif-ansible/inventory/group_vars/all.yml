@@ -6,15 +6,22 @@ with_pause: false
 
 timestamp: "{{ ansible_date_time.date }}"
 
+installation_method: download
+#installation_method: iso
+
+# Location of the mounted iso containing InfoFusion installers
+#default_installer_location: "/mnt/dvd"
+default_installer_location: "/temp"
+
 # Download path. Access to OT network needed.
 download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.0/tme-16.4.0.0-bin.zip
 download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.0/tme-16.4.0.0-data.zip
 
-download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/
-download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/
-download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/
-download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/
-download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/service/local/repositories/releases/content/com/opentext/otif/infofusion-dashboard/
+download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/16.4.0.1/infofusion-zookeeper-installer-16.4.0.1-linux.bin
+download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/16.4.0.1/infofusion-kafka-installer-16.4.0.1-linux.bin
+download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.0/infofusion-crawler-web-social-media-installer-16.4.0.0-linux.bin
+download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/16.4.0.1/infofusion-ingestion-pipeline-installer-16.4.0.1-linux.bin
+download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.1/infofusion-dashboard-16.4.0.1.zip
 
 download_is: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/is/infofusion-integration-services-installer/
 download_ecm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/infofusion-crawler-ecm-installer/
@@ -25,34 +32,35 @@ domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
 zookeeper_host: "{{hostvars[inventory_hostname]['groups']['zookeeper'][0]}}"
 zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn']}}"
-zookeeper_hostname: "{{hostvars[zookeeper_host]['ansible_hostname']}}"
+zookeeper_hostname: "{{hostvars[zookeeper_host]['ansible_hostname'] | regex_replace('\\.$', '')}}"
 
 kafka_host: "{{hostvars[inventory_hostname]['groups']['kafka'][0]}}"
 kafka_hostname: "{{hostvars[kafka_host]['ansible_hostname']}}"
-kafka_fqdn: "{{hostvars[kafka_host]['ansible_fqdn']}}"
+kafka_fqdn: "{{hostvars[kafka_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 wsm_crawler_host: "{{hostvars[inventory_hostname]['groups']['wsm-crawler'][0]}}"
 wsm_crawler_hostname: "{{hostvars[wsm_crawler_host]['ansible_hostname']}}"
-wsm_crawler_fqdn: "{{hostvars[wsm_crawler_host]['ansible_fqdn']}}"
+wsm_crawler_fqdn: "{{hostvars[wsm_crawler_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 pipeline_host: "{{hostvars[inventory_hostname]['groups']['pipeline'][0]}}"
 pipeline_hostname: "{{hostvars[pipeline_host]['ansible_hostname']}}"
-pipeline_fqdn: "{{hostvars[pipeline_host]['ansible_fqdn']}}"
+pipeline_fqdn: "{{hostvars[pipeline_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 text_mining_host: "{{hostvars[inventory_hostname]['groups']['text-mining'][0]}}"
 text_mining_hostname: "{{hostvars[text_mining_host]['ansible_hostname']}}"
-text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn']}}"
+text_mining_fqdn: "{{hostvars[text_mining_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 mongodb_host: "{{hostvars[inventory_hostname]['groups']['mongodb'][0]}}"
 mongodb_hostname: "{{hostvars[mongodb_host]['ansible_hostname']}}"
-mongodb_fqdn: "{{hostvars[mongodb_host]['ansible_fqdn']}}"
+mongodb_fqdn: "{{hostvars[mongodb_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 dashboard_host: "{{hostvars[inventory_hostname]['groups']['dashboard'][0]}}"
 dashboard_hostname: "{{hostvars[dashboard_host]['ansible_hostname']}}"
-dashboard_fqdn: "{{hostvars[dashboard_host]['ansible_fqdn']}}"
+dashboard_fqdn: "{{hostvars[dashboard_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 #Default Network Adapter
-network_interface: "otif1"
+#network_interface: "otif1"
+network_interface: "eno16777984"
 
 # User running the playbooks
 playbook_user: "{{ lookup('env','USER') }}"
@@ -62,9 +70,6 @@ playbook_user_home: "{{ lookup('env','HOME') }}"
 
 # DEPRECATED - Location where to download/find the packages (wget) 
 # default_download_folder: "{{ lookup('env','HOME') }}/otif-packages"
-
-# Location of the mounted iso containing InfoFusion installers
-default_installer_location: "/mnt/dvd"
 
 # Default path for installation
 default_installation_path: "/OpenText/infofusion-{{otif_version}}"

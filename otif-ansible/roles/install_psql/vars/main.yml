@@ -4,6 +4,6 @@
 psql_service_name: postgresql-{{maj_version}}.{{min_version}}
 
 #Path for psql config file
-psql_config: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/postgresql.conf
+#psql_config: /var/lib/pgsql/{{maj_version}}.{{min_version}}/data/postgresql.conf
 
 

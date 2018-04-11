@@ -7,6 +7,25 @@
     src: /dev/cdrom
     fstype: udf
     state: mounted
+  when: installation_method == "iso"
+
+
+- name: Download Package ...
+  block:
+
+    - name: Make sure destination folder exists
+      file:
+        path: "{{ default_installer_location }}"
+        state: directory
+        recurse: yes
+
+    - name: Download Zookeeper from Nexus @ {{ download_zookeeper }} ...
+      get_url: 
+        url: "{{ download_zookeeper }}"
+        dest: "{{ default_installer_location }}/{{ download_zookeeper | basename }}"
+        mode: a+x
+   
+  when: installation_method == "download"
 
 - name: Install Python dependencies ...
   yum:

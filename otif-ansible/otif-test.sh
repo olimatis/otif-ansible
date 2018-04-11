@@ -7,7 +7,7 @@ case "$1" in
 
     'services')
         # Test Services
-        systemctl status postgresql-9.4 mongod ot-zk-1 kafka infofusion-web-crawling-1 otif-wsm-crawler-1 otif-ingestion-api-1 otif-text-mining| grep -E '●|Active'
+        systemctl status postgresql-9.4 mongod ot-zk-1 ot-kafka-1 infofusion-web-crawling-1 otif-wsm-crawler-1 otif-ingestion-api-1 otif-text-mining| grep -E '●|Active'
         ;;
 
     'ports')
