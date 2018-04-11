@@ -30,7 +30,7 @@
       with_items: "{{ mongodb_packages }}*"
       when: remove_mongodb
 
-    - name: Remove data & log folders
+    - name: Remove data & log folders from default location
       become: true
       file:
         state: absent
@@ -39,7 +39,18 @@
         - "/var/log/mongodb"
         - "/var/lib/mongo"
         - "/etc/mongod.conf"
-      when: remove_mongodb_data 
+      when: remove_mongodb_data and custom_data_location is not defined
+ 
+    - name: Remove data & log folders from custom location
+      become: true
+      file:
+        state: absent
+        path: "{{ item }}"
+      with_items:
+        - "/var/log/mongodb"
+        - "{{ custom_data_location }}/mongo"
+        - "/etc/mongod.conf"
+      when: remove_mongodb_data and custom_data_location is defined
 
     - name: Install packages dependencies
       become: true

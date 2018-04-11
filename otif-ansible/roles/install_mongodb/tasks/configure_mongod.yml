@@ -4,6 +4,14 @@
 - name: Configuration tasks for MongoDB
   block:
 
+   - name: Set MongoDB custom data location to "{{ custom_data_location }}"
+     become: true
+     lineinfile:
+       dest: "{{ mongodb_config }}"
+       regexp: "^[ ]*dbPath[ ]*:"   
+       line: "  dbpath: {{ custom_data_location }}/mongo" # Customized by Ansible (otif-ansible)
+     when: custom_data_location is defined
+
    - include_tasks: restart_mongodb.yml
  
    - name: Set authentication for admin user
