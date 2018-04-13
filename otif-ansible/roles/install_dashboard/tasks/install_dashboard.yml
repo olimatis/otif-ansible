@@ -80,7 +80,7 @@
     
     - name: Check if the otif-dashboard.service exists
       stat:
-        path: /etc/systemd/system/otif-service.service
+        path: /etc/systemd/system/otif-dashboard.service
       register: service_location
 
     - name: Stop service if it's there

@@ -1,6 +1,18 @@
 ---
 # tasks file for configure_wsm_crawler
 
+- name: Activate Dashboard
+  "dashboard.notifier.component.adminurl="  
+  become: true
+  lineinfile:
+    dest: "{{ dashboard_target_dir }}/etc/dashboard-api.properties"
+    regexp: "{{item.regexp }}"
+    line: "{{item.line}}"
+  with_items:
+    - { regexp: "^[\.*]dashboard.notifier.enabled=", line: "dashboard.notifier.enabled=true" }
+    - { regexp: "^[\.*]dashboard.notifier.component.adminurl=", line: "dashboard.notifier.component.adminurl=http://{{ wsm_crawler_fqdn }}:10010" }
+    - { regexp: "^[\.*]dashboard.service.url=", line: "dashboard.service.url=http://{{ dashboard_fqdn }}:10020/otif-dashboard-api/api/v1" }
+
 - name: Make sure the {{ master_dbname }}_wsm exists in postgresql.
   postgresql_db:
     name: "{{ master_dbname }}_wsm"

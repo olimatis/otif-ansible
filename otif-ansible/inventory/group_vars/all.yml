@@ -14,14 +14,15 @@ installation_method: download
 default_installer_location: "/temp"
 
 # Download path. Access to OT network needed.
-download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.0/tme-16.4.0.0-bin.zip
-download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.0/tme-16.4.0.0-data.zip
+download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.1/tme-16.4.0.1-bin.zip
+download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.1/tme-16.4.0.1-data.zip
 
 download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/16.4.0.1/infofusion-zookeeper-installer-16.4.0.1-linux.bin
 download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/16.4.0.1/infofusion-kafka-installer-16.4.0.1-linux.bin
-download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.0/infofusion-crawler-web-social-media-installer-16.4.0.0-linux.bin
+download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.1/infofusion-crawler-web-social-media-installer-16.4.0.1-linux.bin
 download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/16.4.0.1/infofusion-ingestion-pipeline-installer-16.4.0.1-linux.bin
-download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.1/infofusion-dashboard-16.4.0.1.zip
+#download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.1/infofusion-dashboard-16.4.0.1.zip
+download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/snapshots/com/opentext/otif/infofusion-dashboard/0.0.1-SNAPSHOT/infofusion-dashboard-0.0.1-20180413.161651-31.zip
 
 download_is: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/is/infofusion-integration-services-installer/
 download_ecm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/infofusion-crawler-ecm-installer/
