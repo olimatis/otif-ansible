@@ -36,9 +36,9 @@
     regexp: "{{item.regexp }}"
     line: "{{item.line}}"
   with_items:
-    - { regexp: "^[\.*]deamon.name=", line: "dashboard.daemon.name=otif-dashboard-1" }
-    - { regexp: "^[\.*]deamon.long.name=", line: "dashboard.daemon.long.name=OpenText InfoFusion Dashboard 1" }
-    - { regexp: "^[\.*]deamon.user=", line: "dashboard.daemon.user={{master_username}}" }
+    - { regexp: "deamon.name=", line: "dashboard.daemon.name=otif-dashboard-1" }
+    - { regexp: "deamon.long.name=", line: "dashboard.daemon.long.name=OpenText InfoFusion Dashboard 1" }
+    - { regexp: "deamon.user=", line: "dashboard.daemon.user={{master_username}}" }
 
 - name: Open port 10020
   ignore_errors: true

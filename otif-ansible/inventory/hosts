@@ -1,13 +1,13 @@
 # The default Ansible inventory to deploy InfoFusion for Web & Social Media on 3 nodes
 
 [wsm-crawler]
-magellan-wsm-crawler  ansible_host=10.5.85.226
+magellan-wsm-crawler  ansible_host=10.18.51.99
 
 [pipeline]
-magellan-pipeline  ansible_host=10.5.85.224
+magellan-pipeline  ansible_host=10.18.51.96
 
 [text-mining]
-magellan-text-mining  ansible_host=10.5.85.227
+magellan-text-mining  ansible_host=10.18.51.92
 
 # The following groups defines taget nodes for depedencies
 

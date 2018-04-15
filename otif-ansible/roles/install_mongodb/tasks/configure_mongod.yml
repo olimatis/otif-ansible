@@ -4,12 +4,22 @@
 - name: Configuration tasks for MongoDB
   block:
 
-   - name: Set MongoDB custom data location to "{{ custom_data_location }}"
+   - name: Set MongoDB custom data location to "{{ custom_data_location }}" if needed
      become: true
      lineinfile:
        dest: "{{ mongodb_config }}"
        regexp: "^[ ]*dbPath[ ]*:"   
-       line: "  dbpath: {{ custom_data_location }}/mongo" # Customized by Ansible (otif-ansible)
+       line: "  dbPath: {{ custom_data_location }}/mongo" # Customized by Ansible (otif-ansible)
+     when: custom_data_location is defined
+
+   - name: Set cutom data folder if needed
+     file:
+       path: "{{ custom_data_location}}/mongo
+       state: directory
+       owner: mongodb
+       group: mongodb
+       mode: 0775
+       recurse: yes  
      when: custom_data_location is defined
 
    - include_tasks: restart_mongodb.yml
@@ -55,7 +65,7 @@
        line: "#security:\nsecurity.authorization: enabled"
      notify: Restart MongoDB
 
-   - name: Create database for InfoFusion
+   - name: Create MongoDB database for InfoFusion
      mongodb_user:
        login_user: "{{ mongodb_user }}"
        login_password: "{{ mongodb_pw }}"
