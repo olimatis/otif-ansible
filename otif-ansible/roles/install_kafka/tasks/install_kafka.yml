@@ -1,14 +1,14 @@
 ---
 
 - debug:
-    msg: "Kafka will be installed using '{{ kafka_installer.files[0].path }}'"
+    msg: "Kafka will be installed using '{{ kafka_installer.path }}'"
 
 - debug:
     msg: "Kafka will be installed in {{ kafka_installation_path }}"
 
 - name: Execute Kafka installer in console mode
   expect:
-    command: "{{ kafka_installer.files[0].path }} -i console"
+    command: "{{ kafka_installer.path }} -i console"
     echo: yes
     timeout: 30
     responses:

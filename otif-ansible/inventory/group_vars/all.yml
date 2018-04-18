@@ -22,7 +22,7 @@ download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repos
 download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.1/infofusion-crawler-web-social-media-installer-16.4.0.1-linux.bin
 download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/16.4.0.1/infofusion-ingestion-pipeline-installer-16.4.0.1-linux.bin
 #download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.1/infofusion-dashboard-16.4.0.1.zip
-download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/snapshots/com/opentext/otif/infofusion-dashboard/0.0.1-SNAPSHOT/infofusion-dashboard-0.0.1-20180413.161651-31.zip
+download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/snapshots/com/opentext/otif/infofusion-dashboard/0.0.1-SNAPSHOT/infofusion-dashboard-0.0.1-20180416.195015-35.zip
 
 download_is: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/is/infofusion-integration-services-installer/
 download_ecm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/infofusion-crawler-ecm-installer/

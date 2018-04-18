@@ -15,14 +15,14 @@
   register: wait
 
 - debug:
-    msg: "WSM Crawler will be installed using '{{ crawler_installer.files[0].path }}'"
+    msg: "WSM Crawler will be installed using '{{ crawler_installer.path }}'"
 
 - debug:
     msg: "WSM Crawler will be installed in {{ crawler_installation_path }}"
 
 - name: Executing WSM Crawler installer in console mode
   expect:
-    command: "{{ crawler_installer.files[0].path }} -i console"
+    command: "{{ crawler_installer.path }} -i console"
     echo: yes
     timeout: 60
     responses:

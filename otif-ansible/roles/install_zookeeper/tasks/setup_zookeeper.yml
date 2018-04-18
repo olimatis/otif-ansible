@@ -61,13 +61,15 @@
     paths: "{{ default_installer_location }}"
     patterns: "^.*zookeeper.*\\.bin$"
     use_regex: yes
-  register: zookeeper_installer
+  register: found_installers
 
 - fail:
     msg: "No Zookeeper installer found in {{ default_installer_location }}"
-  when: zookeeper_installer.matched == 0
+  when: found_installers.matched == 0
 
-
+- name: Get latest file
+  set_fact:
+    zookeeper_installer: "{{ found_installers.files | sort(attribute='mtime',reverse=true) | first }}"
 
 
 

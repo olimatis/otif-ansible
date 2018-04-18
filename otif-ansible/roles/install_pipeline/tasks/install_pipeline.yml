@@ -27,7 +27,7 @@
     state: present
 
 - debug:
-    msg: "Pipeline will be installed using '{{ pipeline_installer.files[0].path }}'"
+    msg: "Pipeline will be installed using '{{ pipeline_installer.path }}'"
 
 - debug:
     msg: "Pipeline will be installed in {{ pipeline_installation_path }}"
@@ -38,7 +38,7 @@
 
 - name: Executing Pipeline installer in console mode
   expect:
-    command: "{{ pipeline_installer.files[0].path }} -i console"
+    command: "{{ pipeline_installer.path }} -i console"
     echo: yes
     timeout: 60
     responses:

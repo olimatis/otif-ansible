@@ -65,9 +65,12 @@
     paths: "{{ default_installer_location }}"
     patterns: "^.*pipeline-installer.*\\.bin$"
     use_regex: yes
-  register: pipeline_installer
+  register: found_installers
 
 - fail:
     msg: "No Pipeline installer found in {{ default_installer_location }}"
-  when: pipeline_installer.matched == 0
+  when: found_installers.matched == 0
 
+- name: Get latest file
+  set_fact:
+    pipeline_installer: "{{ found_installers.files | sort(attribute='mtime',reverse=true) | first }}"

@@ -3,14 +3,14 @@
 
 
 - debug:
-    msg: "Zookeeper will be installed using '{{ zookeeper_installer.files[0].path }}'"
+    msg: "Zookeeper will be installed using '{{ zookeeper_installer.path }}'"
 
 - debug:
     msg: "Zookeeper will be installed in {{ zookeeper_installation_path }}"
 
 - name: Executing Zookeeper installer in console mode
   expect:
-    command: "{{ zookeeper_installer.files[0].path }} -i console"
+    command: "{{ zookeeper_installer.path }} -i console"
     echo: yes
     timeout: 60
     responses:

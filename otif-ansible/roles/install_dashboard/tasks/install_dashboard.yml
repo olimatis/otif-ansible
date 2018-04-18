@@ -42,13 +42,18 @@
     paths: "{{ default_installer_location }}"
     patterns: "^.*infofusion-dashboard.*\\.zip$"
     use_regex: yes
-  register: dashboard_installer
-
+  register: found_installers
 
 - fail:
     msg: "No Dashboard package found in {{ default_installer_location }}"
-  when: dashboard_installer.matched == 0
+  when: found_installers.matched == 0
 
+- name: Get latest file
+  set_fact:
+    dashboard_installer: "{{ found_installers.files | sort(attribute='mtime',reverse=true) | first }}"
+
+#- pause:
+#    prompt: "Dashboard installer: {{dashboard_installer.path}}"
 
 - name: Create a group for admin user
   group:
@@ -101,6 +106,37 @@
       with_items:
         - "{{ dashboard_target_dir }}"        
 
+- name: Creating PostgreSQL backup (support for PostgreSQL only)
+      block:
+
+        - name: Create backup folder if it does not exist
+          file:
+            path: "{{ default_installation_path }}/postgres_backup"
+            state: directory
+            mode: "u=rw,g=r,o=r"
+
+        - name: Backup database {{ master_dbname }}_dasboard (create a backup in folder {{ default_installation_path }}/postgres_backup/)
+          postgresql_db:
+            name: "{{ master_dbname }}_dashboard"
+            login_user: "{{ master_username }}"
+            login_password: "{{ master_password }}"
+            state: dump
+            target: "{{ default_installation_path }}/postgres_backup/psql-{{ansible_hostname}}-{{ master_dbname }}_dashboard.{{ timestamp }}.sql.gz"
+
+        - debug:
+            msg: |
+              Backup created in {{ default_installation_path }}/postgres_backup/.
+              Can be used with pg_restore.
+
+      when: backup_database and custom_data_location is not defined
+
+    - name: Drop database (support for PostgreSQL only)
+      postgresql_db:
+        login_user: "postgres"
+        login_password: "{{psql_admin_password}}"
+        name: "{{master_dbname}}_dashboard"
+        state: absent
+ 
     - pause:
         prompt: "Dashbaord should have been removed."
       when: with_pause
@@ -115,10 +151,10 @@
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
 
-- name: Unzip dashboard binaries (from "{{ dashboard_installer.files[0].path }}" to "{{ dashboard_target_dir }}") 
+- name: Unzip dashboard binaries (from "{{ dashboard_installer.path }}" to "{{ dashboard_target_dir }}") 
   unarchive:
     remote_src: yes
-    src: "{{ dashboard_installer.files[0].path }}"
+    src: "{{ dashboard_installer.path }}"
     dest: "{{ dashboard_target_dir }}"
     keep_newer: yes
     owner: "{{ master_username }}"

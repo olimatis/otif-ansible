@@ -71,10 +71,13 @@
     paths: "{{ default_installer_location }}"
     patterns: "^.*kafka.*\\.bin$"
     use_regex: yes
-  register: kafka_installer
+  register: found_installers
 
 - fail:
     msg: "No kafka installer found in {{ default_installer_location }}"
-  when: kafka_installer.matched == 0
+  when: found_installers.matched == 0
 
+- name: Get latest file
+  set_fact:
+    kafka_installer: "{{ found_installers.files | sort(attribute='mtime',reverse=true) | first }}"
 
