@@ -22,8 +22,8 @@
   vars:
     msg: |
          InfoFusion dashboard has been deployed on {{dashboard_hostname}}.
-         You can validate deployement by opening http://{{ dashboard_hostname }}:10020
-         or http://{{ dashboard_fqdn }}:10020
+         You can validate deployement by opening http://{{ dashboard_fqdn }}:10020
+         or http://{{ ansible_host }}:10020
          Default credentials are admin/admin.
   debug:
     msg: "{{ msg.split('\n') }}"  

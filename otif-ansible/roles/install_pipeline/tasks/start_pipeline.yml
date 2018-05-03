@@ -23,8 +23,9 @@
 - name:
   vars:
     msg: |
-         Magellan Crawler Pipeline has been configured on {{ ansible_hostname }}.
-         You can validate deployement by opening http://{{ ansible_hostname }}:7171
+         Magellan Crawler Pipeline has been configured on {{ pipeline_hostname }}.
+         You can validate deployement by opening http://{{ pipeline_fqdn }}:7171
+         or http://{{ ansible_host }}:7171
          Default credentials are admin/admin.
   debug:
     msg: "{{ msg.split('\n') }}"
