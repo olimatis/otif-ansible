@@ -5,3 +5,4 @@ crawler_installation_path: "{{ default_installation_path }}/wsm-crawler"
 
 remove_wsm_crawler: True
 
+installation_method: file

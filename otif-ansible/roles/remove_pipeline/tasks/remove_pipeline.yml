@@ -35,7 +35,7 @@
 
       - name: Removing Ingestion Pipeline ...
         expect:
-          command: "{{ pipeline_installer.files[0].path }} -i console"
+          command: "{{ pipeline_installer.path }} -i console"
           echo: yes
           timeout: 45
           responses:

@@ -8,21 +8,21 @@ timestamp: "{{ ansible_date_time.date }}"
 
 installation_method: download
 #installation_method: iso
+#installation_method: file
 
 # Location of the mounted iso containing InfoFusion installers
 #default_installer_location: "/mnt/dvd"
 default_installer_location: "/temp"
 
 # Download path. Access to OT network needed.
-download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.1/tme-16.4.0.1-bin.zip
-download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.1/tme-16.4.0.1-data.zip
-
-download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/16.4.0.1/infofusion-zookeeper-installer-16.4.0.1-linux.bin
-download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/16.4.0.1/infofusion-kafka-installer-16.4.0.1-linux.bin
-download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.1/infofusion-crawler-web-social-media-installer-16.4.0.1-linux.bin
-download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/16.4.0.1/infofusion-ingestion-pipeline-installer-16.4.0.1-linux.bin
-#download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.1/infofusion-dashboard-16.4.0.1.zip
-download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/snapshots/com/opentext/otif/infofusion-dashboard/0.0.1-SNAPSHOT/infofusion-dashboard-0.0.1-20180416.195015-35.zip
+download_text_mining_bin: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-bin/16.4.0.2/tme-16.4.0.2-bin.zip
+download_text_mining_data: ftp://ci:ci@discovery-nexus.lab.opentext.com/ftp-home/tme-downloads/main/com/nstein/tme/tme-data/16.4.0.2/tme-16.4.0.2-data.zip
+download_zookeeper: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-zookeeper-installer/16.4.0.3/infofusion-zookeeper-installer-16.4.0.3-linux.bin
+download_kafka: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/discovery/infofusion-kafka-installer/16.4.0.3/infofusion-kafka-installer-16.4.0.3-linux.bin
+download_wsm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/magellan/crawlersinstaller/infofusion-crawler-web-social-media-installer/16.4.0.3/infofusion-crawler-web-social-media-installer-16.4.0.3-linux.bin
+download_pipeline: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-ingestion-pipeline-installer/16.4.0.3/infofusion-ingestion-pipeline-installer-16.4.0.3-linux.bin
+download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/releases/com/opentext/otif/infofusion-dashboard/16.4.0.3/infofusion-dashboard-16.4.0.3.zip
+#download_dashboard: http://discovery-nexus.lab.opentext.com:8081/nexus/content/repositories/snapshots/com/opentext/otif/infofusion-dashboard/0.0.1-SNAPSHOT/infofusion-dashboard-0.0.1-20180416.195015-35.zip
 
 download_is: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/is/infofusion-integration-services-installer/
 download_ecm_crawler: http://is-art.hcl.com:8080/nexus/content/repositories/releases/com/opentext/infofusion/crawler/infofusion-crawler-ecm-installer/
@@ -32,8 +32,8 @@ download_ecm_project: http://is-art.hcl.com:8080/nexus/content/repositories/rele
 domain: "{{hostvars[ansible_hostname]['ansible_domain']}}"
 
 zookeeper_host: "{{hostvars[inventory_hostname]['groups']['zookeeper'][0]}}"
-zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn']}}"
-zookeeper_hostname: "{{hostvars[zookeeper_host]['ansible_hostname'] | regex_replace('\\.$', '')}}"
+zookeeper_hostname: "{{hostvars[zookeeper_host]['ansible_hostname']}}"
+zookeeper_fqdn: "{{hostvars[zookeeper_host]['ansible_fqdn'] | regex_replace('\\.$', '')}}"
 
 kafka_host: "{{hostvars[inventory_hostname]['groups']['kafka'][0]}}"
 kafka_hostname: "{{hostvars[kafka_host]['ansible_hostname']}}"
@@ -78,7 +78,7 @@ default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 
 # Location for Data (psql, mongo, kafka)
 #custom_data_location: /data 
-custom_data_location: /actu02
+#custom_data_location: /actu02
 
 # Master db name, username and password
 # Use these as global defaults for db names, username and password.

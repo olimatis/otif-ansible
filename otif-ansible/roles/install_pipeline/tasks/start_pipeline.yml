@@ -12,7 +12,7 @@
 
 - name: Wait until Pipeline is listening on ports 7071 & 7171  
   wait_for:
-    host: 127.0.0.1
+    host: "{{ pipeline_hostname }}"
     port: "{{ item.port }}"
     delay: 5
     state: started

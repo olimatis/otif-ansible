@@ -27,7 +27,7 @@
       yum:
         name: "{{item}}"
         state: absent
-      with_items: "{{ mongodb_packages }}*"
+      with_items: "{{ mongo_packages }}*"
       when: remove_mongodb
 
     - name: Remove data & log folders from default location
@@ -39,7 +39,8 @@
         - "/var/log/mongodb"
         - "/var/lib/mongo"
         - "/etc/mongod.conf"
-      when: remove_mongodb_data and custom_data_location is not defined
+        - "/tmp/mongodb-27017.sock"
+      when: remove_mongo_data and custom_data_location is not defined
  
     - name: Remove data & log folders from custom location
       become: true
@@ -50,14 +51,14 @@
         - "/var/log/mongodb"
         - "{{ custom_data_location }}/mongo"
         - "/etc/mongod.conf"
-      when: remove_mongodb_data and custom_data_location is defined
+      when: remove_mongo_data and custom_data_location is defined
 
     - name: Install packages dependencies
       become: true
       package:
         name: "{{ item }}"
         state: present
-      with_items: "{{ mongodb_packages_dependencies | default([]) }}"
+      with_items: "{{ mongo_packages_dependencies | default([]) }}"
 
     - name: Install pymongo dependency
       become: true
@@ -68,19 +69,18 @@
     - name: Add MongoDB repository
       become: true
       yum_repository:
-        name: "mongodb-org-{{ mongodb_version }}"
+        name: "mongodb-org-{{ mongo_version }}"
         description: 'MongoDB Repository'
-        baseurl: "{{ mongodb_repo_baseurl }}"
-        gpgcheck: "{{ mongodb_repo_gpgcheck }}"
-        gpgkey: "{{ mongodb_repo_gpgkey }}"
+        baseurl: "{{ mongo_repo_baseurl }}"
+        gpgcheck: "{{ mongo_repo_gpgcheck }}"
+        gpgkey: "{{ mongo_repo_gpgkey }}"
 
     - name: Install MongoDB Packages
       become: true
       yum:
         name: "{{ item }}"
         state: present
-      with_items: "{{ mongodb_packages }}"
+      with_items: "{{ mongo_packages }}"
   
   when: inventory_hostname in groups['mongodb']
  
-

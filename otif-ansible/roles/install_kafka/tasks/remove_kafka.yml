@@ -35,7 +35,7 @@
 
             - name: Removing Kafka ...
               expect:
-                command: "{{ kafka_installer.files[0].path }} -i console"
+                command: "{{ kafka_installer.path }} -i console"
                 echo: yes
                 timeout: 30
                 responses:

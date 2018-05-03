@@ -106,7 +106,7 @@
       with_items:
         - "{{ dashboard_target_dir }}"        
 
-- name: Creating PostgreSQL backup (support for PostgreSQL only)
+    - name: Creating PostgreSQL backup (support for PostgreSQL only)
       block:
 
         - name: Create backup folder if it does not exist

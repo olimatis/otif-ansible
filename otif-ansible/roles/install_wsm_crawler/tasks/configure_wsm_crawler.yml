@@ -4,13 +4,16 @@
 - name: Activate Dashboard
   become: true
   lineinfile:
-    dest: "{{ crawler_installation_path }}/etc/otif-crawler.properties"
+    dest: "{{ crawler_installation_path }}/etc/{{ item.file }}"
     regexp: "{{item.regexp }}"
     line: "{{item.line}}"
   with_items:
-    - { regexp: "dashboard.notifier.enabled=", line: "dashboard.notifier.enabled=true" }
-    - { regexp: "dashboard.notifier.component.adminurl=", line: "dashboard.notifier.component.adminurl=http://{{ wsm_crawler_fqdn }}:10010" }
-    - { regexp: "dashboard.service.url=", line: "dashboard.service.url=http://{{ dashboard_fqdn }}:10020/otif-dashboard-api/api/v1" }
+    - { file: "otif-crawler.properties", regexp: "dashboard.notifier.enabled=", line: "dashboard.notifier.enabled=true" }
+    - { file: "otif-crawler.properties", regexp: "dashboard.notifier.component.adminurl=", line: "dashboard.notifier.component.adminurl=http://{{ wsm_crawler_hostname }}:10010" }
+    - { file: "otif-crawler.properties", regexp: "dashboard.service.url=", line: "dashboard.service.url=http://{{ dashboard_hostname }}:10020/otif-dashboard-api/api/v1" }
+    - { file: "otif-crawler.properties", regexp: "dashboard.service.password=", line: "dashboard.service.password=admin" }
+    - { file: "crawleradmin.properties", regexp: "dashboard.service.url=", line: "dashboard.service.url={{ dashboard_hostname }}" }
+    - { file: "crawleradmin.properties", regexp: "dashboard.component.adminurl=", line: "dashboard.component.adminurl={{ wsm_crawler_fqdn }}" }
 
 - name: Make sure the {{ master_dbname }}_wsm exists in postgresql.
   postgresql_db:

@@ -37,7 +37,7 @@
 
           - name: Removing Zookeeper ...
             expect:
-              command: "{{ zookeeper_installer.files[0].path }} -i console"
+              command: "{{ zookeeper_installer.path }} -i console"
               echo: yes
               timeout: 30
               responses:

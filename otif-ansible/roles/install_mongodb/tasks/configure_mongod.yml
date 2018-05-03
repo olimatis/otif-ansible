@@ -7,14 +7,14 @@
    - name: Set MongoDB custom data location to "{{ custom_data_location }}" if needed
      become: true
      lineinfile:
-       dest: "{{ mongodb_config }}"
+       dest: "{{ mongo_config }}"
        regexp: "^[ ]*dbPath[ ]*:"   
        line: "  dbPath: {{ custom_data_location }}/mongo" # Customized by Ansible (otif-ansible)
      when: custom_data_location is defined
 
    - name: Set cutom data folder if needed
      file:
-       path: "{{ custom_data_location}}/mongo
+       path: "{{ custom_data_location}}/mongo"
        state: directory
        owner: mongodb
        group: mongodb
@@ -27,32 +27,32 @@
    - name: Set authentication for admin user
      mongodb_user:
        database: admin
-       name: "{{ mongodb_user }}"
-       password: "{{ mongodb_pw }}"
+       name: "{{ mongo_user }}"
+       password: "{{ mongo_pw }}"
        update_password: on_create
        roles: root
        state: present
 
-   - name: Set MongoDB to listen on all interface"
+   - name: Set MongoDB to listen on all interface
      become: true
      lineinfile:
-       dest: "{{ mongodb_config }}"
+       dest: "{{ mongo_config }}"
        regexp: "^[ ]*bindIp:"
        line: "#  bindIp: 127.0.0.1 # Ansible commented this line to enable remote conection."
 
-   - name: Set MongoDB to listen on port "{{ mongodb_port }}"
+   - name: Set MongoDB to listen on port "{{ mongo_port }}"
      become: true
      lineinfile:
-       dest: "{{ mongodb_config }}"
+       dest: "{{ mongo_config }}"
        regexp: "^#?[ ]*port:"
-       line: "  port: {{mongodb_port }} # The playbook will make sure this port is opened."
+       line: "  port: {{mongo_port }} # The playbook will make sure this port is opened."
 
-   - name: Open port "{{mongodb_port}}" for MongoDB - error reported if firewall not running
+   - name: Open port "{{mongo_port}}" for MongoDB - error reported if firewall not running
      become: true
      ignore_errors: true
      firewalld:
        zone: public
-       port: "{{mongodb_port}}/tcp"
+       port: "{{mongo_port}}/tcp"
        permanent: true
        immediate: true
        state: enabled
@@ -60,19 +60,19 @@
    - name: Enable security.authorization for MongoDB
      become: true
      lineinfile:
-       dest: "{{ mongodb_config }}"
+       dest: "{{ mongo_config }}"
        regexp: "^#security:"
        line: "#security:\nsecurity.authorization: enabled"
      notify: Restart MongoDB
 
    - name: Create MongoDB database for InfoFusion
      mongodb_user:
-       login_user: "{{ mongodb_user }}"
-       login_password: "{{ mongodb_pw }}"
+       login_user: "{{ mongo_user }}"
+       login_password: "{{ mongo_pw }}"
        login_database: admin
-       database: "{{ mongodb_database }}"
-       name: "{{ mongodb_user }}"
-       password: "{{ mongodb_pw }}"
+       database: "{{ mongo_database }}"
+       name: "{{ mongo_user }}"
+       password: "{{ mongo_pw }}"
        update_password: on_create
        roles: dbOwner
        state: present
@@ -82,7 +82,7 @@
      vars:
        msg: |
             You can now to use the mongo shell with:
-            'mongo {{mongodb_database}} -u {{mongodb_user}} -p {{mongodb_pw}}'
+            'mongo {{mongo_database}} -u {{mongo_user}} -p {{mongo_pw}}'
             Then '> use infofusion'
      debug:
        msg: "{{ msg.split('\n') }}"

@@ -9,6 +9,6 @@
 - name: Wait MongoDB port is listening
   wait_for: 
     host: "127.0.0.1"
-    port: "{{ mongodb_port }}"
+    port: "{{ mongo_port }}"
     delay: 5
     state: started

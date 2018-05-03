@@ -12,7 +12,7 @@
     - { port: 2181 }
   register: wait
 
-- name: Mount DVD at {{ default_installer_location }}. The Pipeline installer is meant to be there.
+- name: Mount DVD at {{ default_installer_location }}. The Text Mining packages are meant to be there.
   mount:
     path: "{{ default_installer_location }}"
     src: /dev/cdrom
@@ -35,7 +35,7 @@
         dest: "{{ default_installer_location }}/{{ download_text_mining_bin | basename }}"
         mode: a+x
 
-    - name: Download Text Mining Data from Nexus @ {{ download_text_mining_data }} ...
+    - name: Download Text Mining data from Nexus @ {{ download_text_mining_data }} ... TAKES A WHILE! (up to 20min)
       get_url:
         url: "{{ download_text_mining_data }}"
         dest: "{{ default_installer_location }}/{{ download_text_mining_data | basename }}"
