@@ -10,14 +10,14 @@
   expect:
     command: "{{ kafka_installer.path }} -i console"
     echo: yes
-    timeout: 30
+    timeout: 60
     responses:
       .*to reach the end of this text.*: "skip"
       PRESS \<ENTER\> TO CONTINUE: ""
       .*DO YOU ACCEPT THE TERMS.*: "Y"
       .*ENTER AN ABSOLUTE PATH.*: "{{ kafka_installation_path }}"
       .*IS THIS CORRECT.*: "Y"
-      .*Current Host.*: ""
+      .*Current Host.*: "{{ kafka_hostname }}"
       .*Zookeeper Host.*: "{{ zookeeper_hostname }}"
       .*YOUR CHOICE.*: "1"
       .*EXIT THE INSTALLER.*: ""

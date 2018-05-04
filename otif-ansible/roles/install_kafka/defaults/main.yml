@@ -19,5 +19,8 @@ kafka_installation_path: "{{ default_installation_path }}/kafka"
 # Remove existing Kafka
 remove_kafka: True
 
+# Delete associated node and information in Zookeeper
+cleanup_zookeeper: true
+
 with_pause: False
 skip_zk: False

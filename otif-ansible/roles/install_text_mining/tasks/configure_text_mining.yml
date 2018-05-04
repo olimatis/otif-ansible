@@ -23,11 +23,11 @@
   lineinfile:
     dest: "{{ tme_target_dir }}/{{ tme_package_basename }}/etc/tme.properties"
     regexp: '^(.*{{ item.lookup }}.*)=(.*)$'
-    line: '\1={{ item.fqdn }}'
+    line: '\1={{ item.hostname }}'
     backrefs: true
   with_items:
-    - { lookup: "zookeeper.ensemble", fqdn: "{{ zookeeper_fqdn }}:2181" }
-    - { lookup: "service.host", fqdn: "{{ text_mining_fqdn }}" }
+    - { lookup: "zookeeper.ensemble", hostname: "{{ zookeeper_hostname }}:2181" }
+    - { lookup: "service.host", hostname: "{{ text_mining_hostname }}" }
 
 - name: Enable Text Mining registration into ZK
   become: true

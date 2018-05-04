@@ -144,15 +144,19 @@
     url: "http://{{ wsm_crawler_fqdn }}:10010/crawlers-admin/rest/v1/jobs"
     method: POST
     body: >
-      {"schedule_info":{"repeat_count":0,"recurrence":0},
-      "search_text":{"numberOfCycles":3,"batchSize":50,"configuration":{},"urls":["https://blogs.opentext.com/"],
-      "url_filters":[{"expression":"\\/(author|category)\\/","type":"EXCLUDE"},{"expression":"https:\\/\\/blogs.opentext.com\\/.*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
-      "ingestion_filters":[{"expression":"https:\\/\\/blogs.opentext.com\\/.*\\/$","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
+      {"schedule_info":{"repeat_count":0,"recurrence":0},"search_text":{"numberOfCycles":3,"batchSize":50,
+      "configuration":{},"urls":["https://blogs.opentext.com/"],
+      "url_filters":[{"expression":"\\/(author|category|feed|tag)\\/","type":"EXCLUDE"},{"expression":"\\/(xmlrpc|wp-)","type":"EXCLUDE"},
+      {"expression":"https:\\/\\/blogs.opentext.com\\/.*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
+      "ingestion_filters":[{"expression":"page=","type":"EXCLUDE"},{"expression":"https:\\/\\/blogs.opentext.com\\/$","type":"EXCLUDE"},{"expression":".","type":"INCLUDE"}],
       "content_filters":[{"expression":".","type":"EXCLUDE"}],
-      "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate","textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
-      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"YYYY-MM-DD'T'hh:mm:ssXXX"}}]}]},
-      "job_id":2,"name":"Sample Web Crawling Job","creation_date":"2018-04-05T04:36:00.006-0700","status":"Completed","date_modified":"2018-04-10T19:03:10.965-0700",
-      "crawler_type":"Web","job_group":"OpenText","exec_info":{"id":0,"job_id":2}}
+      "scrapingRules":[{"targetField":"document.metadata.attributes.creationDate",
+      "textExtraction":{"concatenate":false,"xpaths":["//meta[@property=\"article:published_time\"]/@content"]},
+      "textTransformation":[{"type":"dateFormatting","parameters":{"format":"yyyy-MM-dd'T'hh:mm:ssXXX"}}]}],
+      "pipeline_custom_properties":{"source":"OpenText Blogs"}},
+      "job_id":2,"name":"Sample Web Crawling Job","creation_date":"2018-05-04T06:41:42.485-0700",
+      "status":"Completed","date_modified":"2018-05-04T07:26:25.457-0700","crawler_type":"Web",
+      "job_group":"OpenText","exec_info":{"id":2,"job_id":2,"last_run":"2018-05-04T07:10:18.754-0700","status":"Completed","message":"Job execution completed successfully"}}
     status_code: 201, 400
     body_format: json
     timeout: 10

@@ -19,7 +19,7 @@
       .*DO YOU ACCEPT THE TERMS.*: "Y"
       .*ENTER AN ABSOLUTE PATH.*: "{{ zookeeper_installation_path }}"
       .*IS THIS CORRECT.*: "Y"
-      .*Current Host.*: ""
+      .*Current Host.*: "{{ zookeeper_hostname }}"
       .*TO ACCEPT THE DEFAULT.*: ""
       '.*TO EXIT THE INSTALLER.*': ""
   register: installer_output

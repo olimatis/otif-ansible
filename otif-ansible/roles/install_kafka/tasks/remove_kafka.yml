@@ -37,7 +37,7 @@
               expect:
                 command: "{{ kafka_installer.path }} -i console"
                 echo: yes
-                timeout: 30
+                timeout: 60
                 responses:
                   .*Choose Instance Management Option.*: "2"
                   .*Choose the instance to modify.*: "1"
@@ -62,6 +62,26 @@
           when: hits.count > 0  
 
       when: installanywhere_registry_is_there.stat.exists == true
+
+    - name: Remove reference to kafka in Zookeeper
+      block:
+
+        - name: Install kazoo dependency - needed for the Ansible znode module used to talk to Zookeeper
+          become: true
+          easy_install:
+            name: kazoo
+            state: latest
+
+        - name: Remove Kafka from Zookeeper
+          znode:
+            hosts: "{{ zookeeper_hostname }}:2181"
+            name: "{{ item }}"
+            recursive: true
+            state: absent
+          with_items:
+            - /kafka
+
+      when: cleanup_zookeeper
 
   when: remove_kafka
 

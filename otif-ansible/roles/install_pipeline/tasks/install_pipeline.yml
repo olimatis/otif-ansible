@@ -47,7 +47,7 @@
       .*DO YOU ACCEPT THE TERMS.*: "Y"
       .*ENTER AN ABSOLUTE PATH.*: "{{ pipeline_installation_path }}"
       .*IS THIS CORRECT.*: "Y"
-      .*Current Host.*: ""
+      .*Current Host.*: "{{ pipeline_hostname }}"
       .*Zookeeper Host.*: "{{ zookeeper_hostname }}"
       .*components to enable.*: "1,2,4"
       .*OTCA Host.*: "{{ text_mining_hostname }}"
