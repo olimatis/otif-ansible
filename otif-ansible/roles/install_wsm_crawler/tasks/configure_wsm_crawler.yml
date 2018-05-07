@@ -12,8 +12,8 @@
     - { file: "otif-crawler.properties", regexp: "dashboard.notifier.component.adminurl=", line: "dashboard.notifier.component.adminurl=http://{{ wsm_crawler_hostname }}:10010" }
     - { file: "otif-crawler.properties", regexp: "dashboard.service.url=", line: "dashboard.service.url=http://{{ dashboard_hostname }}:10020/otif-dashboard-api/api/v1" }
     - { file: "otif-crawler.properties", regexp: "dashboard.service.password=", line: "dashboard.service.password=admin" }
-    - { file: "crawleradmin.properties", regexp: "dashboard.service.url=", line: "dashboard.service.url={{ dashboard_hostname }}" }
-    - { file: "crawleradmin.properties", regexp: "dashboard.component.adminurl=", line: "dashboard.component.adminurl={{ wsm_crawler_fqdn }}" }
+    - { file: "crawleradmin.properties", regexp: "dashboard.service.url=", line: "dashboard.service.url=http://{{ dashboard_hostname }}:10020/otif-dashboard-api/api/v1" }
+    - { file: "crawleradmin.properties", regexp: "dashboard.component.adminurl=", line: "dashboard.component.adminurl=http://{{ wsm_crawler_fqdn }}:10010" }
 
 - name: Make sure the {{ master_dbname }}_wsm exists in postgresql.
   postgresql_db:

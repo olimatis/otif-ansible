@@ -25,7 +25,7 @@
     line: "{{item.line}}"
   with_items:
     - { regexp: "driverClassName=", line: "dashboard.persistence.pool.properties.driverClassName=org.postgresql.Driver" }
-    - { regexp: "url=", line: "dashboard.persistence.pool.properties.url=jdbc:postgresql://{{ dashboard_fqdn }}:5432/{{ master_dbname }}_dashboard" }
+    - { regexp: "url=", line: "dashboard.persistence.pool.properties.url=jdbc:postgresql://{{ dashboard_hostname }}:5432/{{ master_dbname }}_dashboard" }
     - { regexp: "username=", line: "dashboard.persistence.pool.properties.username={{ master_username}}" }
     - { regexp: "password=", line: "dashboard.persistence.pool.properties.password={{ master_password}}" }
 
