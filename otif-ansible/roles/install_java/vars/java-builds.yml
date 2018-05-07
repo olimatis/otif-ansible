@@ -9,6 +9,12 @@ java_builds:
       build: 11
       download_id: 'c2514751926b4512b076cc82f959763f'
   8:
+    172:
+      build: 11
+      download_id: 'a58eab1ec242421181065cdc37240b08'
+    171:
+      build: 11
+      download_id: '512cd62ec5174c3487ac17c61aaa89e8'
     162:
       build: 12
       download_id: '0da788060d494f5095bf8624735fa2f1'

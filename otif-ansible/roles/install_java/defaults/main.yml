@@ -4,7 +4,7 @@
 # Java major version 7 or 8
 java_major_version: 8
 # Java minor version
-java_minor_version: 162
+java_minor_version: 172
 
 # Parent path to install JDK
 java_root_path: /opt/java
