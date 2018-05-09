@@ -20,6 +20,28 @@
     - { port: 7071 }
     - { port: 7171 }
 
+- name: Register Pipeline in the Dashboard
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/dashboardNotifier"
+    method: PUT
+    body: >
+      { "type": "dashboardNotifierConfig", "version": "0", "enabled": { "value": "true", "defaultValue": "false" },
+      "dashboardHost": "{{ dashboard_hostname }}","dashboardPort": {"value": "10020","defaultValue": "10020" },
+      "dashboardPath": { "value": "/otif-dashboard-api/api/v1","defaultValue": "/otif-dashboard-api/api/v1" },
+      "dashboardUser": "admin","dashboardPassword": "admin" }
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    body_format: json
+    timeout: 30
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
+
 - name:
   vars:
     msg: |

@@ -37,7 +37,7 @@
         expect:
           command: "{{ pipeline_installer.path }} -i console"
           echo: yes
-          timeout: 45
+          timeout: 120
           responses:
             .*Choose Instance Management Option.*: "2"
             .*Choose the instance to modify.*: "1"

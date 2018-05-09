@@ -6,8 +6,8 @@ with_pause: false
 
 timestamp: "{{ ansible_date_time.date }}"
 
-installation_method: download
-#installation_method: iso
+#installation_method: download
+installation_method: iso
 #installation_method: file
 
 # Location of the mounted iso containing InfoFusion installers

@@ -28,8 +28,8 @@
     name: pexpect
   register: pexpect_result
 
-- debug:
-    var: pexpect_result
+#- debug:
+#    var: pexpect_result
 
 - name: Fallback in case previous easy_install pexect didn't work
   command: easy_install pexpect

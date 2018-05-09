@@ -1,6 +1,7 @@
+
 ---
 
-- hosts: pipeline, zookeeper, kafka, mongodb, text-mining, wsm-crawler
+- hosts: pipeline, zookeeper, kafka, mongodb, text-mining, wsm-crawler, dashboard
 
   tasks:
 

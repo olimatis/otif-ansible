@@ -10,7 +10,7 @@
   with_items:
     - { name: otif-text-mining }
 
-- name: Wait Text Mining Engine for listening on port 40002 ... it can take a minut or 2 for teh engine to warm up ...
+- name: Wait Text Mining Engine for listening on port 40002 ... it can take a minute or 2 for the engine to warm up ...
   wait_for:
     host: "127.0.0.1"
     port: "{{ item.port }}"
@@ -22,9 +22,9 @@
 - name:
   vars:
     msg: |
-         InfoFusion Text Mining has been deployed on {{ansible_hostname }}.
-         You can validate deployement by opening http://{{ ansible_hostname }}:40002
-         or http://{{ ansible_fqdn }}:40002
+         InfoFusion Text Mining has been deployed on {{text_mining_hostname }}.
+         You can validate deployement by opening http://{{ text_mining_fqdn }}:40002
+         or http://{{ ansible_host }}:40002
          Default credentials are admin/admin.
          You can also test the REST API using a REST client like Postman.
   debug:

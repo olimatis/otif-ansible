@@ -40,7 +40,7 @@
   expect:
     command: "{{ pipeline_installer.path }} -i console"
     echo: yes
-    timeout: 60
+    timeout: 120
     responses:
       .*to reach the end of this text.*: "skip"
       PRESS \<ENTER\> TO CONTINUE: ""
