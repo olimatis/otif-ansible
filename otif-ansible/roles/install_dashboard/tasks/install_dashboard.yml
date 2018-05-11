@@ -104,7 +104,7 @@
         path: "{{ item }}"
         state: absent
       with_items:
-        - "{{ dashboard_target_dir }}"        
+        - "{{ dashboard_installation_path }}"        
 
     - name: Creating PostgreSQL backup (support for PostgreSQL only)
       block:
@@ -145,7 +145,7 @@
 
 - name: Make sure target directory exists
   file:
-    path: "{{ dashboard_target_dir }}"
+    path: "{{ dashboard_installation_path }}"
     state: directory
     mode: 0744
     owner: "{{ master_username }}"
@@ -155,7 +155,7 @@
   unarchive:
     remote_src: yes
     src: "{{ dashboard_installer.path }}"
-    dest: "{{ dashboard_target_dir }}"
+    dest: "{{ dashboard_installation_path }}"
     keep_newer: yes
     owner: "{{ master_username }}"
     group: "{{ master_username }}"

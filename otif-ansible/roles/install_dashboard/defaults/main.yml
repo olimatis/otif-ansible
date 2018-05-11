@@ -1,6 +1,6 @@
 ---
 
-dashboard_target_dir: "{{ default_installation_path }}/dashboard"
+dashboard_installation_path: "{{ default_installation_path }}/dashboard"
 
 remove_dashboard: True
 backup_database: True

@@ -19,6 +19,9 @@
     - name: Configure InfoFusion Crawler for Web & Social Media
       include_tasks: configure_wsm_crawler.yml
 
+    - name: Patch InfoFusion Crawler for Web & Social Media
+      include_tasks: patch_wsm_crawler.yml
+
     - name: Start InfoFusion Crawler for Web & Social Media
       include_tasks: start_wsm_crawler.yml
 

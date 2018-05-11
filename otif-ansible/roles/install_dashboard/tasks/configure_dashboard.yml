@@ -6,7 +6,7 @@
     dest: "{{ item.dest }}"
   with_items:
     - { src: otif-dashboard.service.j2, dest: /etc/systemd/system/otif-dashboard.service }
-    - { src: server.xml.j2, dest: "{{ dashboard_target_dir }}/conf/server.xml" }
+    - { src: server.xml.j2, dest: "{{ dashboard_installation_path }}/conf/server.xml" }
 
 - name: Create database if not already there (mandatory for the installation)
   postgresql_db:
@@ -20,7 +20,7 @@
 - name: Set Dashboard API configuration"
   become: true
   lineinfile:
-    dest: "{{ dashboard_target_dir }}/etc/dashboard-api.properties"
+    dest: "{{ dashboard_installation_path }}/etc/dashboard-api.properties"
     regexp: "{{item.regexp }}" 
     line: "{{item.line}}"
   with_items:
@@ -32,9 +32,9 @@
 - name: Set Dashboard Deamon configuration"
   become: true
   lineinfile:
-    dest: "{{ dashboard_target_dir }}/etc/otif-system.properties"
-    regexp: "{{item.regexp }}"
-    line: "{{item.line}}"
+    dest: "{{ dashboard_installation_path }}/etc/otif-system.properties"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
   with_items:
     - { regexp: "deamon.name=", line: "dashboard.daemon.name=otif-dashboard-1" }
     - { regexp: "deamon.long.name=", line: "dashboard.daemon.long.name=OpenText InfoFusion Dashboard 1" }

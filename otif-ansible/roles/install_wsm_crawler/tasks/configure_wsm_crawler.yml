@@ -39,15 +39,6 @@
     - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_wsm -f {{ crawler_installation_path }}/etc/otif-wsm-crawler-schema.sql" }
     - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_wsm -f {{ crawler_installation_path }}/etc/add_admin.sql" }
 
-- name: Patch logos
-  copy:
-    src: "{{ item }}"
-    dest: "{{ crawler_installation_path }}/webapps/ROOT/gfx/singles/{{ item }}"
-    backup: yes
-  with_items:
-    - logo-crawler-app-v2.svg
-    - logo-crawler-login-v2.svg
-  
 - name: Open port 10010 used to access InfoFusion Crawler for Web & Social Media Admin UI
   become: true
   ignore_errors: true

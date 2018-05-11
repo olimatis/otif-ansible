@@ -1,0 +1,9 @@
+---
+
+- name: Patch Pipeline War file for Magellan branding (logos)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ pipeline_installation_path }}/adminapps/ROOT.war"
+    backup: yes
+  with_items:
+    - otif-ingestion-api-admin-16.4.0.3.war

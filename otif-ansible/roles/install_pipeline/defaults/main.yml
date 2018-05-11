@@ -1,7 +1,6 @@
 ---
 # defaults file for install_pipeline
 
-#pipeline_destination_path: 
 pipeline_installation_path: "{{ default_installation_path }}/pipeline"
 
 remove_pipeline: true

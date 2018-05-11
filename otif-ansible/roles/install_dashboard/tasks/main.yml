@@ -10,6 +10,9 @@
     - name: Configure InfoFusion Dashboard
       include_tasks: configure_dashboard.yml
 
+    - name: Patch InfoFusion Dashboard
+      include_tasks: patch_dashboard.yml
+
     - name: Start InfoFusion Dashboard
       include_tasks: start_dashboard.yml
 

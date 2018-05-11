@@ -1,0 +1,10 @@
+---
+
+- name: Patch logos
+  copy:
+    src: "{{ item }}"
+    dest: "{{ crawler_installation_path }}/webapps/ROOT/gfx/singles/{{ item }}"
+    backup: yes
+  with_items:
+    - logo-crawler-app-v2.svg
+    - logo-crawler-login-v2.svg  

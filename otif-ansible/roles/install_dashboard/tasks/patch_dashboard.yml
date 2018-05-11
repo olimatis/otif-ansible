@@ -1,0 +1,9 @@
+---
+
+- name: Patch Dashboard War file for Magellan branding (logos)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ dashboard_installation_path }}/webapps/ROOT.war"
+    backup: yes
+  with_items:
+    - otif-dashboard-webapp-16.4.0.3.war
