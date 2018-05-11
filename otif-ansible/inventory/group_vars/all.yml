@@ -6,9 +6,13 @@ with_pause: false
 
 timestamp: "{{ ansible_date_time.date }}"
 
-#installation_method: download
-installation_method: iso
+installation_method: download
+#installation_method: iso
 #installation_method: file
+
+# Default path for installation
+default_installation_path: "/OpenText/infofusion-{{otif_version}}"
+#default_installation_path: "/opt/OpenText/infofusion-{{otif_version}}"
 
 # Location of the mounted iso containing InfoFusion installers
 #default_installer_location: "/mnt/dvd"
@@ -71,10 +75,6 @@ playbook_user_home: "{{ lookup('env','HOME') }}"
 
 # DEPRECATED - Location where to download/find the packages (wget) 
 # default_download_folder: "{{ lookup('env','HOME') }}/otif-packages"
-
-# Default path for installation
-default_installation_path: "/OpenText/infofusion-{{otif_version}}"
-#default_installation_path: "/opt/OpenText/infofusion-{{otif_version}}"
 
 # Location for Data (psql, mongo, kafka)
 #custom_data_location: /data 
