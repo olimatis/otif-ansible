@@ -125,6 +125,12 @@
 
       when: backup_database and custom_data_location is defined
 
+    - name: Restart PostgreSQL to drop any existing connection
+      become: true
+      service:
+        name: "postgresql-{{psql_maj_version}}.{{psql_min_version}}"
+        state: restarted
+
     - name: Dropping PostgreSQL database {{ master_dbname }} ...
       block:
 

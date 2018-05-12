@@ -87,3 +87,7 @@ master_username: maguser
 master_password: Mage11an
 # Password for 'postgres' admin
 psql_admin_password: psql-admin
+
+# Install PostgreSQL 9.6 by default
+psql_maj_version: 9
+psql_min_version: 6

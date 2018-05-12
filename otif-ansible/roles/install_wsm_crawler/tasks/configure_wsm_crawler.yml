@@ -146,7 +146,7 @@
     body: >
       {"schedule_info":{"repeat_count":0,"recurrence":0},"search_text":{"numberOfCycles":3,"batchSize":50,
       "configuration":{},"urls":["https://blogs.opentext.com/"],
-      "url_filters":[{"expression":"\\/(author|category|feed|tag)\\/","type":"EXCLUDE"},{"expression":"\\/(xmlrpc|wp-)","type":"EXCLUDE"},
+      "url_filters":[{"expression":"\\/(author|category|feed|tag|amp)\\/","type":"EXCLUDE"},{"expression":"\\/(xmlrpc|wp-)","type":"EXCLUDE"},
       {"expression":"https:\\/\\/blogs.opentext.com\\/.*","type":"INCLUDE"},{"expression":".","type":"EXCLUDE"}],
       "ingestion_filters":[{"expression":"page=","type":"EXCLUDE"},{"expression":"https:\\/\\/blogs.opentext.com\\/$","type":"EXCLUDE"},{"expression":".","type":"INCLUDE"}],
       "content_filters":[{"expression":".","type":"EXCLUDE"}],

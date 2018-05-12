@@ -1,6 +1,7 @@
 ---
 
 - hosts: wsm-crawler, zookeeper, kafka, mongodb, postgresql
+#  serial: 1
 
   tasks:
 

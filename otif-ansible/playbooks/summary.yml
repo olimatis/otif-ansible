@@ -1,0 +1,161 @@
+---
+
+- hosts: wsm-crawler, pipeline, text-mining
+
+  tasks:
+
+  - name: Wait until Zookeeper is listening on port 2181
+    wait_for:
+      host: "{{ zookeeper_hostname }}"
+      port: "{{ item.port }}"
+      timeout: 10
+      state: started
+    with_items:
+      - { port: 2181 } 
+    when: inventory_hostname in groups['zookeeper']
+
+  - name: Wait until Kafka is listening on port 9092
+    wait_for:
+      host: "{{ kafka_hostname }}"
+      port: "{{ item.port }}"
+      timeout: 10
+      state: started
+    with_items:
+      - { port: 9092 }     
+    when: inventory_hostname in groups['kafka']
+
+  - name: Summary for MongoDB
+    block:
+
+    - name:
+      vars:
+        msg: |
+             You can now to use the mongo shell locally on {{ mongodb_hostname }}:
+             'mongo {{master_dbname}} -u {{master_username}} -p {{master_password}}'
+             Then '> use infofusion'
+      debug:
+        msg: "{{ msg.split('\n') }}"
+
+    when: inventory_hostname in groups['mongodb']
+
+  - name: Sumamry for Dashboard
+    block:
+
+    - name: Wait for Dashboard to be listening on port 10020
+      wait_for:
+        host: "{{ dashboard_hostname }}"
+        port: "{{ item.port }}"
+        timeout: 10
+        state: started
+      with_items:
+        - { port: 10020 }
+
+    - name:
+      vars:
+        msg: |
+             InfoFusion dashboard has been deployed on {{dashboard_hostname}}.
+             You can validate deployement by opening http://{{ dashboard_fqdn }}:10020
+             or http://{{ ansible_host }}:10020
+             Default credentials are admin/admin.
+      debug:
+        msg: "{{ msg.split('\n') }}"
+
+    when: inventory_hostname in groups['dashboard']
+
+  - name: Summary for Crawler for Web & Social Media
+    block:
+
+    - name: Wait for Crawler for Web & Social Media to be listening on port 10010 & 10011
+      wait_for:
+        host: "{{ wsm_crawler_hostname }}"
+        port: "{{ item }}"
+        timeout: 10
+        state: started
+      with_items:
+        - "10010"
+        - "10011"
+
+    - name:
+      vars:
+        msg: |
+             Magellan Crawler for Web & Social Media has been configured on {{ wsm_crawler_hostname }}.
+             Two sample crawling jobs have been created to test with.
+             You can validate deployement by opening http://{{ wsm_crawler_fqdn }}:10010
+             or http://{{ ansible_host }}:10010
+             Default credentials are admin/admin but user '{{ master_username }}/{{ master_password }}' has ben created as well.
+      debug:
+        msg: "{{ msg.split('\n') }}"
+
+    when: inventory_hostname in groups['wsm-crawler']
+
+  - name: Summary for Pipeline
+    block:
+
+    - name: Wait until Pipeline is listening on ports 7071 & 7171
+      wait_for:
+        host: "{{ pipeline_hostname }}"
+        port: "{{ item.port }}"
+        timeout: 10
+        state: started
+      with_items:
+        - { port: 7071 }
+        - { port: 7171 }
+
+    - name:
+      vars:
+        msg: |
+             Magellan Crawler Pipeline has been configured on {{ pipeline_hostname }}.
+             You can validate deployement by opening http://{{ pipeline_fqdn }}:7171
+             or http://{{ ansible_host }}:7171
+             Default credentials are admin/admin.
+      debug:
+        msg: "{{ msg.split('\n') }}"
+
+    - name: Testing access to PostgreSQL on Pipeline
+      wait_for:
+        host: "{{ item.host }}"
+        port: "{{ item.port }}"
+        timeout: 10
+        state: started
+      with_items:
+        - { host: "{{pipeline_hostname}}", port: 5432 }
+ 
+    - name:
+      vars:
+        msg: |
+             Magellan Pipeline is persisting data info a database on {{ pipeline_hostname }}.
+             You can access locally using the following command:
+             psql -U {{ master_username}} {{master_dbname}}
+             > \l (to list all databases)
+             > \d (to list tables in database)
+             > \q to quit psql terminal
+
+      debug:
+        msg: "{{ msg.split('\n') }}"
+  
+    when: inventory_hostname in groups['pipeline']
+
+  - name: Summary for Pipeline
+    block: 
+   
+      - name: Wait Text Mining Engine for listening on port 40002 ...
+        wait_for:
+          host: "{{ text_mining_hostname }}"
+          port: "{{ item.port }}"
+          timeout: 10
+          state: started
+        with_items:
+          - { port: 40002 }
+
+      - name:
+        vars:
+          msg: |
+               Magellan Text Mining has been deployed on {{text_mining_hostname }}.
+               You can validate deployement by opening http://{{ text_mining_fqdn }}:40002
+               or http://{{ ansible_host }}:40002
+               Default credentials are admin/admin.
+               You can also test the REST API using a REST client like Postman.
+        debug:
+          msg: "{{ msg.split('\n') }}"
+
+    when: inventory_hostname in groups['text-mining']  

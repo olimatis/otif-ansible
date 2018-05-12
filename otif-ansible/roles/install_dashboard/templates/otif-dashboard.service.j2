@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart={{dashboard_target_dir}}/bin/catalina.sh start
-ExecStop={{dashboard_target_dir}}/bin/catalina.sh stop
+ExecStart={{dashboard_installation_path}}/bin/catalina.sh start
+ExecStop={{dashboard_installation_path}}/bin/catalina.sh stop
 
 [Install]
 WantedBy=multi-user.target

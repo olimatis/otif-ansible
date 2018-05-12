@@ -1,11 +1,9 @@
 ---
 # defaults file for install_psql
 
-# See also into inventory/group_vars/postgresql.yml for other global variables vailable for the group
-
 # Install PostgreSQL 9.6 by default
-maj_version: 9
-min_version: 6
+maj_version: "{{ psql_maj_version }}"
+min_version: "{{ psql_min_version }}"
 
 # use RPM release 3 (9.6-3)
 psql_rpm_release: 3

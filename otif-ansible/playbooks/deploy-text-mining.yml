@@ -1,6 +1,7 @@
 ---
 
 - hosts: text-mining, pipeline
+  serial: 1
 
   tasks: 
 

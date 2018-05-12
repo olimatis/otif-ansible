@@ -55,5 +55,5 @@
 - name: Initialize the database used by the Dashboard
   shell: "{{ item.command }}"
   with_items:
-    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -f {{ dashboard_target_dir }}/etc/otif-dashboard-schema.sql" }
+    - { command: "PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -f {{ dashboard_installation_path }}/etc/otif-dashboard-schema.sql" }
   

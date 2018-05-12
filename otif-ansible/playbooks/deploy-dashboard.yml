@@ -1,6 +1,7 @@
 ---
 
-- hosts: wsm-crawler, pipeline
+- hosts: wsm-crawler, pipeline, dashboard
+#  serial: 1
 
   tasks: 
 

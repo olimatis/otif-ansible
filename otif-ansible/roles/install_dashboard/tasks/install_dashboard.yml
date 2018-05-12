@@ -121,7 +121,7 @@
             login_user: "{{ master_username }}"
             login_password: "{{ master_password }}"
             state: dump
-            target: "{{ default_installation_path }}/postgres_backup/psql-{{ansible_hostname}}-{{ master_dbname }}_dashboard.{{ timestamp }}.sql.gz"
+            target: "{{ default_installation_path }}/postgres_backup/psql-{{dashboard_hostname}}-{{ master_dbname }}_dashboard.{{ timestamp }}.sql.gz"
 
         - debug:
             msg: |
@@ -160,4 +160,5 @@
     owner: "{{ master_username }}"
     group: "{{ master_username }}"
     mode: 0774
+
 
