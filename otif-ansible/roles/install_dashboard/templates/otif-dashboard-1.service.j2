@@ -1,0 +1,13 @@
+[Unit]
+Description=InfoFusion Dashboard 1
+After=network.target
+
+[Service]
+Type=forking
+ExecStart={{dashboard_installation_path}}/bin/catalina.sh start sysd
+ExecStop={{dashboard_installation_path}}/bin/catalina.sh stop sysd
+User=root
+#User={{ master_username }}
+
+[Install]
+WantedBy=multi-user.target

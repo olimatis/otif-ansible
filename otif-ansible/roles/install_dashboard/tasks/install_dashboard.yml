@@ -83,20 +83,20 @@
 - name: Make sure Dashboard is removed if it exists
   block:
     
-    - name: Check if the otif-dashboard.service exists
+    - name: Check if the otif-dashboard-1.service exists
       stat:
-        path: /etc/systemd/system/otif-dashboard.service
+        path: /etc/systemd/system/otif-dashboard-1.service
       register: service_location
 
     - name: Stop service if it's there
       systemd:
-        name: otif-dashboard
+        name: otif-dashboard-1
         state: stopped
       when: service_location.stat.exists == True    
  
     - name: Remove service
       file:
-        path: "/etc/systemd/system/otif-dashboard.service"
+        path: "/etc/systemd/system/otif-dashboard-1.service"
         state: absent    
 
     - name: Remove dashbaord directory if it exists
@@ -130,6 +130,12 @@
 
       when: backup_database and custom_data_location is not defined
 
+    - name: Restart PostgreSQL to drop any existing connection
+      become: true
+      service:
+        name: "postgresql-{{psql_maj_version}}.{{psql_min_version}}"
+        state: restarted
+
     - name: Drop database (support for PostgreSQL only)
       postgresql_db:
         login_user: "postgres"
@@ -148,8 +154,8 @@
     path: "{{ dashboard_installation_path }}"
     state: directory
     mode: 0744
-    owner: "{{ master_username }}"
-    group: "{{ master_username }}"
+#    owner: "{{ master_username }}"
+#    group: "{{ master_username }}"
 
 - name: Unzip dashboard binaries (from "{{ dashboard_installer.path }}" to "{{ dashboard_target_dir }}") 
   unarchive:
@@ -157,8 +163,8 @@
     src: "{{ dashboard_installer.path }}"
     dest: "{{ dashboard_installation_path }}"
     keep_newer: yes
-    owner: "{{ master_username }}"
-    group: "{{ master_username }}"
+#    owner: "{{ master_username }}"
+#    group: "{{ master_username }}"
     mode: 0774
 
 

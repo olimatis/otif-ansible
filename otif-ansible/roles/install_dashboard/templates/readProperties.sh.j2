@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# This file is part of OT InfoFusion Cra.
+# (C) 2012-2017 - Open Text Corporation
+# All rights reserved.
+
+DAEMON_NAME=`cat "$INSTALL_DIR/etc/otif-system.properties" | grep 'dashboard.daemon.name' | cut -d= -f2-`
+DAEMON_LONG_NAME=`cat "$INSTALL_DIR/etc/otif-system.properties" | grep 'dashboard.daemon.long.name' | cut -d= -f2-`
+DAEMON_USER=`cat "$INSTALL_DIR/etc/otif-system.properties" | grep 'dashboard.daemon.user' | cut -d= -f2-`
+
+export DAEMON_NAME
+export DAEMON_LONG_NAME
+export DAEMON_USER
+
+# On AIX and Solaris, just verify that JAVA_HOME is set.
+if [ "$DIST_OS" = "aix" ] ; then
+        if [ -z "$JAVA_HOME" ] ; then
+                echo JAVA_HOME environment variable is missing.
+        fi
+elif [ "$DIST_OS" = "solaris" ] ; then
+    if [ -z "$JAVA_HOME" ] ; then
+        echo JAVA_HOME environment variable is missing.
+    fi
+elif [ -d "$BASE_DIR/../jre" ]
+                then
+                        export JRE_HOME="$BASE_DIR/../jre"
+fi

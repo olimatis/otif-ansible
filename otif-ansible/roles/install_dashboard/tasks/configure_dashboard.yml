@@ -5,8 +5,9 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: otif-dashboard.service.j2, dest: /etc/systemd/system/otif-dashboard.service }
+    - { src: otif-dashboard-1.service.j2, dest: /etc/systemd/system/otif-dashboard-1.service }
     - { src: server.xml.j2, dest: "{{ dashboard_installation_path }}/conf/server.xml" }
+    - { src: readProperties.sh.j2, dest: "{{ dashboard_installation_path }}/bin/readProperties.sh" }
 
 - name: Create database if not already there (mandatory for the installation)
   postgresql_db:
@@ -24,10 +25,13 @@
     regexp: "{{item.regexp }}" 
     line: "{{item.line}}"
   with_items:
-    - { regexp: "driverClassName=", line: "dashboard.persistence.pool.properties.driverClassName=org.postgresql.Driver" }
-    - { regexp: "url=", line: "dashboard.persistence.pool.properties.url=jdbc:postgresql://{{ dashboard_hostname }}:5432/{{ master_dbname }}_dashboard" }
-    - { regexp: "username=", line: "dashboard.persistence.pool.properties.username={{ master_username}}" }
-    - { regexp: "password=", line: "dashboard.persistence.pool.properties.password={{ master_password}}" }
+    - { regexp: 'driverClassName=', line: "dashboard.persistence.pool.properties.driverClassName=org.postgresql.Driver" }
+    - { regexp: 'url=', line: "dashboard.persistence.pool.properties.url=jdbc:postgresql://{{ dashboard_hostname }}:5432/{{ master_dbname }}_dashboard" }
+    - { regexp: 'username=', line: "dashboard.persistence.pool.properties.username={{ master_username}}" }
+    - { regexp: 'password=', line: "dashboard.persistence.pool.properties.password={{ master_password}}" }
+
+#- pause:
+#    prompt: "Before to fix otif-syste,properties"
 
 - name: Set Dashboard Deamon configuration"
   become: true
@@ -36,9 +40,13 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: "deamon.name=", line: "dashboard.daemon.name=otif-dashboard-1" }
-    - { regexp: "deamon.long.name=", line: "dashboard.daemon.long.name=OpenText InfoFusion Dashboard 1" }
-    - { regexp: "deamon.user=", line: "dashboard.daemon.user={{master_username}}" }
+    - { regexp: 'dsahboard', line: '' }
+    - { regexp: 'daemon\.name=', line: 'dashboard.daemon.name=otif-dashboard-1' }
+    - { regexp: 'long\.name=', line: 'dashboard.daemon.long.name=OpenText InfoFusion Dashboard 1' }
+    - { regexp: 'user=', line: 'dashboard.daemon.user={{master_username}}' }
+
+#- pause:
+#    prompt: "After fixing otif-syste,properties"
 
 - name: Open port 10020
   ignore_errors: true

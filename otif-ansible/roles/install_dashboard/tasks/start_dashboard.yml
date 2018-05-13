@@ -7,7 +7,7 @@
     enabled: yes
     name: "{{ item.name }}"
   with_items:
-    - { name: otif-dashboard }
+    - { name: otif-dashboard-1 }
 
 - name: Wait for Dashboard to be listening on port 10020
   wait_for:
