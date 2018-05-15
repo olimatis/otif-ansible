@@ -1,0 +1,10 @@
+---
+
+- hosts: dashboard, wsm-crawler, pipeline, text-mining
+
+  tasks:
+
+  - name: Reconfiguration of hostnames
+    include_role:
+      name: update_hostname
+    tags: 'update-hostname'

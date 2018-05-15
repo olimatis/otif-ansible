@@ -14,6 +14,11 @@ installation_method: download
 default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 #default_installation_path: "/opt/OpenText/infofusion-{{otif_version}}"
 
+dashboard_installation_path: "{{ default_installation_path }}/dashboard"
+crawler_installation_path: "{{ default_installation_path }}/wsm-crawler"
+pipeline_installation_path: "{{ default_installation_path }}/pipeline"
+
+
 # Location of the mounted iso containing InfoFusion installers
 #default_installer_location: "/mnt/dvd"
 default_installer_location: "/temp"

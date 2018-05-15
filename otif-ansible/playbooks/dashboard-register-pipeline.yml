@@ -19,7 +19,7 @@
       body_format: json
       timeout: 30
     register: request_otif
-    when: inventory_hostname == pipeline
+    when: inventory_hostname in groups['pipeline']
 
   - name:
     debug:

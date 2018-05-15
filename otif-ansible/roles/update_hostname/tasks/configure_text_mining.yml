@@ -1,0 +1,56 @@
+---
+
+- name: Find where tme is installed and create a variable from the output
+  become: yes
+  command: "find {{ default_installation_path }} -path '*/bin/tme'"
+  register: tme_location
+
+- set_fact:
+    tme_installation_path: "{{ tme_location.stdout | regex_replace('^(.*)\\/bin\\/tme$', '\\1') }}"
+
+- debug:
+    msg: "Text Mining Engine has been found under {{tme_installation_path}}"
+
+- name: Reconfigured hostnames for Text Mining (in property file)
+  become: true
+  lineinfile:
+    dest: "{{ tme_installation_path }}/etc/tme.properties"
+    regexp: '^(.*{{ item.lookup }}.*)=(.*)$'
+    line: '\1={{ item.hostname }}'
+    backrefs: true
+  with_items:
+    - { lookup: "zookeeper.ensemble", hostname: "{{ zookeeper_hostname }}:2181" }
+    - { lookup: "service.host", hostname: "{{ text_mining_hostname }}" }
+
+
+#  *   /OpenText/infofusion-16.4/tme-16.4.0.2/etc/tme.properties:otca.service.zookeeper.ensemble=ussm-mag-app-pipeline-164:2181
+#  *   /OpenText/infofusion-16.4/tme-16.4.0.2/etc/tme.properties:otca.service.host=ussm-mag-app-otca-164
+
+
+- name: Restart Text Mining Engine service
+  systemd:
+    state: restarted
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-text-mining }
+
+- name: Wait Text Mining Engine for listening on port 40002 ... it can take a minute or 2 for the engine to warm up ...
+  wait_for:
+    host: "{{ text_mining_hostname }}"
+    port: "{{ item.port }}"
+    delay: 5
+    timeout: 120
+    state: started
+  with_items:
+    - { port: 40002 }
+
+- name:
+  vars:
+    msg: |
+         Magellan Text Mining has been reconfigured on {{text_mining_hostname }}.
+         You can validate deployement by opening http://{{ text_mining_fqdn }}:40002
+         or http://{{ ansible_host }}:40002
+         Default credentials are admin/admin.
+         You can also test the REST API using a REST client like Postman.
+  debug:
+    msg: "{{ msg.split('\n') }}"

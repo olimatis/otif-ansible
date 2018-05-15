@@ -2,7 +2,6 @@
 ---
 
 - hosts: pipeline, zookeeper, kafka, mongodb, text-mining, wsm-crawler, dashboard
-#  serial: 1
 
   tasks:
 

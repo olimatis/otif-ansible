@@ -1,0 +1,253 @@
+---
+
+- name: Wait until Zookeeper is listening on port 2181
+  wait_for:
+    host: "{{ zookeeper_hostname }}"
+    port: "{{ item.port }}"
+    timeout: 10
+    state: started
+  with_items:
+     - { port: 2181 }
+
+- name: Reconfigured hostnames for Pipeline (in property file)"
+  become: true
+  lineinfile:
+    dest: "{{ pipeline_installation_path }}/etc/ingestion-api/otif-ingestion-api.properties"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: 'ingestion\.service\.zookeeper\.ensemble=', line: 'ingestion.service.zookeeper.ensemble={{ pipeline_hostname }}:2181' }
+    - { regexp: 'ingestion\.service\.host=', line: 'ingestion.service.host={{ pipeline_hostname }}' }
+    - { regexp: 'ingestion\.api\.config\.zookeeper\.ensemble=', line: 'ingestion.api.config.zookeeper.ensemble={{ pipeline_hostname }}:2181' }
+    - { regexp: 'dashboard\.notifier\.component\.host=', line: 'dashboard.notifier.component.host={{ pipeline_hostname }}' }
+    - { regexp: 'dashboard\.notifier\.component\.adminurl=', line: 'dashboard.notifier.component.adminurl=http://{{ pipeline_fqdn }}:7171${ingestion.service.admin.basePath}' }
+
+- name: Wait until Pipeline is listening on ports 7071 & 7171
+  wait_for:
+    host: "{{ pipeline_hostname }}"
+    port: "{{ item.port }}"
+    timeout: 10
+    state: started
+  with_items:
+    - { port: 7071 }
+    - { port: 7171 }
+
+
+- name: Get current Pipeline WebDocumentLoader configuration
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/webDocumentLoader"
+    method: GET
+    headers:
+      accept: "application/xml"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 200
+    timeout: 30
+    return_content: yes
+  register: request_otif
+
+- debug:
+    var: request_otif.content
+
+- name: update mongoDbUrl
+  xml:
+    xmlstring: "{{ request_otif.content }}"
+    xpath: //mongoDbUrl
+    value: "{{ wsm_crawler_hostname }}:27017"
+    pretty_print: yes
+  register: updated_xml 
+
+- debug:
+    var: updated_xml.xmlstring
+
+- name: Update hostname where MongoDB is running (WebDocumentLoader)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/webDocumentLoader"
+    method: PUT
+    headers:
+      Content-Type: "application/xml"
+      accept: "application/xml"
+    body: "{{  updated_xml.xmlstring }}"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    timeout: 30
+  register: request_otif
+
+- name: New value for MongoDbUrl set to "{{ wsm_crawler_hostname }}:27017"
+  debug:
+    var: request_otif
+
+- name: Get current Pipeline consumer configuration (Kafka)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/consumer"
+    method: GET
+    headers:
+      accept: "application/xml"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 200
+    timeout: 30
+    return_content: yes 
+  register: request_otif
+
+- name: update bootstrap.servers
+  xml:
+    xmlstring: "{{ request_otif.content }}"
+    xpath: //consumerSetting[consumerTopics/topic='TopicTwitterCrawler']/consumerProperties/value/consumerProperty[@name='bootstrap.servers']
+    attribute: "value"
+    value: "{{ pipeline_hostname }}:9092"
+  register: updated_xml
+
+- name: update bootstrap.servers
+  xml:
+    xmlstring: "{{ updated_xml.xmlstring }}"
+    xpath: //consumerSetting[consumerTopics/topic='TopicWebCrawler']/consumerProperties/value/consumerProperty[@name='bootstrap.servers']
+    attribute: "value"
+    value: "{{ pipeline_hostname }}:9092"
+  register: updated_xml
+
+- debug:
+    var: updated_xml.xmlstring
+
+- name: Update Pipeline consumer configuration (Kafka)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/consumer"
+    method: PUT
+    headers:
+      Content-Type: "application/xml"
+      accept: "application/xml"  
+    body: "{{  updated_xml.xmlstring }}"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    timeout: 30
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
+
+- name: Get current RDBMS persistance configuration  (dbadapter/rdbms-common)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/dbadapter/rdbms-common"
+    method: GET
+    headers:
+      accept: "application/xml"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 200
+    timeout: 30
+    return_content: yes
+  register: request_otif
+
+- name: update rdbms-common
+  xml:
+    xmlstring: "{{ request_otif.content }}"
+    xpath: //dbHost
+    value: "{{ pipeline_hostname }}"
+  register: updated_xml
+
+- debug:
+    var: updated_xml
+
+- name: Update RDBMS persistance configuration (dbadapter/rdbms-common)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/dbadapter/rdbms-common"
+    method: PUT
+    headers:
+      Content-Type: "application/xml"
+      accept: "application/xml"
+    body: "{{  updated_xml.xmlstring }}"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    timeout: 30
+  register: request_otif
+
+- name:
+  debug:
+    var: request_otif
+
+
+#  *   Postgres hostname (‘Database Host’ for persistence of metadata)
+#  *   Web Scraper: URL for Web Crawler admin UI
+
+- name: Get current Web Scraper configuration  (admin/scraper)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/scraper"
+    method: GET
+    headers:
+      accept: "application/xml"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 200
+    timeout: 30
+    return_content: yes
+#    body_format: json
+  register: request_otif
+
+- debug:
+    var: request_otif
+
+- name: update scraper
+  xml:
+    xmlstring: "{{ request_otif.content | regex_replace('[*]{8}','admin')}}"
+    xpath: //webCrawlerAdminUrl
+    value: "http://{{ wsm_crawler_hostname }}:10010/crawlers-admin/rest/v1"
+  register: updated_xml
+
+- debug:
+    var: updated_xml
+
+- name: Update Web Scraper configuration  (admin/scraper)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/scraper"
+    method: PUT
+    headers:
+      Content-Type: "application/xml"
+      accept: "application/xml"
+    body: "{{  updated_xml.xmlstring }}"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    timeout: 30
+  register: request_otif
+
+
+- name: Restart Pipeline service
+  systemd:
+    state: restarted
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-ingestion-api-1 }
+
+- name: Wait until Pipeline is listening on ports 7071 & 7171
+  wait_for:
+    host: "{{ pipeline_hostname }}"
+    port: "{{ item.port }}"
+    delay: 5
+    timeout: 10
+    state: started
+  with_items:
+    - { port: 7071 }
+    - { port: 7171 }
+
+- name:
+  vars:
+    msg: |
+         Magellan Crawler Pipeline has been reconfigured on {{ pipeline_hostname }}.
+         You can validate deployement by opening http://{{ pipeline_fqdn }}:7171
+         or http://{{ ansible_host }}:7171
+         Default credentials are admin/admin.
+  debug:
+    msg: "{{ msg.split('\n') }}"
