@@ -44,7 +44,7 @@
     user: "admin"
     password: "admin"
     status_code: 200
-    timeout: 30
+    timeout: 90
     return_content: yes
   register: request_otif
 
@@ -224,24 +224,6 @@
     timeout: 30
   register: request_otif
 
-
-- name: Restart Pipeline service
-  systemd:
-    state: restarted
-    name: "{{ item.name }}"
-  with_items:
-    - { name: otif-ingestion-api-1 }
-
-- name: Wait until Pipeline is listening on ports 7071 & 7171
-  wait_for:
-    host: "{{ pipeline_hostname }}"
-    port: "{{ item.port }}"
-    delay: 5
-    timeout: 10
-    state: started
-  with_items:
-    - { port: 7071 }
-    - { port: 7171 }
 
 - name: Get current Dashboard notifier configuration (dashboardNotifier)
   uri:
