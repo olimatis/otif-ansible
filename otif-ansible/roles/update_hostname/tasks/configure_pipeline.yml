@@ -1,6 +1,24 @@
 ---
 
-- name: Wait until Zookeeper is listening on port 2181
+- name: Reconfigured hostnames for Kafka (in property file)"
+  become: true
+  lineinfile:
+    dest: "{{ kafka_installation_path }}/config/server.properties"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^listeners=', line: 'listeners==PLAINTEXT://{{ pipeline_hostname }}:9092' }
+    - { regexp: '^zookeeper.connect=', line: 'zookeeper.connect={{ pipeline_hostname }}:2181/kafka' }
+
+- name: Make sure Zookeeper & Kafka are running
+  systemd:
+    state: restarted
+    name: "{{ item.name }}"
+  with_items:
+    - { name: ot-zk-1 }
+    - { name: ot-kafka-1 }
+
+- name: Wait until Zookeeper & Kafka are  listening on port 2181 & 9092
   wait_for:
     host: "{{ zookeeper_hostname }}"
     port: "{{ item.port }}"
@@ -8,6 +26,7 @@
     state: started
   with_items:
      - { port: 2181 }
+     - { port: 9092 }
 
 - name: Reconfigured hostnames for Pipeline (in property file)"
   become: true

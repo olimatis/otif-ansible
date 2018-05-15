@@ -17,7 +17,7 @@ default_installation_path: "/OpenText/infofusion-{{otif_version}}"
 dashboard_installation_path: "{{ default_installation_path }}/dashboard"
 crawler_installation_path: "{{ default_installation_path }}/wsm-crawler"
 pipeline_installation_path: "{{ default_installation_path }}/pipeline"
-
+kafka_installation_path: "{{ default_installation_path }}/kafka"
 
 # Location of the mounted iso containing InfoFusion installers
 #default_installer_location: "/mnt/dvd"
