@@ -24,6 +24,16 @@
       - { port: 9092 }     
     when: inventory_hostname in groups['kafka']
 
+  - name: Wait until MongoDB is listening on port 27017
+    wait_for:
+      host: "{{ mongodb_hostname }}"
+      port: "{{ item.port }}"
+      timeout: 10
+      state: started
+    with_items:
+      - { port: 27017 }
+    when: inventory_hostname in groups['mongodb']
+
   - name: Summary for MongoDB
     block:
 
