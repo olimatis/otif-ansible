@@ -47,8 +47,8 @@
     return_content: yes
   register: request_otif
 
-- debug:
-    var: request_otif.content
+#- debug:
+#    var: request_otif.content
 
 - name: update mongoDbUrl
   xml:
@@ -58,8 +58,8 @@
     pretty_print: yes
   register: updated_xml 
 
-- debug:
-    var: updated_xml.xmlstring
+#- debug:
+#    var: updated_xml.xmlstring
 
 - name: Update hostname where MongoDB is running (WebDocumentLoader)
   uri:
@@ -76,9 +76,9 @@
     timeout: 30
   register: request_otif
 
-- name: New value for MongoDbUrl set to "{{ wsm_crawler_hostname }}:27017"
-  debug:
-    var: request_otif
+#- name: New value for MongoDbUrl set to "{{ wsm_crawler_hostname }}:27017"
+#  debug:
+#    var: request_otif
 
 - name: Get current Pipeline consumer configuration (Kafka)
   uri:
@@ -110,8 +110,8 @@
     value: "{{ pipeline_hostname }}:9092"
   register: updated_xml
 
-- debug:
-    var: updated_xml.xmlstring
+#- debug:
+#    var: updated_xml.xmlstring
 
 - name: Update Pipeline consumer configuration (Kafka)
   uri:
@@ -128,9 +128,9 @@
     timeout: 30
   register: request_otif
 
-- name:
-  debug:
-    var: request_otif
+#- name:
+#  debug:
+#    var: request_otif
 
 
 - name: Get current RDBMS persistance configuration  (dbadapter/rdbms-common)
@@ -154,8 +154,8 @@
     value: "{{ pipeline_hostname }}"
   register: updated_xml
 
-- debug:
-    var: updated_xml
+#- debug:
+#    var: updated_xml
 
 - name: Update RDBMS persistance configuration (dbadapter/rdbms-common)
   uri:
@@ -172,9 +172,9 @@
     timeout: 30
   register: request_otif
 
-- name:
-  debug:
-    var: request_otif
+#- name:
+#  debug:
+#    var: request_otif
 
 
 #  *   Postgres hostname (‘Database Host’ for persistence of metadata)
@@ -195,8 +195,8 @@
 #    body_format: json
   register: request_otif
 
-- debug:
-    var: request_otif
+#- debug:
+#    var: request_otif
 
 - name: update scraper
   xml:
@@ -205,8 +205,8 @@
     value: "http://{{ wsm_crawler_hostname }}:10010/crawlers-admin/rest/v1"
   register: updated_xml
 
-- debug:
-    var: updated_xml
+#- debug:
+#    var: updated_xml
 
 - name: Update Web Scraper configuration  (admin/scraper)
   uri:
@@ -257,8 +257,8 @@
 #    body_format: json
   register: request_otif
 
-- debug:
-    var: request_otif
+#- debug:
+#    var: request_otif
 
 - name: update dashboard notifier
   xml:
@@ -275,8 +275,23 @@
     value: "true"
   register: updated_xml
 
-- debug:
-    var: updated_xml
+#- debug:
+#    var: updated_xml
+
+- name: Update Dashboard notifier configuration (dashboardNotifier)
+  uri:
+    url: "http://{{ pipeline_hostname }}:7171/otif/v3/admin/dashboardNotifier"
+    method: PUT
+    headers:
+      Content-Type: "application/xml"
+      accept: "application/xml"
+    body: "{{  updated_xml.xmlstring }}"
+    force_basic_auth: yes
+    user: "admin"
+    password: "admin"
+    status_code: 202
+    timeout: 30
+  register: request_otif
 
 - name:
   vars:
