@@ -9,29 +9,34 @@
   with_items:
     - { file: "dashboard-api.properties", regexp: 'dashboard\.persistence\.pool\.properties\.url=', line: "dashboard.persistence.pool.properties.url=jdbc:postgresql://{{ dashboard_hostname }}:5432/magellan_dashboard" } 	
 
-- name: Update the database used by the Dashboard (1/3)
-  shell: >
-    PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c 
-    "update component set component_name = 'template twitter crawler 1',
-    host = '{{ wsm_crawler_hostname }}',
-    admin_url = 'http://{{ wsm_crawler_fqdn }}:10010'
-    where component_type = 'twitter-crawler';"  
-    
-- name: Update the database used by the Dashboard (2/3)
+- name: Truncate the database used by the Dashboard
   shell: >
     PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c
-    "update component set component_name = 'template web crawler 1',
-    host = '{{ wsm_crawler_hostname }}',
-    admin_url = 'http://{{ wsm_crawler_fqdn }}:10010'
-    where component_type = 'web-crawler';"
+    "TRUNCATE TABLE component, metrics, dashboard_job CASCADE;"
 
-- name: Update the database used by the Dashboard (3/3)
-  shell: >
-    PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c
-    "update component set component_name = 'template pipeline 1',
-    host = '{{ pipeline_hostname }}',
-    admin_url = 'http://{{ pipeline_fqdn }}:10010'
-    where component_type = 'pipeline';"
+#- name: Update the database used by the Dashboard (1/3)
+#  shell: >
+#    PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c 
+#    "update component set component_name = 'template twitter crawler 1',
+#    host = '{{ wsm_crawler_hostname }}',
+#    admin_url = 'http://{{ wsm_crawler_fqdn }}:10010'
+#    where component_type = 'twitter-crawler';"  
+    
+#- name: Update the database used by the Dashboard (2/3)
+#  shell: >
+#    PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c
+#    "update component set component_name = 'template web crawler 1',
+#    host = '{{ wsm_crawler_hostname }}',
+#    admin_url = 'http://{{ wsm_crawler_fqdn }}:10010'
+#    where component_type = 'web-crawler';"
+
+#- name: Update the database used by the Dashboard (3/3)
+#  shell: >
+#    PGPASSWORD={{ master_password }} psql {{ master_username }} -d {{ master_dbname }}_dashboard -c
+#    "update component set component_name = 'template pipeline 1',
+#    host = '{{ pipeline_hostname }}',
+#    admin_url = 'http://{{ pipeline_fqdn }}:7171'
+#    where component_type = 'pipeline';"
 
 - name: Restart InfoFusion Dashboard service
   systemd:
