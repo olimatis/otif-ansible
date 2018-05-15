@@ -1,6 +1,10 @@
 ---
 # tasks file for update_hostname
 
+- name: Reconfigure Kafka for InfoFusion
+  include_tasks: configure_kafka.yml
+  when: inventory_hostname in groups['kafka']
+
 - name: Reconfigure InfoFusion Dashboard
   include_tasks: configure_dashboard.yml
   when: inventory_hostname in groups['dashboard']
