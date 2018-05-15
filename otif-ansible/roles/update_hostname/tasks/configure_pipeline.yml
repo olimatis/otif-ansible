@@ -1,33 +1,5 @@
 ---
 
-- name: Reconfigured hostnames for Kafka (in property file)"
-  become: true
-  lineinfile:
-    dest: "{{ kafka_installation_path }}/config/server.properties"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  with_items:
-    - { regexp: '^listeners=', line: 'listeners==PLAINTEXT://{{ pipeline_hostname }}:9092' }
-    - { regexp: '^zookeeper.connect=', line: 'zookeeper.connect={{ pipeline_hostname }}:2181/kafka' }
-
-- name: Make sure Zookeeper & Kafka are running
-  systemd:
-    state: restarted
-    name: "{{ item.name }}"
-  with_items:
-    - { name: ot-zk-1 }
-    - { name: ot-kafka-1 }
-
-- name: Wait until Zookeeper & Kafka are  listening on port 2181 & 9092
-  wait_for:
-    host: "{{ zookeeper_hostname }}"
-    port: "{{ item.port }}"
-    timeout: 10
-    state: started
-  with_items:
-     - { port: 2181 }
-     - { port: 9092 }
-
 - name: Reconfigured hostnames for Pipeline (in property file)"
   become: true
   lineinfile:
@@ -40,6 +12,16 @@
     - { regexp: 'ingestion\.api\.config\.zookeeper\.ensemble=', line: 'ingestion.api.config.zookeeper.ensemble={{ pipeline_hostname }}:2181' }
     - { regexp: 'dashboard\.notifier\.component\.host=', line: 'dashboard.notifier.component.host={{ pipeline_hostname }}' }
     - { regexp: 'dashboard\.notifier\.component\.adminurl=', line: 'dashboard.notifier.component.adminurl=http://{{ pipeline_fqdn }}:7171${ingestion.service.admin.basePath}' }
+
+- name: Make sure Pipeline service is restarted
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: otif-ingestion-api-1 }
+
 
 - name: Wait until Pipeline is listening on ports 7071 & 7171
   wait_for:
