@@ -1,5 +1,22 @@
 ---
 
+- name: Make sure PostgreSQL is running
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: postgresql-9.6.service } 
+
+- name: Wait until PostgreSQL is listening on ports 5432
+  wait_for:
+    host: "{{ pipeline_hostname }}"
+    port: "{{ item.port }}"
+    timeout: 10
+    state: started
+  with_items:
+    - { port: 5432 }
+
 - name: Reconfigured hostnames for Pipeline (in property file)"
   become: true
   lineinfile:

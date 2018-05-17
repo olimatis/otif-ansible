@@ -1,6 +1,7 @@
 ---
 # tasks file for configure_wsm_crawler
 
+
 - name: Wait until Zookeeper is listening on port 2181 (for service registry)
   wait_for:
     host: "{{ zookeeper_hostname }}"
@@ -37,6 +38,23 @@
   with_items:
     - { src: crawler-registration.xml.j2, dest: "{{ crawler_installation_path }}/etc/crawler-registration.xml" }
     - { src: nutch-site.xml.j2, dest: "{{ crawler_installation_path }}/crawler-web/conf/nutch-site.xml" }
+
+- name: Make sure PostgreSQL is running
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ item.name }}"
+  with_items:
+    - { name: postgresql-9.6.service }
+
+- name: Wait until PostgreSQL is listening on ports 5432
+  wait_for:
+    host: "{{ pipeline_hostname }}"
+    port: "{{ item.port }}"
+    timeout: 10
+    state: started
+  with_items:
+    - { port: 5432 }
 
 - name: Restart service for Web & Social Media services
   systemd:
